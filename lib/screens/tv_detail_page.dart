@@ -1,37 +1,31 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/models/moviedetail_model.dart';
+import 'package:movies_app/models/populartv_detail.dart';
 import '../services/api_handler.dart';
 
-class MovieDetailPage extends StatefulWidget {
-  final double trendmovieid;
-  const MovieDetailPage({
+class TvDetailPage extends StatefulWidget {
+  final double tvpopularid;
+  TvDetailPage({
     Key? key,
-    required this.trendmovieid,
+    required this.tvpopularid,
   }) : super(key: key);
 
   @override
-  State<MovieDetailPage> createState() => _MovieDetailPageState();
+  State<TvDetailPage> createState() => _TvDetailPageState();
 }
 
-class _MovieDetailPageState extends State<MovieDetailPage> {
-  String durationToString(int minutes) {
-    var d = Duration(minutes: minutes);
-    List<String> parts = d.toString().split(':');
-    return '${parts[0].padLeft(2, '0')} hr ${parts[1].padLeft(2, '0')}';
-  }
-
+class _TvDetailPageState extends State<TvDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
       ),
-      body: FutureBuilder<TrendingMovieDetail>(
-          future: ApiHandler().fetchTrendingMovieDetail(widget.trendmovieid),
+      body: FutureBuilder<PopularTvDetailModel>(
+          future: ApiHandler().fetchPopularTvDetail(widget.tvpopularid),
           builder: (context, snapshot) {
             //print(snapshot.data);
             print(snapshot.error);
-            print(snapshot.data?.genres.elementAt(1).name.toString());
+            // print(snapshot.data?.genres.elementAt(1).name.toString());
             if (snapshot.hasData) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -39,16 +33,18 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                 children: [
                   Stack(
                     children: [
-                      Image(
-                        height: 235,
-                        width: MediaQuery.of(context).size.width,
-                        // ignore: prefer_interpolation_to_compose_strings
-                        image: NetworkImage(
-                          // ignore: prefer_interpolation_to_compose_strings
-                          'https://image.tmdb.org/t/p/w500' +
-                              snapshot.data!.movieBackdrop.toString(),
+                      if (snapshot.data!.tvBackdrop != null)
+                        Image(
+                          height: 235,
+                          width: MediaQuery.of(context).size.width,
+                          image: NetworkImage(
+                            // ignore: prefer_interpolation_to_compose_strings
+                            'https://image.tmdb.org/t/p/w500' +
+                                snapshot.data!.tvBackdrop.toString(),
+                          ),
                         ),
-                      ),
+                      if (snapshot.data!.tvBackdrop == null)
+                        const Text('Error Loading Image'),
                     ],
                   ),
                   Padding(
@@ -58,7 +54,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       bottom: 12,
                     ),
                     child: Text(
-                      snapshot.data!.movieDetailTitle.toString(),
+                      snapshot.data!.tvTitle.toString(),
                       style: const TextStyle(
                         fontSize: 25,
                         fontWeight: FontWeight.bold,
@@ -81,29 +77,53 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                         ),
                       ),
                       Text(
-                        snapshot.data!.releaseDate.toString(),
+                        snapshot.data!.firstairDate.toString(),
                         style: const TextStyle(
                             color: Colors.white, fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(
-                        width: 50,
+                        width: 70,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(left: 20),
+                        child: Text(
+                          'Seasons:  ',
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        snapshot.data!.seasons.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 180,
                       ),
                       const Text(
-                        'Duration:  ',
+                        'Episodes:  ',
                         style: TextStyle(
                           color: Colors.grey,
                         ),
                       ),
                       Text(
-                        '' +
-                            durationToString(snapshot.data?.runTime as int) +
-                            ' min',
+                        snapshot.data!.episodes.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                      // Text(
-                      //   '' + snapshot.data!.runTime.toString() + ' min',
-                      //   style: TextStyle(
-                      //       color: Colors.white, fontWeight: FontWeight.bold),
-                      // ),
                     ],
                   ),
                   const SizedBox(
@@ -133,7 +153,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       ),
                       Icon(
                         Icons.star,
-                        color: Colors.amber.shade600,
+                        color: Colors.amber,
                       ),
                     ],
                   ),
@@ -143,7 +163,9 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   Row(
                     children: [
                       const Padding(
-                        padding: EdgeInsets.only(left: 20),
+                        padding: EdgeInsets.only(
+                          left: 20,
+                        ),
                         child: Text(
                           'Genre:  ',
                           style: TextStyle(
@@ -151,21 +173,21 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                           ),
                         ),
                       ),
-                      if (snapshot.data!.genres.isNotEmpty &&
-                          snapshot.data!.genres.length == 1)
+                      if (snapshot.data!.genres != null &&
+                          snapshot.data!.genres!.length == 1)
                         Text(
-                          snapshot.data!.genres.elementAt(0).name.toString(),
+                          snapshot.data!.genres!.elementAt(0).name.toString(),
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                      if (snapshot.data!.genres.length == 2 ||
-                          snapshot.data!.genres.length > 2)
+                      if (snapshot.data!.genres!.length == 2 ||
+                          snapshot.data!.genres!.length > 2)
                         (Row(
                           children: [
                             Text(
-                              snapshot.data!.genres
+                              snapshot.data!.genres!
                                   .elementAt(0)
                                   .name
                                   .toString(),
@@ -176,7 +198,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             ),
                             const Text('  ,  '),
                             Text(
-                              snapshot.data!.genres
+                              snapshot.data!.genres!
                                   .elementAt(1)
                                   .name
                                   .toString(),
@@ -187,17 +209,42 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                             )
                           ],
                         )),
-                      if (snapshot.data!.genres.isEmpty == true) (Text('')),
+                      if (snapshot.data!.genres!.isEmpty == true) (Text('')),
                     ],
                   ),
                   const SizedBox(
-                    height: 25,
+                    height: 15,
+                  ),
+                  Row(
+                    children: [
+                      const Padding(
+                        padding: EdgeInsets.only(
+                          left: 20,
+                        ),
+                        child: Text(
+                          'Status:  ',
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
+                        ),
+                      ),
+                      Text(
+                        snapshot.data!.status.toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
                   ),
                   Container(
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.all(20),
                     child: Text(
-                      snapshot.data!.description.toString(),
+                      snapshot.data!.tvDescription.toString(),
                       textAlign: TextAlign.justify,
                     ),
                   ),

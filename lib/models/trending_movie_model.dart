@@ -1,36 +1,25 @@
-import 'dart:convert';
-import 'dart:core';
-import '../widgets/api_handler.dart';
-import 'package:http/http.dart' as http;
+import 'package:json_annotation/json_annotation.dart';
 
-// class Genres {
-//   List genre;
-//   final int id;
-//   final String name;
+part 'trending_movie_model.g.dart';
 
-//   Genres({required this.id, required this.name});
-// }
-
+@JsonSerializable()
 class TrendingMovie {
-  final String movieTitle;
-  final String imageMoviePath;
-  final int movieId;
+  @JsonKey(name: 'title')
+  final String? movieTitle;
+
+  @JsonKey(name: 'poster_path')
+  final String? moviePoster;
+
+  @JsonKey(name: 'id')
+  final int? movieId;
 
   TrendingMovie({
     required this.movieId,
     required this.movieTitle,
-    required this.imageMoviePath,
+    required this.moviePoster,
   });
 
-  factory TrendingMovie.fromJson(Map<String, dynamic> json) {
-    return TrendingMovie(
-      movieId: json["id"],
-      movieTitle: json["title"],
-      imageMoviePath: json["poster_path"],
-    );
-  }
-  @override
-  String toString() {
-    return '$movieId, $movieTitle, $imageMoviePath';
-  }
+  factory TrendingMovie.fromJson(Map<String, dynamic> json) =>
+      _$TrendingMovieFromJson(json);
+  Map<String, dynamic> toJson() => _$TrendingMovieToJson(this);
 }
