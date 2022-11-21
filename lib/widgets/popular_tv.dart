@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/models/popular_tv_model.dart';
+import 'package:provider/provider.dart';
 import '../screens/tv_detail_page.dart';
 import '../services/api_handler.dart';
+import '../states/favourite_provider.dart';
 
 class PopularTvPage extends StatefulWidget {
   const PopularTvPage({
@@ -15,6 +17,8 @@ class PopularTvPage extends StatefulWidget {
 class _PopularTvPageState extends State<PopularTvPage> {
   @override
   Widget build(BuildContext context) {
+    List _favtv = context.watch<Favourite>().favTvShows;
+
     return FutureBuilder<List<PopularTv>>(
       future: ApiHandler().fetchPopularTv(),
       builder: (context, snapshot) {
@@ -23,7 +27,8 @@ class _PopularTvPageState extends State<PopularTvPage> {
             child: GridView.builder(
               itemCount: snapshot.data?.length,
               shrinkWrap: false,
-              padding: EdgeInsets.only(top: 15, left: 9, right: 9),
+              cacheExtent: 10,
+              padding: const EdgeInsets.only(top: 15, left: 9, right: 9),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 130,
                 crossAxisSpacing: 30,
@@ -31,6 +36,7 @@ class _PopularTvPageState extends State<PopularTvPage> {
                 mainAxisExtent: 240,
               ),
               itemBuilder: (BuildContext ctx, index) {
+                final favouritetv = snapshot.data![index];
                 return Column(
                   children: [
                     InkWell(
@@ -45,40 +51,61 @@ class _PopularTvPageState extends State<PopularTvPage> {
                           ),
                         );
                       },
-                      child: Stack(alignment: Alignment.topRight, children: [
-                        Container(
-                          height: 170,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            shape: BoxShape.rectangle,
-                            image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image: NetworkImage(
-                                // ignore: prefer_interpolation_to_compose_strings
-                                'https://image.tmdb.org/t/p/w500' +
-                                    snapshot.data![index].popTvPoster
-                                        .toString(),
+                      child: Stack(
+                        // alignment: Alignment.topRight,
+                        children: [
+                          Container(
+                            height: 170,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              shape: BoxShape.rectangle,
+                              image: DecorationImage(
+                                fit: BoxFit.contain,
+                                image: NetworkImage(
+                                  // ignore: prefer_interpolation_to_compose_strings
+                                  'https://image.tmdb.org/t/p/w500' +
+                                      snapshot.data![index].popTvPoster
+                                          .toString(),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            Icons.favorite_rounded,
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black45,
-                                blurRadius: 20,
-                                offset: Offset(0, 2.0),
-                              )
-                            ],
+                          Positioned(
+                            top: 7,
+                            left: 75,
+                            right: 0,
+                            bottom: 140,
+                            child: IconButton(
+                              onPressed: () {
+                                if (!_favtv.contains(favouritetv)) {
+                                  context
+                                      .read<Favourite>()
+                                      .addtofavtv(favouritetv);
+                                } else {
+                                  context
+                                      .read<Favourite>()
+                                      .removefromfavtv(favouritetv);
+                                }
+                              },
+                              icon: Icon(
+                                Icons.favorite_rounded,
+                                color: _favtv.contains(favouritetv)
+                                    ? Colors.red
+                                    : Colors.white,
+                                shadows: const [
+                                  Shadow(
+                                    color: Colors.black45,
+                                    blurRadius: 20,
+                                    offset: Offset(0, 2.0),
+                                  )
+                                ],
+                              ),
+                            ),
                           ),
-                        ),
-                      ]),
+                        ],
+                      ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     SizedBox(
@@ -98,9 +125,9 @@ class _PopularTvPageState extends State<PopularTvPage> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text("Error");
+          return const Text("Error");
         }
-        return Text("Loading...");
+        return const Text("Loading...");
       },
     );
   }

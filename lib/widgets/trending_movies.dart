@@ -17,7 +17,7 @@ class TrendingMoviesPage extends StatefulWidget {
 class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
   @override
   Widget build(BuildContext context) {
-    var favMovies = context.watch<Favourite>();
+    List _favMovies = context.watch<Favourite>().favMovies;
 
     return FutureBuilder<List<TrendingMovie>>(
       future: ApiHandler().fetchTrendingMovies(),
@@ -28,8 +28,8 @@ class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
             child: GridView.builder(
               itemCount: snapshot.data?.length,
               scrollDirection: Axis.horizontal,
-              // shrinkWrap: true,
-              padding: EdgeInsets.only(top: 15, left: 9, right: 9),
+              cacheExtent: 10,
+              padding: const EdgeInsets.only(top: 15, left: 9, right: 9),
               gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: 700,
                 crossAxisSpacing: 0,
@@ -37,7 +37,7 @@ class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
                 mainAxisExtent: 115,
               ),
               itemBuilder: (BuildContext ctx, index) {
-                final faviritemovie = snapshot.data![index];
+                final favouritemovie = snapshot.data![index];
                 return Column(
                   children: [
                     InkWell(
@@ -53,10 +53,10 @@ class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
                         );
                       },
                       child: Stack(
-                        alignment: Alignment.topRight,
+                        //alignment: Alignment.topRight,
                         children: [
                           Container(
-                            height: 180,
+                            height: 170,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(10),
                               shape: BoxShape.rectangle,
@@ -71,30 +71,39 @@ class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
                               ),
                             ),
                           ),
-                          IconButton(
-                            onPressed: () {
-                              if (!favMovies.contains(faviritemovie)) {
+                          Positioned(
+                            top: 7,
+                            left: 77,
+                            right: 0,
+                            bottom: 140,
+                            child: IconButton(
+                              onPressed: () {
                                 context
                                     .read<Favourite>()
-                                    .addtofav(faviritemovie);
-                              } else {
-                                context
-                                    .read<Favourite>()
-                                    .removefromfav(faviritemovie);
-                              }
-                            },
-                            icon: Icon(
-                              Icons.favorite_rounded,
-                              color: favMovies.contains(faviritemovie)
-                                  ? Colors.red
-                                  : Colors.white,
-                              shadows: const [
-                                Shadow(
-                                  color: Colors.black45,
-                                  blurRadius: 20,
-                                  offset: Offset(0, 2.0),
-                                )
-                              ],
+                                    .addtofav(favouritemovie);
+                                // if (!_favMovies.contains(favouritemovie)) {
+                                //   context
+                                //       .read<Favourite>()
+                                //       .addtofav(favouritemovie);
+                                // } else {
+                                //   context
+                                //       .read<Favourite>()
+                                //       .removefromfav(favouritemovie);
+                                // }
+                              },
+                              icon: Icon(
+                                Icons.favorite_rounded,
+                                color: _favMovies.contains(favouritemovie)
+                                    ? Colors.red
+                                    : Colors.white,
+                                shadows: const [
+                                  Shadow(
+                                    color: Colors.black45,
+                                    blurRadius: 20,
+                                    offset: Offset(0, 2.0),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ],
@@ -120,23 +129,10 @@ class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
             ),
           );
         } else if (snapshot.hasError) {
-          return Text("Error");
+          return const Text("Error");
         }
         return Text("Loading...");
       },
     );
   }
 }
-
-                      
-                      // IconButton(
-                      //     onPressed: () {
-                      //       setState(() {
-                      //         _isTap = !_isTap;
-                      //       });
-                      //     },
-                      //     icon: Icon(
-                      //         _isTap
-                      //             ? Icons.favorite_outline_rounded
-                      //             : Icons.favorite_rounded,
-                      //         color: _isTap ? Colors.amber : Colors.red)),

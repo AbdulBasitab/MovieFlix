@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/states/favourite_provider.dart';
 import 'package:movies_app/widgets/trending_movies.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import '../widgets/popular_tv.dart';
 import 'fav_movies.dart';
 import 'fav_shows.dart';
@@ -64,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => const FavMovies()),
+                                  builder: (context) => FavMovies()),
                             );
                           });
                         },
