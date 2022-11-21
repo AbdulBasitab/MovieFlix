@@ -13,8 +13,8 @@ class Favourite extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removefromfav(FavouriteMovieTv favmovietv) {
-    _favMovies.remove(favmovietv);
+  void removefromfav(int id) {
+    _favMovies.removeWhere(((element) => element.id == id));
     notifyListeners();
   }
 

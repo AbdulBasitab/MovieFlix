@@ -87,13 +87,15 @@ class _PopularTvPageState extends State<PopularTvPage> {
                             bottom: 140,
                             child: IconButton(
                               onPressed: () {
-                                if (!favtv.contains(fav)) {
-                                  fav.isFavourite = true;
-                                  context.read<Favourite>().addtofav(fav);
-                                } else if (favtv.contains(fav)) {
-                                  context.read<Favourite>().removefromfav(fav);
-                                  fav.isFavourite = false;
+                                if (favItem.isFavourite) {
+                                  context
+                                      .read<Favourite>()
+                                      .removefromfav(favtvs!);
+                                  return;
                                 }
+
+                                fav.isFavourite = true;
+                                context.read<Favourite>().addtofav(fav);
                               },
                               icon: Icon(
                                 Icons.favorite_rounded,
