@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:movies_app/screens/home_page.dart';
 import 'package:movies_app/states/favourite_provider.dart';
 import 'package:provider/provider.dart';
-import '';
 
 void main() {
   runApp(const MyApp());

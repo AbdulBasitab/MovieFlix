@@ -15,7 +15,8 @@ class FavShows extends StatefulWidget {
 class _FavShowsState extends State<FavShows> {
   @override
   Widget build(BuildContext context) {
-    final List favtv = context.watch<Favourite>().favTvShows;
+    final favtv = context.watch<Favourite>().favMovies;
+
     return Scaffold(
       appBar: AppBar(
         title: Text('Favourite Shows'),
@@ -55,7 +56,7 @@ class _FavShowsState extends State<FavShows> {
                           image: NetworkImage(
                             // ignore: prefer_interpolation_to_compose_strings
                             'https://image.tmdb.org/t/p/w500' +
-                                currentfavtvshow.popTvPoster.toString(),
+                                currentfavtvshow.image.toString(),
                           ),
                         ),
                       ),
@@ -71,12 +72,12 @@ class _FavShowsState extends State<FavShows> {
                             Provider.of<Favourite>(context, listen: false);
                             context
                                 .read<Favourite>()
-                                .removefromfavtv(currentfavtvshow);
+                                .removefromfav(currentfavtvshow);
                           } else {
                             Provider.of<Favourite>(context, listen: false);
                             context
                                 .read<Favourite>()
-                                .addtofavtv(currentfavtvshow);
+                                .addtofav(currentfavtvshow);
                           }
                         },
                         icon: Icon(
@@ -102,7 +103,7 @@ class _FavShowsState extends State<FavShows> {
                 SizedBox(
                   height: 45,
                   child: Text(
-                    currentfavtvshow.popTvTitle ?? '',
+                    currentfavtvshow.title ?? '',
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,

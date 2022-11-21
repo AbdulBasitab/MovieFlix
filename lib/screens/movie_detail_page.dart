@@ -30,8 +30,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
           future: ApiHandler().fetchTrendingMovieDetail(widget.trendmovieid),
           builder: (context, snapshot) {
             //print(snapshot.data);
-            print(snapshot.error);
-            print(snapshot.data?.genres.elementAt(1).name.toString());
+
             if (snapshot.hasData) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.start,

@@ -1,34 +1,40 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/models/popular_tv_model.dart';
-import 'package:movies_app/models/trending_movie_model.dart';
+import 'package:movies_app/models/favourite_movies.dart';
 
 class Favourite extends ChangeNotifier {
-  List<TrendingMovie> _favMovies = [];
-  List<PopularTv> _favTvShows = [];
-  List<TrendingMovie> get favMovies => _favMovies;
-  List<PopularTv> get favTvShows => _favTvShows;
+  final List<FavouriteMovieTv> _favMovies = [];
+  List<FavouriteMovieTv> get favMovies => _favMovies;
 
-  void addtofavtv(PopularTv favtv) {
-    _favTvShows.add(favtv);
+  bool _fav = false;
+  bool get isFav => _fav;
+
+  void addtofav(FavouriteMovieTv favmovietv) {
+    _favMovies.add(favmovietv);
     notifyListeners();
   }
 
-  void removefromfavtv(PopularTv favtv) {
-    _favTvShows.remove(favtv);
+  void removefromfav(FavouriteMovieTv favmovietv) {
+    _favMovies.remove(favmovietv);
     notifyListeners();
   }
 
-  void addtofav(TrendingMovie favmovie) {
-    if (!_favMovies.contains(favmovie.movieId)) {
-      _favMovies.add(favmovie);
-      notifyListeners();
-    } else
+  void togglefav(FavouriteMovieTv favmovie) {
+    final isExist = _favMovies.contains(favmovie);
+    if (isExist) {
       _favMovies.remove(favmovie);
-    notifyListeners();
+    } else {
+      _favMovies.add(favmovie);
+    }
   }
 
-  void removefromfav(TrendingMovie favmovie) {
-    _favMovies.remove(favmovie);
+  bool isFavourite(FavouriteMovieTv fav) {
+    final isExist = _favMovies.contains(fav);
+    print(isExist);
+    return isExist;
+  }
+
+  isFavorited() {
+    _fav = !_fav;
     notifyListeners();
   }
 }

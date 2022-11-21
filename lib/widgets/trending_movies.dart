@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/models/trending_movie_model.dart';
+import 'package:movies_app/screens/fav_movies.dart';
 import 'package:provider/provider.dart';
+import '../models/favourite_movies.dart';
 import '../screens/movie_detail_page.dart';
 import '../services/api_handler.dart';
 import '../states/favourite_provider.dart';
@@ -17,8 +19,8 @@ class TrendingMoviesPage extends StatefulWidget {
 class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
   @override
   Widget build(BuildContext context) {
-    List _favMovies = context.watch<Favourite>().favMovies;
-
+    final favmovies = context.watch<Favourite>().favMovies;
+    final provider = Provider.of<Favourite>(context, listen: false);
     return FutureBuilder<List<TrendingMovie>>(
       future: ApiHandler().fetchTrendingMovies(),
       builder: (context, snapshot) {
@@ -38,6 +40,15 @@ class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
               ),
               itemBuilder: (BuildContext ctx, index) {
                 final favouritemovie = snapshot.data![index];
+                final fav = FavouriteMovieTv(
+                    id: favouritemovie.movieId,
+                    title: favouritemovie.movieTitle.toString(),
+                    image: favouritemovie.moviePoster.toString(),
+                    isFavourite: false);
+                final favItem = favmovies.firstWhere(
+                    (element) => element.id == favouritemovie.movieId,
+                    orElse: (() => fav));
+
                 return Column(
                   children: [
                     InkWell(
@@ -78,32 +89,36 @@ class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
                             bottom: 140,
                             child: IconButton(
                               onPressed: () {
-                                context
-                                    .read<Favourite>()
-                                    .addtofav(favouritemovie);
-                                // if (!_favMovies.contains(favouritemovie)) {
-                                //   context
-                                //       .read<Favourite>()
-                                //       .addtofav(favouritemovie);
-                                // } else {
-                                //   context
-                                //       .read<Favourite>()
-                                //       .removefromfav(favouritemovie);
-                                // }
+                                if (!favmovies.contains(fav)) {
+                                  fav.isFavourite = true;
+                                  context.read<Favourite>().addtofav(fav);
+                                } else {
+                                  context.read<Favourite>().removefromfav(fav);
+                                }
                               },
-                              icon: Icon(
-                                Icons.favorite_rounded,
-                                color: _favMovies.contains(favouritemovie)
-                                    ? Colors.red
-                                    : Colors.white,
-                                shadows: const [
-                                  Shadow(
-                                    color: Colors.black45,
-                                    blurRadius: 20,
-                                    offset: Offset(0, 2.0),
-                                  )
-                                ],
-                              ),
+                              icon: favItem.isFavourite == true
+                                  ? const Icon(
+                                      Icons.favorite,
+                                      color: Colors.red,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black45,
+                                          blurRadius: 20,
+                                          offset: Offset(0, 2.0),
+                                        )
+                                      ],
+                                    )
+                                  : const Icon(
+                                      Icons.favorite_outline_rounded,
+                                      color: Colors.white,
+                                      shadows: [
+                                        Shadow(
+                                          color: Colors.black45,
+                                          blurRadius: 20,
+                                          offset: Offset(0, 2.0),
+                                        )
+                                      ],
+                                    ),
                             ),
                           ),
                         ],

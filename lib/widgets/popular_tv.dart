@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/models/favourite_movies.dart';
 import 'package:movies_app/models/popular_tv_model.dart';
 import 'package:provider/provider.dart';
 import '../screens/tv_detail_page.dart';
@@ -17,7 +18,7 @@ class PopularTvPage extends StatefulWidget {
 class _PopularTvPageState extends State<PopularTvPage> {
   @override
   Widget build(BuildContext context) {
-    List _favtv = context.watch<Favourite>().favTvShows;
+    final favtv = context.watch<Favourite>().favMovies;
 
     return FutureBuilder<List<PopularTv>>(
       future: ApiHandler().fetchPopularTv(),
@@ -37,6 +38,15 @@ class _PopularTvPageState extends State<PopularTvPage> {
               ),
               itemBuilder: (BuildContext ctx, index) {
                 final favouritetv = snapshot.data![index];
+                final favtvs = favouritetv.popTvId;
+                final fav = FavouriteMovieTv(
+                    id: favouritetv.popTvId,
+                    title: favouritetv.popTvTitle.toString(),
+                    image: favouritetv.popTvPoster.toString(),
+                    isFavourite: false);
+                final favItem = favtv.firstWhere(
+                    (element) => element.id == favouritetv.popTvId,
+                    orElse: (() => fav));
                 return Column(
                   children: [
                     InkWell(
@@ -77,19 +87,17 @@ class _PopularTvPageState extends State<PopularTvPage> {
                             bottom: 140,
                             child: IconButton(
                               onPressed: () {
-                                if (!_favtv.contains(favouritetv)) {
-                                  context
-                                      .read<Favourite>()
-                                      .addtofavtv(favouritetv);
-                                } else {
-                                  context
-                                      .read<Favourite>()
-                                      .removefromfavtv(favouritetv);
+                                if (!favtv.contains(fav)) {
+                                  fav.isFavourite = true;
+                                  context.read<Favourite>().addtofav(fav);
+                                } else if (favtv.contains(fav)) {
+                                  context.read<Favourite>().removefromfav(fav);
+                                  fav.isFavourite = false;
                                 }
                               },
                               icon: Icon(
                                 Icons.favorite_rounded,
-                                color: _favtv.contains(favouritetv)
+                                color: favItem.isFavourite == true
                                     ? Colors.red
                                     : Colors.white,
                                 shadows: const [
@@ -132,3 +140,8 @@ class _PopularTvPageState extends State<PopularTvPage> {
     );
   }
 }
+
+// final favItem = favtv.firstWhere(
+                //   (element) => element.id == favouritetv.popTvId,
+                //   orElse: () => false as FavouriteMovieTv,
+                // );

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movies_app/models/trending_movie_model.dart';
 import 'package:provider/provider.dart';
 import '../states/favourite_provider.dart';
 
@@ -12,7 +13,7 @@ class FavMovies extends StatefulWidget {
 class _FavMoviesState extends State<FavMovies> {
   @override
   Widget build(BuildContext context) {
-    List _favMovies = context.watch<Favourite>().favMovies;
+    final favMovies = context.watch<Favourite>().favMovies;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Favourite Movies'),
@@ -28,9 +29,9 @@ class _FavMoviesState extends State<FavMovies> {
           bottom: 10,
         ),
         child: GridView.builder(
-          itemCount: _favMovies.length,
+          itemCount: favMovies.length,
           itemBuilder: (BuildContext context, int index) {
-            final currentFavMovie = _favMovies[index];
+            final currentFavMovie = favMovies[index];
             return Column(
               children: [
                 Stack(
@@ -46,7 +47,7 @@ class _FavMoviesState extends State<FavMovies> {
                           image: NetworkImage(
                             // ignore: prefer_interpolation_to_compose_strings
                             'https://image.tmdb.org/t/p/w500' +
-                                currentFavMovie.moviePoster.toString(),
+                                currentFavMovie.image.toString(),
                           ),
                         ),
                       ),
@@ -58,17 +59,15 @@ class _FavMoviesState extends State<FavMovies> {
                       bottom: 140,
                       child: IconButton(
                         onPressed: () {
-                          if (_favMovies.contains(currentFavMovie)) {
+                          if (favMovies.contains(currentFavMovie)) {
                             context
                                 .read<Favourite>()
                                 .removefromfav(currentFavMovie);
-                          } else {
-                            context.read<Favourite>().addtofav(currentFavMovie);
                           }
                         },
                         icon: Icon(
                           Icons.favorite_rounded,
-                          color: _favMovies.contains(currentFavMovie)
+                          color: favMovies.contains(currentFavMovie)
                               ? Colors.red
                               : Colors.white,
                           shadows: const [
@@ -89,7 +88,7 @@ class _FavMoviesState extends State<FavMovies> {
                 SizedBox(
                   height: 45,
                   child: Text(
-                    currentFavMovie.movieTitle ?? '',
+                    currentFavMovie.title ?? '',
                     style: const TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
