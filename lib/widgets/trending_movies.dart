@@ -19,7 +19,7 @@ class TrendingMoviesPage extends StatefulWidget {
 class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
   @override
   Widget build(BuildContext context) {
-    final favmovies = context.watch<Favourite>().favMovies;
+    final favmovies = context.watch<Favourite>().favMovies.toList();
     final provider = Provider.of<Favourite>(context, listen: false);
     return FutureBuilder<List<TrendingMovie>>(
       future: ApiHandler().fetchTrendingMovies(),
@@ -89,12 +89,14 @@ class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
                             bottom: 140,
                             child: IconButton(
                               onPressed: () {
-                                if (!favmovies.contains(fav)) {
-                                  fav.isFavourite = true;
-                                  context.read<Favourite>().addtofav(fav);
-                                } else {
-                                  context.read<Favourite>().removefromfav(fav);
-                                }
+                                provider.togglefav(fav);
+                                // if (favmovies.contains(fav)) {
+                                //   context.read<Favourite>().removefromfav(fav);
+                                //   fav.isFavourite = false;
+                                // } else {
+                                //   fav.isFavourite = true;
+                                //   context.read<Favourite>().addtofav(fav);
+                                // }
                               },
                               icon: favItem.isFavourite == true
                                   ? const Icon(

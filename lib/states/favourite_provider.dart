@@ -21,10 +21,13 @@ class Favourite extends ChangeNotifier {
   void togglefav(FavouriteMovieTv favmovie) {
     final isExist = _favMovies.contains(favmovie);
     if (isExist) {
+      favmovie.isFavourite = false;
       _favMovies.remove(favmovie);
     } else {
+      favmovie.isFavourite = true;
       _favMovies.add(favmovie);
     }
+    notifyListeners();
   }
 
   bool isFavourite(FavouriteMovieTv fav) {
