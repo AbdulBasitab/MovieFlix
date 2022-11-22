@@ -72,7 +72,7 @@ class _FavShowsState extends State<FavShows> {
                             Provider.of<Favourite>(context, listen: false);
                             context
                                 .read<Favourite>()
-                                .removefromfav(currentfavtvshow);
+                                .removefromfav(currentfavtvshow.id!);
                           } else {
                             Provider.of<Favourite>(context, listen: false);
                             context

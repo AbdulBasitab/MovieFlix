@@ -62,7 +62,7 @@ class _FavMoviesState extends State<FavMovies> {
                           if (favMovies.contains(currentFavMovie)) {
                             context
                                 .read<Favourite>()
-                                .removefromfav(currentFavMovie);
+                                .removefromfav(currentFavMovie.id!);
                           }
                         },
                         icon: Icon(
