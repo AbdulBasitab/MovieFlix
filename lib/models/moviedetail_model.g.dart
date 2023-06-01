@@ -9,7 +9,7 @@ part of 'moviedetail_model.dart';
 TrendingMovieDetail _$TrendingMovieDetailFromJson(Map<String, dynamic> json) =>
     TrendingMovieDetail(
       movieDetailTitle: json['title'] as String?,
-      movieBackdrop: json['backdrop_path'] as String,
+      movieBackdrop: json['backdrop_path'] as String?,
       movieDetailId: json['id'] as int?,
       description: json['overview'] as String?,
       rating: json['vote_average'] as num?,

@@ -39,17 +39,17 @@ class PopularTvDetailModel {
   final List<TvGenre>? genres;
 
   PopularTvDetailModel({
-    required this.tvBackdrop,
-    required this.tvTitle,
-    required this.tvId,
-    required this.tvDescription,
-    required this.seasons,
-    required this.episodes,
-    required this.firstairDate,
-    required this.lastairDate,
-    required this.status,
-    required this.rating,
-    required this.genres,
+    this.tvBackdrop,
+    this.tvTitle,
+    this.tvId,
+    this.tvDescription,
+    this.seasons,
+    this.episodes,
+    this.firstairDate,
+    this.lastairDate,
+    this.status,
+    this.rating,
+    this.genres,
   });
 
   factory PopularTvDetailModel.fromJson(Map<String, dynamic> json) =>

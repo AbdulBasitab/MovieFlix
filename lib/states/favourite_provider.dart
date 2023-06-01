@@ -1,9 +1,12 @@
+import 'dart:collection';
+
 import 'package:flutter/material.dart';
 import 'package:movies_app/models/favourite_movies.dart';
 
 class Favourite extends ChangeNotifier {
   final List<FavouriteMovieTv> _favMovies = [];
-  List<FavouriteMovieTv> get favMovies => _favMovies;
+  UnmodifiableListView<FavouriteMovieTv> get favMovies =>
+      UnmodifiableListView(_favMovies);
 
   bool _fav = false;
   bool get isFav => _fav;
@@ -21,10 +24,10 @@ class Favourite extends ChangeNotifier {
   void togglefav(FavouriteMovieTv favmovie) {
     final isExist = _favMovies.contains(favmovie);
     if (isExist) {
-      favmovie.isFavourite = false;
+      favmovie.copyWith(isFavourite: false);
       _favMovies.remove(favmovie);
     } else {
-      favmovie.isFavourite = true;
+      favmovie.copyWith(isFavourite: true);
       _favMovies.add(favmovie);
     }
     notifyListeners();

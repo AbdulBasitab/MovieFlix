@@ -8,7 +8,7 @@ class TrendingMovieDetail {
   final String? movieDetailTitle;
 
   @JsonKey(name: 'backdrop_path')
-  final String movieBackdrop;
+  final String? movieBackdrop;
 
   @JsonKey(name: 'id')
   final int? movieDetailId;
@@ -30,7 +30,7 @@ class TrendingMovieDetail {
 
   TrendingMovieDetail({
     this.movieDetailTitle,
-    required this.movieBackdrop,
+    this.movieBackdrop,
     this.movieDetailId,
     this.description,
     this.rating,
@@ -43,19 +43,4 @@ class TrendingMovieDetail {
       _$TrendingMovieDetailFromJson(json);
 
   Map<String, dynamic> toJson() => _$TrendingMovieDetailToJson(this);
-  //   return TrendingMovieDetail(
-  //     movieDetailId: json["id"],
-  //     movieDetailTitle: json["title"],
-  //     movieImage: json["poster_path"],
-  //     backdrop: json["backdrop_path"],
-  //     description: json["overview"],
-  //     rating: json["vote_average"],
-  //     releaseDate: json["release_date"],
-  //     runTime: json["runtime"],
-  //     imdbId: json["imdb_id"],
-  //     genres: (json["genres"] as List<dynamic>)
-  //         .map((e) => Genre.fromJson(e))
-  //         .toList(),
-  //   );
-  // }
 }

@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/models/favourite_movies.dart';
-import 'package:movies_app/models/popular_tv_model.dart';
-import 'package:provider/provider.dart';
-import '../screens/tv_detail_page.dart';
-import '../services/api_handler.dart';
-import '../states/favourite_provider.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/cubit/api_service_cubit.dart';
+import 'package:movies_app/cubit/api_service_cubit_state.dart';
+import 'package:movies_app/cubit/favourite_cubit.dart';
+import '../screens/tv_detail_screen.dart';
 
 class PopularTvPage extends StatefulWidget {
   const PopularTvPage({
@@ -18,45 +17,49 @@ class PopularTvPage extends StatefulWidget {
 class _PopularTvPageState extends State<PopularTvPage> {
   @override
   Widget build(BuildContext context) {
-    final favtv = context.watch<Favourite>().favMovies;
-
-    return FutureBuilder<List<PopularTv>>(
-      future: ApiHandler().fetchPopularTv(),
+    final favCubit = context.watch<FavouriteMoviesShowsCubit>();
+    return BlocBuilder<TvShowsCubit, ApiServiceCubit>(
       builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Expanded(
-            child: GridView.builder(
-              itemCount: snapshot.data?.length,
-              shrinkWrap: false,
-              cacheExtent: 10,
-              padding: const EdgeInsets.only(top: 15, left: 9, right: 9),
-              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                maxCrossAxisExtent: 130,
-                crossAxisSpacing: 30,
-                mainAxisSpacing: 11,
-                mainAxisExtent: 240,
-              ),
-              itemBuilder: (BuildContext ctx, index) {
-                final favouritetv = snapshot.data![index];
-                final favtvs = favouritetv.popTvId;
-                final fav = FavouriteMovieTv(
-                    id: favouritetv.popTvId,
-                    title: favouritetv.popTvTitle.toString(),
-                    image: favouritetv.popTvPoster.toString(),
-                    isFavourite: false);
-                final favItem = favtv.firstWhere(
-                    (element) => element.id == favouritetv.popTvId,
-                    orElse: (() => fav));
-                return Column(
+        if (snapshot is PopularMoviesState) {
+          final popTvs = snapshot.popularTvList;
+          return SliverGrid.builder(
+            itemCount: snapshot.popularTvList.length,
+            // shrinkWrap: false,
+            // cacheExtent: 10,
+            // padding: const EdgeInsets.only(top: 15, left: 9, right: 9),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 130,
+              crossAxisSpacing: 30,
+              mainAxisSpacing: 11,
+              mainAxisExtent: 240,
+            ),
+            itemBuilder: (BuildContext ctx, index) {
+              // final favouritetv = snapshot.data![index];
+              // final favtvs = favouritetv.popTvId;
+              // final fav = FavouriteMovieTv(
+              //     id: favouritetv.popTvId,
+              //     title: favouritetv.popTvTitle.toString(),
+              //     image: favouritetv.popTvPoster.toString(),
+              //     isFavourite: false);
+              // final favItem = favtv.firstWhere(
+              //     (element) => element.id == favouritetv.popTvId,
+              //     orElse: (() => fav));
+              return Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8),
+                child: Column(
                   children: [
                     InkWell(
                       onTap: () {
+                        context
+                            .read<PopularTvDetailCubit>()
+                            .fetchPopularTvDetail(
+                                popTvs[index].popTvId!.toDouble());
+
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => TvDetailPage(
-                              tvpopularid:
-                                  snapshot.data![index].popTvId!.toDouble(),
+                              tvpopularid: popTvs[index].popTvId!.toDouble(),
                             ),
                           ),
                         );
@@ -72,34 +75,28 @@ class _PopularTvPageState extends State<PopularTvPage> {
                               image: DecorationImage(
                                 fit: BoxFit.contain,
                                 image: NetworkImage(
-                                  // ignore: prefer_interpolation_to_compose_strings
-                                  'https://image.tmdb.org/t/p/w500' +
-                                      snapshot.data![index].popTvPoster
-                                          .toString(),
+                                  'https://image.tmdb.org/t/p/w500${popTvs[index].popTvPoster}',
                                 ),
                               ),
                             ),
                           ),
                           Positioned(
                             top: 7,
-                            left: 75,
+                            left: 67,
                             right: 0,
                             bottom: 140,
                             child: IconButton(
                               onPressed: () {
-                                if (favItem.isFavourite) {
-                                  context
-                                      .read<Favourite>()
-                                      .removefromfav(favtvs!);
+                                if (favCubit.isShowFavorited(popTvs[index]) ==
+                                    true) {
+                                  favCubit.removeFavShow(popTvs[index]);
                                   return;
                                 }
-
-                                fav.isFavourite = true;
-                                context.read<Favourite>().addtofav(fav);
+                                favCubit.addFavShow(popTvs[index]);
                               },
                               icon: Icon(
                                 Icons.favorite_rounded,
-                                color: favItem.isFavourite == true
+                                color: favCubit.isShowFavorited(popTvs[index])
                                     ? Colors.red
                                     : Colors.white,
                                 shadows: const [
@@ -121,7 +118,7 @@ class _PopularTvPageState extends State<PopularTvPage> {
                     SizedBox(
                       height: 45,
                       child: Text(
-                        snapshot.data?[index].popTvTitle ?? '',
+                        popTvs[index].popTvTitle ?? '',
                         style: const TextStyle(
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
@@ -130,14 +127,21 @@ class _PopularTvPageState extends State<PopularTvPage> {
                       ),
                     ),
                   ],
-                );
-              },
-            ),
+                ),
+              );
+            },
           );
-        } else if (snapshot.hasError) {
-          return const Text("Error");
+        } else if (snapshot is LoadingMovieState || snapshot is InitCubit) {
+          return const SliverToBoxAdapter(
+              child: Center(child: CircularProgressIndicator()));
+        } else if (snapshot is ErrorMovieState) {
+          return const SliverToBoxAdapter(
+              child: Center(
+            child: CircularProgressIndicator(),
+          ));
         }
-        return const Text("Loading...");
+        return const SliverToBoxAdapter(
+            child: Center(child: CircularProgressIndicator()));
       },
     );
   }

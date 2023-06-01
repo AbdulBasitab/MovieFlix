@@ -13,6 +13,9 @@ class TrendingMovie {
   @JsonKey(name: 'id')
   final int? movieId;
 
+  // @JsonKey(defaultValue: false)
+  // final bool isFavourite;
+
   TrendingMovie({
     required this.movieId,
     required this.movieTitle,
