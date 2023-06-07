@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/cubit/api_service_cubit.dart';
-import 'package:movies_app/models/trending_movie_model.dart';
-import '../cubit/api_service_cubit_state.dart';
-import '../cubit/favourite_cubit.dart';
+import '../cubit/api_cubit/api_service_cubit.dart';
+import '../cubit/api_cubit/api_service_cubit_state.dart';
+import '../cubit/fav_cubit/favourite_cubit.dart';
 import '../screens/movie_detail_screen.dart';
 
 class TrendingMoviesPage extends StatefulWidget {

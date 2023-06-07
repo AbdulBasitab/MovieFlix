@@ -25,4 +25,18 @@ class PopularTv {
       _$PopularTvFromJson(json);
 
   Map<String, dynamic> toJson() => _$PopularTvToJson(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is PopularTv &&
+        other.popTvId == popTvId &&
+        other.popTvPoster == popTvPoster &&
+        other.popTvTitle == popTvTitle;
+  }
+
+  @override
+  int get hashCode =>
+      popTvId.hashCode ^ popTvPoster.hashCode ^ popTvTitle.hashCode;
 }

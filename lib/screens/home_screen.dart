@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/widgets/trending_movies_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../cubit/api_service_cubit.dart';
+import '../cubit/api_cubit/api_service_cubit.dart';
 import '../widgets/popular_tv_widget.dart';
 import 'fav_movies_screen.dart';
 import 'fav_shows_screen.dart';
@@ -32,6 +32,7 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.blue.shade900,
           //foregroundColor: Colors.white,
           title: const Text('MovieFlix'),
+          centerTitle: true,
           elevation: 2,
           toolbarHeight: 65,
         ),
@@ -93,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Popular Tv Shows',
+                      'Popular Shows',
                       style: GoogleFonts.raleway(
                         fontSize: 20,
                         fontWeight: FontWeight.w500,

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/cubit/api_service_cubit.dart';
-import 'package:movies_app/cubit/api_service_cubit_state.dart';
-import 'package:movies_app/models/moviedetail_model.dart';
-import '../services/api_service.dart';
+import '../cubit/api_cubit/api_service_cubit.dart';
+import '../cubit/api_cubit/api_service_cubit_state.dart';
 
 class MovieDetailPage extends StatefulWidget {
   final double trendmovieid;
@@ -28,11 +26,17 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
+        centerTitle: true,
+        title: const Text(
+          "Detail",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 21,
+          ),
+        ),
       ),
       body: BlocBuilder<MovieDetailCubit, ApiServiceCubit>(
           builder: (context, snapshot) {
-        //print(snapshot.data);
-
         if (snapshot is TrendingMovieDetailState) {
           final movie = snapshot.movieDetail;
           return SingleChildScrollView(

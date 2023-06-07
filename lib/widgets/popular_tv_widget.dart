@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/cubit/api_service_cubit.dart';
-import 'package:movies_app/cubit/api_service_cubit_state.dart';
-import 'package:movies_app/cubit/favourite_cubit.dart';
+import '../cubit/api_cubit/api_service_cubit.dart';
+import '../cubit/api_cubit/api_service_cubit_state.dart';
+import '../cubit/fav_cubit/favourite_cubit.dart';
 import '../screens/tv_detail_screen.dart';
 
 class PopularTvPage extends StatefulWidget {
@@ -34,16 +34,6 @@ class _PopularTvPageState extends State<PopularTvPage> {
               mainAxisExtent: 240,
             ),
             itemBuilder: (BuildContext ctx, index) {
-              // final favouritetv = snapshot.data![index];
-              // final favtvs = favouritetv.popTvId;
-              // final fav = FavouriteMovieTv(
-              //     id: favouritetv.popTvId,
-              //     title: favouritetv.popTvTitle.toString(),
-              //     image: favouritetv.popTvPoster.toString(),
-              //     isFavourite: false);
-              // final favItem = favtv.firstWhere(
-              //     (element) => element.id == favouritetv.popTvId,
-              //     orElse: (() => fav));
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8),
                 child: Column(
@@ -54,7 +44,6 @@ class _PopularTvPageState extends State<PopularTvPage> {
                             .read<PopularTvDetailCubit>()
                             .fetchPopularTvDetail(
                                 popTvs[index].popTvId!.toDouble());
-
                         Navigator.push(
                           context,
                           MaterialPageRoute(

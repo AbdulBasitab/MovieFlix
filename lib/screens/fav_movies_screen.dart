@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/cubit/favourite_cubit.dart';
-import 'package:movies_app/cubit/favourite_cubit_state.dart';
 import 'package:movies_app/models/trending_movie_model.dart';
-import 'package:provider/provider.dart';
-import '../states/favourite_provider.dart';
+
+import '../cubit/fav_cubit/favourite_cubit.dart';
+import '../cubit/fav_cubit/favourite_cubit_state.dart';
 
 class FavMovies extends StatefulWidget {
   const FavMovies({Key? key}) : super(key: key);
@@ -33,8 +32,8 @@ class _FavMoviesState extends State<FavMovies> {
         ),
         child: BlocBuilder<FavouriteMoviesShowsCubit, FavMoviesShowsCubitState>(
           builder: (context, state) {
-            if (state is FavMoviesState) {
-              final List<TrendingMovie> favMovies = state.favMovies;
+            if (state.favouriteMovies.isNotEmpty) {
+              final List<TrendingMovie> favMovies = state.favouriteMovies;
               return GridView.builder(
                 itemCount: favMovies.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -115,7 +114,15 @@ class _FavMoviesState extends State<FavMovies> {
                 ),
               );
             } else {
-              return const Center(child: CircularProgressIndicator());
+              return const Center(
+                child: Text(
+                  "No Favourite Movies added yet",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                  ),
+                ),
+              );
             }
           },
         ),

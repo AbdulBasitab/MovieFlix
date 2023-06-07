@@ -25,4 +25,18 @@ class TrendingMovie {
   factory TrendingMovie.fromJson(Map<String, dynamic> json) =>
       _$TrendingMovieFromJson(json);
   Map<String, dynamic> toJson() => _$TrendingMovieToJson(this);
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is TrendingMovie &&
+        other.movieId == movieId &&
+        other.movieTitle == movieTitle &&
+        other.moviePoster == moviePoster;
+  }
+
+  @override
+  int get hashCode =>
+      movieId.hashCode ^ movieTitle.hashCode ^ moviePoster.hashCode;
 }
