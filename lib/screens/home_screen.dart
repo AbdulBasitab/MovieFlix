@@ -31,10 +31,25 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Colors.blue.shade900,
           //foregroundColor: Colors.white,
-          title: const Text('MovieFlix'),
+          title: const Text(
+            'MovieFlix',
+            style: TextStyle(
+              fontSize: 22,
+            ),
+          ),
           centerTitle: true,
           elevation: 2,
           toolbarHeight: 65,
+          actions: [
+            IconButton(
+              tooltip: "Search",
+              onPressed: () {},
+              icon: const Icon(
+                Icons.search_rounded,
+                size: 24,
+              ),
+            ),
+          ],
         ),
         body: CustomScrollView(
           slivers: [

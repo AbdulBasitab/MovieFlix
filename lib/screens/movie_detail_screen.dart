@@ -4,10 +4,10 @@ import '../cubit/api_cubit/api_service_cubit.dart';
 import '../cubit/api_cubit/api_service_cubit_state.dart';
 
 class MovieDetailPage extends StatefulWidget {
-  final double trendmovieid;
+  final double movieId;
   const MovieDetailPage({
     Key? key,
-    required this.trendmovieid,
+    required this.movieId,
   }) : super(key: key);
 
   @override

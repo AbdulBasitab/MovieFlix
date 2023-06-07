@@ -68,7 +68,7 @@ class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => MovieDetailPage(
-                              trendmovieid:
+                              movieId:
                                   trendingMovies[index].movieId!.toDouble(),
                             ),
                           ),

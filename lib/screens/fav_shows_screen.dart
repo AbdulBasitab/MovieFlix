@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/models/popular_tv_model.dart';
+import 'package:movies_app/screens/tv_detail_screen.dart';
 
+import '../cubit/api_cubit/api_service_cubit.dart';
 import '../cubit/fav_cubit/favourite_cubit.dart';
 import '../cubit/fav_cubit/favourite_cubit_state.dart';
 
@@ -46,54 +48,70 @@ class _FavShowsState extends State<FavShows> {
                   final currentfavtvshow = favtv[index];
                   return Column(
                     children: [
-                      Stack(
-                        //alignment: Alignment.topRight,
-                        children: [
-                          Container(
-                            height: 170,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              shape: BoxShape.rectangle,
-                              image: DecorationImage(
-                                fit: BoxFit.contain,
-                                image: NetworkImage(
-                                  // ignore: prefer_interpolation_to_compose_strings
-                                  'https://image.tmdb.org/t/p/w500' +
-                                      currentfavtvshow.popTvPoster.toString(),
+                      GestureDetector(
+                        onTap: () {
+                          context
+                              .read<PopularTvDetailCubit>()
+                              .fetchPopularTvDetail(
+                                  currentfavtvshow.popTvId!.toDouble());
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TvDetailPage(
+                                    showId:
+                                        currentfavtvshow.popTvId?.toDouble() ??
+                                            0.0),
+                              ));
+                        },
+                        child: Stack(
+                          //alignment: Alignment.topRight,
+                          children: [
+                            Container(
+                              height: 170,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                shape: BoxShape.rectangle,
+                                image: DecorationImage(
+                                  fit: BoxFit.contain,
+                                  image: NetworkImage(
+                                    // ignore: prefer_interpolation_to_compose_strings
+                                    'https://image.tmdb.org/t/p/w500' +
+                                        currentfavtvshow.popTvPoster.toString(),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            top: 7,
-                            left: 77,
-                            right: 10,
-                            bottom: 140,
-                            child: IconButton(
-                              onPressed: () {
-                                if (favCubit
-                                    .isShowFavorited(currentfavtvshow)) {
-                                  favCubit.removeFavShow(currentfavtvshow);
-                                  return;
-                                }
-                              },
-                              icon: Icon(
-                                Icons.favorite_rounded,
-                                color:
-                                    favCubit.isShowFavorited(currentfavtvshow)
-                                        ? Colors.red
-                                        : Colors.white,
-                                shadows: const [
-                                  Shadow(
-                                    color: Colors.black45,
-                                    blurRadius: 20,
-                                    offset: Offset(0, 2.0),
-                                  )
-                                ],
+                            Positioned(
+                              top: 7,
+                              left: 77,
+                              right: 10,
+                              bottom: 140,
+                              child: IconButton(
+                                onPressed: () {
+                                  if (favCubit
+                                      .isShowFavorited(currentfavtvshow)) {
+                                    favCubit.removeFavShow(currentfavtvshow);
+                                    return;
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.favorite_rounded,
+                                  color:
+                                      favCubit.isShowFavorited(currentfavtvshow)
+                                          ? Colors.red
+                                          : Colors.white,
+                                  shadows: const [
+                                    Shadow(
+                                      color: Colors.black45,
+                                      blurRadius: 20,
+                                      offset: Offset(0, 2.0),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 10,

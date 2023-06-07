@@ -4,10 +4,10 @@ import '../cubit/api_cubit/api_service_cubit.dart';
 import '../cubit/api_cubit/api_service_cubit_state.dart';
 
 class TvDetailPage extends StatefulWidget {
-  final double tvpopularid;
+  final double showId;
   const TvDetailPage({
     Key? key,
-    required this.tvpopularid,
+    required this.showId,
   }) : super(key: key);
 
   @override
@@ -29,9 +29,6 @@ class _TvDetailPageState extends State<TvDetailPage> {
       ),
       body: BlocBuilder<PopularTvDetailCubit, ApiServiceCubit>(
           builder: (context, snapshot) {
-        //print(snapshot.data);
-        // print(snapshot.error);
-        // print(snapshot.data?.genres.elementAt(1).name.toString());
         if (snapshot is PopularMovieDetailState) {
           final popTv = snapshot.popularTvDetail;
           return SingleChildScrollView(

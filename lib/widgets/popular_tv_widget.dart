@@ -24,9 +24,6 @@ class _PopularTvPageState extends State<PopularTvPage> {
           final popTvs = snapshot.popularTvList;
           return SliverGrid.builder(
             itemCount: snapshot.popularTvList.length,
-            // shrinkWrap: false,
-            // cacheExtent: 10,
-            // padding: const EdgeInsets.only(top: 15, left: 9, right: 9),
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 130,
               crossAxisSpacing: 30,
@@ -48,7 +45,7 @@ class _PopularTvPageState extends State<PopularTvPage> {
                           context,
                           MaterialPageRoute(
                             builder: (context) => TvDetailPage(
-                              tvpopularid: popTvs[index].popTvId!.toDouble(),
+                              showId: popTvs[index].popTvId!.toDouble(),
                             ),
                           ),
                         );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/cubit/api_cubit/api_service_cubit.dart';
 import 'package:movies_app/models/trending_movie_model.dart';
+import 'package:movies_app/screens/movie_detail_screen.dart';
 
 import '../cubit/fav_cubit/favourite_cubit.dart';
 import '../cubit/fav_cubit/favourite_cubit_state.dart';
@@ -40,54 +42,70 @@ class _FavMoviesState extends State<FavMovies> {
                   final currentFavMovie = favMovies[index];
                   return Column(
                     children: [
-                      Stack(
-                        alignment: Alignment.topRight,
-                        children: [
-                          Container(
-                            height: 170,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              shape: BoxShape.rectangle,
-                              image: DecorationImage(
-                                fit: BoxFit.contain,
-                                image: NetworkImage(
-                                  // ignore: prefer_interpolation_to_compose_strings
-                                  'https://image.tmdb.org/t/p/w500' +
-                                      currentFavMovie.moviePoster.toString(),
+                      GestureDetector(
+                        onTap: () {
+                          context
+                              .read<MovieDetailCubit>()
+                              .fetchTrendingMovieDetail(
+                                  currentFavMovie.movieId!.toDouble());
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => MovieDetailPage(
+                                    movieId:
+                                        currentFavMovie.movieId?.toDouble() ??
+                                            0.0),
+                              ));
+                        },
+                        child: Stack(
+                          alignment: Alignment.topRight,
+                          children: [
+                            Container(
+                              height: 170,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                shape: BoxShape.rectangle,
+                                image: DecorationImage(
+                                  fit: BoxFit.contain,
+                                  image: NetworkImage(
+                                    // ignore: prefer_interpolation_to_compose_strings
+                                    'https://image.tmdb.org/t/p/w500' +
+                                        currentFavMovie.moviePoster.toString(),
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                          Positioned(
-                            top: 7,
-                            left: 77,
-                            right: 0,
-                            bottom: 140,
-                            child: IconButton(
-                              onPressed: () {
-                                if (favCubit
-                                    .isMovieFavorited(currentFavMovie)) {
-                                  favCubit.removeFavMovie(currentFavMovie);
-                                  return;
-                                }
-                              },
-                              icon: Icon(
-                                Icons.favorite_rounded,
-                                color:
-                                    favCubit.isMovieFavorited(currentFavMovie)
-                                        ? Colors.red
-                                        : Colors.white,
-                                shadows: const [
-                                  Shadow(
-                                    color: Colors.black45,
-                                    blurRadius: 20,
-                                    offset: Offset(0, 2.0),
-                                  )
-                                ],
+                            Positioned(
+                              top: 7,
+                              left: 77,
+                              right: 0,
+                              bottom: 140,
+                              child: IconButton(
+                                onPressed: () {
+                                  if (favCubit
+                                      .isMovieFavorited(currentFavMovie)) {
+                                    favCubit.removeFavMovie(currentFavMovie);
+                                    return;
+                                  }
+                                },
+                                icon: Icon(
+                                  Icons.favorite_rounded,
+                                  color:
+                                      favCubit.isMovieFavorited(currentFavMovie)
+                                          ? Colors.red
+                                          : Colors.white,
+                                  shadows: const [
+                                    Shadow(
+                                      color: Colors.black45,
+                                      blurRadius: 20,
+                                      offset: Offset(0, 2.0),
+                                    )
+                                  ],
+                                ),
                               ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                       const SizedBox(
                         height: 10,
