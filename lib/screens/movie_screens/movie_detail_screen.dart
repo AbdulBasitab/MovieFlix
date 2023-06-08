@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/models/movie.dart';
 import '../../cubit/api_cubit/api_service_cubit.dart';
 import '../../cubit/api_cubit/api_service_cubit_state.dart';
 
 class MovieDetailPage extends StatefulWidget {
-  final double movieId;
+  final Movie movie;
   const MovieDetailPage({
     Key? key,
-    required this.movieId,
+    required this.movie,
   }) : super(key: key);
 
   @override
@@ -53,7 +54,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       image: NetworkImage(
                         // ignore: prefer_interpolation_to_compose_strings
                         'https://image.tmdb.org/t/p/w500' +
-                            movie.movieBackdrop.toString(),
+                            widget.movie.backdrop.toString(),
                       ),
                     ),
                   ],
@@ -65,7 +66,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                     bottom: 12,
                   ),
                   child: Text(
-                    movie.movieDetailTitle.toString(),
+                    widget.movie.title.toString(),
                     style: const TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -88,7 +89,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       ),
                     ),
                     Text(
-                      movie.releaseDate.toString(),
+                      widget.movie.releaseDate.toString(),
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
@@ -127,7 +128,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       ),
                     ),
                     Text(
-                      movie.rating!.toStringAsFixed(1).toString(),
+                      widget.movie.rating!.toStringAsFixed(1).toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -194,7 +195,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    movie.description.toString(),
+                    widget.movie.description.toString(),
                     textAlign: TextAlign.justify,
                   ),
                 ),

@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/models/popular_tv_model.dart';
-import 'package:movies_app/models/trending_movie_model.dart';
+import 'package:movies_app/models/tv_show.dart';
+import 'package:movies_app/models/movie.dart';
 import 'favourite_cubit_state.dart';
 
 class FavouriteMoviesShowsCubit extends Cubit<FavMoviesShowsCubitState> {
@@ -8,7 +8,7 @@ class FavouriteMoviesShowsCubit extends Cubit<FavMoviesShowsCubitState> {
       : super(
             FavMoviesShowsCubitState(favouriteMovies: [], favouriteShows: []));
 
-  void addFavMovie(TrendingMovie favMovie) {
+  void addFavMovie(Movie favMovie) {
     state.favouriteMovies.add(favMovie);
     emit(
       state.copyWith(
@@ -17,32 +17,32 @@ class FavouriteMoviesShowsCubit extends Cubit<FavMoviesShowsCubitState> {
     );
   }
 
-  void addFavShow(PopularTv show) {
+  void addFavShow(TvShow show) {
     state.favouriteShows.add(show);
     emit(state.copyWith(
       favouriteShows: state.favouriteShows,
     ));
   }
 
-  void removeFavMovie(TrendingMovie movie) {
+  void removeFavMovie(Movie movie) {
     state.favouriteMovies.remove(movie);
     emit(state.copyWith(
       favouriteMovies: state.favouriteMovies,
     ));
   }
 
-  void removeFavShow(PopularTv show) {
+  void removeFavShow(TvShow show) {
     state.favouriteShows.remove(show);
     emit(state.copyWith(
       favouriteShows: state.favouriteShows,
     ));
   }
 
-  bool isMovieFavorited(TrendingMovie movie) {
+  bool isMovieFavorited(Movie movie) {
     return state.favouriteMovies.contains(movie);
   }
 
-  bool isShowFavorited(PopularTv show) {
+  bool isShowFavorited(TvShow show) {
     return state.favouriteShows.contains(show);
   }
 }

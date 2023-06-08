@@ -1,10 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'tv_genre.dart';
+import 'genre.dart';
 
-part 'populartv_detail.g.dart';
+part 'tv_detail.g.dart';
 
 @JsonSerializable()
-class PopularTvDetailModel {
+class TvDetail {
   @JsonKey(name: 'backdrop_path')
   final String? tvBackdrop;
 
@@ -36,9 +36,9 @@ class PopularTvDetailModel {
   final num? rating;
 
   @JsonKey(name: 'genres')
-  final List<TvGenre>? genres;
+  final List<Genre>? genres;
 
-  PopularTvDetailModel({
+  TvDetail({
     this.tvBackdrop,
     this.tvTitle,
     this.tvId,
@@ -52,8 +52,8 @@ class PopularTvDetailModel {
     this.genres,
   });
 
-  factory PopularTvDetailModel.fromJson(Map<String, dynamic> json) =>
-      _$PopularTvDetailModelFromJson(json);
+  factory TvDetail.fromJson(Map<String, dynamic> json) =>
+      _$TvDetailFromJson(json);
 
-  Map<String, dynamic> toJson() => _$PopularTvDetailModelToJson(this);
+  Map<String, dynamic> toJson() => _$TvDetailToJson(this);
 }

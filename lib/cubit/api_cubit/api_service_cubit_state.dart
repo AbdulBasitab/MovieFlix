@@ -1,8 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:movies_app/models/moviedetail_model.dart';
-import 'package:movies_app/models/popular_tv_model.dart';
-import 'package:movies_app/models/populartv_detail.dart';
-import 'package:movies_app/models/trending_movie_model.dart';
+import 'package:movies_app/models/movie_detail.dart';
+import 'package:movies_app/models/tv_show.dart';
+import 'package:movies_app/models/tv_detail.dart';
+import 'package:movies_app/models/movie.dart';
 
 abstract class ApiServiceCubit {}
 
@@ -17,28 +17,28 @@ class ErrorMovieState extends ApiServiceCubit {
 }
 
 class TrendingMovieState extends ApiServiceCubit {
-  List<TrendingMovie> trendingMovies;
+  List<Movie> trendingMovies;
   TrendingMovieState({
     required this.trendingMovies,
   });
 }
 
 class TrendingMovieDetailState extends ApiServiceCubit {
-  final TrendingMovieDetail movieDetail;
+  final MovieDetail movieDetail;
   TrendingMovieDetailState({
     required this.movieDetail,
   });
 }
 
 class PopularMoviesState extends ApiServiceCubit {
-  final List<PopularTv> popularTvList;
+  final List<TvShow> popularTvList;
   PopularMoviesState({
     required this.popularTvList,
   });
 }
 
 class PopularMovieDetailState extends ApiServiceCubit {
-  final PopularTvDetailModel popularTvDetail;
+  final TvDetail popularTvDetail;
   PopularMovieDetailState({
     required this.popularTvDetail,
   });

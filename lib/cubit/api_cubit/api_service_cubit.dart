@@ -2,13 +2,13 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
-import '../../models/moviedetail_model.dart';
-import '../../models/popular_tv_model.dart';
-import '../../models/populartv_detail.dart';
-import '../../models/trending_movie_model.dart';
+import '../../models/movie_detail.dart';
+import '../../models/tv_show.dart';
+import '../../models/tv_detail.dart';
+import '../../models/movie.dart';
 import 'api_service_cubit_state.dart';
 
-class MoviesCubit extends Cubit<ApiServiceCubit> with ApiServicesCubit {
+class MoviesCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
   MoviesCubit() : super(InitCubit());
 
   Future<void> fetchTrendingMovies() async {
@@ -17,10 +17,10 @@ class MoviesCubit extends Cubit<ApiServiceCubit> with ApiServicesCubit {
         .get(Uri.parse('$baseUrl/trending/movie/week?api_key=$apiKey'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as Map<String, dynamic>;
-      var trendMovies = <TrendingMovie>[];
-      trendMovies = <TrendingMovie>[
+      var trendMovies = <Movie>[];
+      trendMovies = <Movie>[
         ...data['results']
-            .map((trendmovie) => TrendingMovie.fromJson(trendmovie))
+            .map((trendmovie) => Movie.fromJson(trendmovie))
             .toList()
       ];
 
@@ -34,7 +34,7 @@ class MoviesCubit extends Cubit<ApiServiceCubit> with ApiServicesCubit {
   }
 }
 
-class MovieDetailCubit extends Cubit<ApiServiceCubit> with ApiServicesCubit {
+class MovieDetailCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
   MovieDetailCubit() : super(InitCubit());
 
   Future<void> fetchTrendingMovieDetail(double moviekey) async {
@@ -44,7 +44,7 @@ class MovieDetailCubit extends Cubit<ApiServiceCubit> with ApiServicesCubit {
     print(response);
     if (response.statusCode == 200) {
       var movieDetails = json.decode(response.body);
-      var movieDetail = TrendingMovieDetail.fromJson(movieDetails);
+      var movieDetail = MovieDetail.fromJson(movieDetails);
       // print(movieDetail);
       emit(TrendingMovieDetailState(movieDetail: movieDetail));
     } else {
@@ -54,7 +54,7 @@ class MovieDetailCubit extends Cubit<ApiServiceCubit> with ApiServicesCubit {
   }
 }
 
-class TvShowsCubit extends Cubit<ApiServiceCubit> with ApiServicesCubit {
+class TvShowsCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
   TvShowsCubit() : super(InitCubit());
 
   Future<void> fetchPopularTv() async {
@@ -63,11 +63,9 @@ class TvShowsCubit extends Cubit<ApiServiceCubit> with ApiServicesCubit {
         '$baseUrl/tv/top_rated?api_key=$apiKey&language=en-US&page=1'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as Map<String, dynamic>;
-      var popularTvShows = <PopularTv>[];
-      popularTvShows = <PopularTv>[
-        ...data['results']
-            .map((trendtv) => PopularTv.fromJson(trendtv))
-            .toList()
+      var popularTvShows = <TvShow>[];
+      popularTvShows = <TvShow>[
+        ...data['results'].map((trendtv) => TvShow.fromJson(trendtv)).toList()
       ];
       emit(PopularMoviesState(popularTvList: popularTvShows));
     } else {
@@ -79,7 +77,7 @@ class TvShowsCubit extends Cubit<ApiServiceCubit> with ApiServicesCubit {
 }
 
 class PopularTvDetailCubit extends Cubit<ApiServiceCubit>
-    with ApiServicesCubit {
+    with ApiServiceConstants {
   PopularTvDetailCubit() : super(InitCubit());
 
   Future<void> fetchPopularTvDetail(double tvKey) async {
@@ -89,7 +87,7 @@ class PopularTvDetailCubit extends Cubit<ApiServiceCubit>
     // print(response.body);
     if (response.statusCode == 200) {
       var poptvDetails = json.decode(response.body);
-      var poptvDetail = PopularTvDetailModel.fromJson(poptvDetails);
+      var poptvDetail = TvDetail.fromJson(poptvDetails);
 
       emit(PopularMovieDetailState(popularTvDetail: poptvDetail));
     } else {
@@ -99,7 +97,7 @@ class PopularTvDetailCubit extends Cubit<ApiServiceCubit>
   }
 }
 
-class ApiServicesCubit {
+class ApiServiceConstants {
   final baseUrl = DataConstants.baseUrl;
   final apiKey = DataConstants.apiKey;
 }

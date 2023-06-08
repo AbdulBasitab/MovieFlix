@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/cubit/api_cubit/api_service_cubit.dart';
-import 'package:movies_app/models/trending_movie_model.dart';
+import 'package:movies_app/models/movie.dart';
 import 'package:movies_app/screens/movie_screens/movie_detail_screen.dart';
 
+import '../../cubit/api_cubit/api_service_cubit.dart';
 import '../../cubit/fav_cubit/favourite_cubit.dart';
 import '../../cubit/fav_cubit/favourite_cubit_state.dart';
 
@@ -36,7 +36,7 @@ class _FavMoviesState extends State<FavMovies> {
         child: BlocBuilder<FavouriteMoviesShowsCubit, FavMoviesShowsCubitState>(
           builder: (context, state) {
             if (state.favouriteMovies.isNotEmpty) {
-              final List<TrendingMovie> favMovies = state.favouriteMovies;
+              final List<Movie> favMovies = state.favouriteMovies;
               return GridView.builder(
                 itemCount: favMovies.length,
                 itemBuilder: (BuildContext context, int index) {
@@ -48,14 +48,13 @@ class _FavMoviesState extends State<FavMovies> {
                           context
                               .read<MovieDetailCubit>()
                               .fetchTrendingMovieDetail(
-                                  currentFavMovie.movieId!.toDouble());
+                                  currentFavMovie.id!.toDouble());
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => MovieDetailPage(
-                                    movieId:
-                                        currentFavMovie.movieId?.toDouble() ??
-                                            0.0),
+                                  movie: currentFavMovie,
+                                ),
                               ));
                         },
                         child: Stack(
@@ -71,7 +70,7 @@ class _FavMoviesState extends State<FavMovies> {
                                   image: NetworkImage(
                                     // ignore: prefer_interpolation_to_compose_strings
                                     'https://image.tmdb.org/t/p/w500' +
-                                        currentFavMovie.moviePoster.toString(),
+                                        currentFavMovie.poster.toString(),
                                   ),
                                 ),
                               ),
@@ -114,7 +113,7 @@ class _FavMoviesState extends State<FavMovies> {
                       SizedBox(
                         height: 45,
                         child: Text(
-                          currentFavMovie.movieTitle ?? '',
+                          currentFavMovie.title ?? '',
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,

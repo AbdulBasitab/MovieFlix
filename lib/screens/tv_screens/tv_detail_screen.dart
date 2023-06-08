@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/models/tv_show.dart';
 import '../../cubit/api_cubit/api_service_cubit.dart';
 import '../../cubit/api_cubit/api_service_cubit_state.dart';
 
 class TvDetailPage extends StatefulWidget {
-  final double showId;
+  final TvShow tvShow;
   const TvDetailPage({
     Key? key,
-    required this.showId,
+    required this.tvShow,
   }) : super(key: key);
 
   @override
@@ -26,11 +27,19 @@ class _TvDetailPageState extends State<TvDetailPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
+        title: const Text(
+          "Details",
+          style: TextStyle(
+            fontSize: 21,
+            color: Colors.white,
+          ),
+        ),
+        centerTitle: true,
       ),
       body: BlocBuilder<PopularTvDetailCubit, ApiServiceCubit>(
           builder: (context, snapshot) {
         if (snapshot is PopularMovieDetailState) {
-          final popTv = snapshot.popularTvDetail;
+          final tvShow = snapshot.popularTvDetail;
           return SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -38,17 +47,17 @@ class _TvDetailPageState extends State<TvDetailPage> {
               children: [
                 Stack(
                   children: [
-                    if (popTv.tvBackdrop != null)
+                    if (widget.tvShow.backdrop != null)
                       Image(
                         height: 235,
                         width: MediaQuery.of(context).size.width,
                         image: NetworkImage(
                           // ignore: prefer_interpolation_to_compose_strings
                           'https://image.tmdb.org/t/p/w500' +
-                              popTv.tvBackdrop.toString(),
+                              widget.tvShow.backdrop.toString(),
                         ),
                       ),
-                    if (popTv.tvBackdrop == null)
+                    if (widget.tvShow.backdrop == null)
                       const Text('Error Loading Image'),
                   ],
                 ),
@@ -59,7 +68,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                     bottom: 12,
                   ),
                   child: Text(
-                    popTv.tvTitle.toString(),
+                    widget.tvShow.title.toString(),
                     style: const TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -82,7 +91,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                       ),
                     ),
                     Text(
-                      popTv.firstairDate.toString(),
+                      widget.tvShow.firstairDate.toString(),
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
@@ -107,7 +116,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                       ),
                     ),
                     Text(
-                      popTv.seasons.toString(),
+                      tvShow.seasons.toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -123,7 +132,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                       ),
                     ),
                     Text(
-                      popTv.episodes.toString(),
+                      tvShow.episodes.toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -147,7 +156,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                       ),
                     ),
                     Text(
-                      popTv.rating!.toStringAsFixed(1).toString(),
+                      widget.tvShow.rating!.toStringAsFixed(1).toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -178,19 +187,19 @@ class _TvDetailPageState extends State<TvDetailPage> {
                         ),
                       ),
                     ),
-                    if (popTv.genres != null && popTv.genres!.length == 1)
+                    if (tvShow.genres != null && tvShow.genres!.length == 1)
                       Text(
-                        popTv.genres!.elementAt(0).name.toString(),
+                        tvShow.genres!.elementAt(0).name.toString(),
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-                    if (popTv.genres!.length == 2 || popTv.genres!.length > 2)
+                    if (tvShow.genres!.length == 2 || tvShow.genres!.length > 2)
                       (Row(
                         children: [
                           Text(
-                            popTv.genres!.elementAt(0).name.toString(),
+                            tvShow.genres!.elementAt(0).name.toString(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -198,7 +207,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                           ),
                           const Text('  ,  '),
                           Text(
-                            popTv.genres!.elementAt(1).name.toString(),
+                            tvShow.genres!.elementAt(1).name.toString(),
                             style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -206,7 +215,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                           )
                         ],
                       )),
-                    if (popTv.genres!.isEmpty == true) (const Text('')),
+                    if (tvShow.genres!.isEmpty == true) (const Text('')),
                   ],
                 ),
                 const SizedBox(
@@ -226,7 +235,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                       ),
                     ),
                     Text(
-                      popTv.status.toString(),
+                      tvShow.status.toString(),
                       style: const TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
@@ -241,7 +250,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                   alignment: Alignment.centerLeft,
                   padding: const EdgeInsets.all(20),
                   child: Text(
-                    popTv.tvDescription.toString(),
+                    widget.tvShow.description.toString(),
                     textAlign: TextAlign.justify,
                   ),
                 ),

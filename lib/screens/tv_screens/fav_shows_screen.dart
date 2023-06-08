@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/models/popular_tv_model.dart';
+import 'package:movies_app/models/tv_show.dart';
 import 'package:movies_app/screens/tv_screens/tv_detail_screen.dart';
-
 import '../../cubit/api_cubit/api_service_cubit.dart';
 import '../../cubit/fav_cubit/favourite_cubit.dart';
 import '../../cubit/fav_cubit/favourite_cubit_state.dart';
@@ -36,7 +35,7 @@ class _FavShowsState extends State<FavShows> {
         child: BlocBuilder<FavouriteMoviesShowsCubit, FavMoviesShowsCubitState>(
           builder: (context, state) {
             if (state.favouriteShows.isNotEmpty) {
-              final List<PopularTv> favtv = state.favouriteShows;
+              final List<TvShow> favtv = state.favouriteShows;
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 130,
@@ -54,14 +53,13 @@ class _FavShowsState extends State<FavShows> {
                           context
                               .read<PopularTvDetailCubit>()
                               .fetchPopularTvDetail(
-                                  currentfavtvshow.popTvId!.toDouble());
+                                  currentfavtvshow.id!.toDouble());
                           Navigator.push(
                               context,
                               MaterialPageRoute(
                                 builder: (context) => TvDetailPage(
-                                    showId:
-                                        currentfavtvshow.popTvId?.toDouble() ??
-                                            0.0),
+                                  tvShow: currentfavtvshow,
+                                ),
                               ));
                         },
                         child: Stack(
@@ -77,7 +75,7 @@ class _FavShowsState extends State<FavShows> {
                                   image: NetworkImage(
                                     // ignore: prefer_interpolation_to_compose_strings
                                     'https://image.tmdb.org/t/p/w500' +
-                                        currentfavtvshow.popTvPoster.toString(),
+                                        currentfavtvshow.poster.toString(),
                                   ),
                                 ),
                               ),
@@ -120,7 +118,7 @@ class _FavShowsState extends State<FavShows> {
                       SizedBox(
                         height: 45,
                         child: Text(
-                          currentfavtvshow.popTvTitle ?? '',
+                          currentfavtvshow.title ?? '',
                           style: const TextStyle(
                             fontSize: 13,
                             fontWeight: FontWeight.bold,

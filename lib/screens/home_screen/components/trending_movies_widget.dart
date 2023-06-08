@@ -48,19 +48,19 @@ class _TrendingMoviesPageState extends State<TrendingMoviesPage> {
                 trendingMovie: trendingMovies[index],
                 onTap: () {
                   context.read<MovieDetailCubit>().fetchTrendingMovieDetail(
-                        trendingMovies[index].movieId!.toDouble(),
+                        trendingMovies[index].id!.toDouble(),
                       );
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => MovieDetailPage(
-                        movieId: trendingMovies[index].movieId!.toDouble(),
+                        movie: trendingMovies[index],
                       ),
                     ),
                   );
                 },
                 posterImage:
-                    'https://image.tmdb.org/t/p/w500${trendingMovies[index].moviePoster}',
+                    'https://image.tmdb.org/t/p/w500${trendingMovies[index].poster}',
                 onFavouriteTap: () {
                   if (favCubit.isMovieFavorited(trendingMovies[index]) ==
                       true) {

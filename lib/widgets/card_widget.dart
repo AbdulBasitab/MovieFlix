@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/models/trending_movie_model.dart';
+import 'package:movies_app/models/movie.dart';
 import '../cubit/fav_cubit/favourite_cubit.dart';
-import '../models/popular_tv_model.dart';
+import '../models/tv_show.dart';
 
 class MovieTvCardWidget extends StatelessWidget {
   const MovieTvCardWidget({
@@ -15,8 +15,8 @@ class MovieTvCardWidget extends StatelessWidget {
     this.fromTrendingMovie = false,
   });
 
-  final PopularTv? popTv;
-  final TrendingMovie? trendingMovie;
+  final TvShow? popTv;
+  final Movie? trendingMovie;
   final bool fromTrendingMovie;
   final FavouriteMoviesShowsCubit favCubit;
   final void Function() onTap;
@@ -91,8 +91,8 @@ class MovieTvCardWidget extends StatelessWidget {
             height: 45,
             child: Text(
               (fromTrendingMovie)
-                  ? trendingMovie?.movieTitle ?? ''
-                  : popTv?.popTvTitle ?? '',
+                  ? trendingMovie?.title ?? ''
+                  : popTv?.title ?? '',
               style: const TextStyle(
                 fontSize: 13,
                 fontWeight: FontWeight.bold,

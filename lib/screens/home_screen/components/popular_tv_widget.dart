@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/models/popular_tv_model.dart';
 import '../../../cubit/api_cubit/api_service_cubit.dart';
 import '../../../cubit/api_cubit/api_service_cubit_state.dart';
 import '../../../cubit/fav_cubit/favourite_cubit.dart';
@@ -37,17 +36,17 @@ class _PopularTvPageState extends State<PopularTvPage> {
                 popTv: popTvs[index],
                 favCubit: favCubit,
                 posterImage:
-                    'https://image.tmdb.org/t/p/w500${popTvs[index].popTvPoster}',
+                    'https://image.tmdb.org/t/p/w500${popTvs[index].poster}',
                 fromTrendingMovie: false,
                 onTap: () {
                   context
                       .read<PopularTvDetailCubit>()
-                      .fetchPopularTvDetail(popTvs[index].popTvId!.toDouble());
+                      .fetchPopularTvDetail(popTvs[index].id!.toDouble());
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                       builder: (context) => TvDetailPage(
-                        showId: popTvs[index].popTvId!.toDouble(),
+                        tvShow: popTvs[index],
                       ),
                     ),
                   );
@@ -74,115 +73,6 @@ class _PopularTvPageState extends State<PopularTvPage> {
         return const SliverToBoxAdapter(
             child: Center(child: CircularProgressIndicator()));
       },
-    );
-  }
-}
-
-class CardWidget extends StatelessWidget {
-  const CardWidget({
-    super.key,
-    required this.popTvs,
-    required this.favCubit,
-    required this.index,
-  });
-
-  final List<PopularTv> popTvs;
-  final FavouriteMoviesShowsCubit favCubit;
-  final int index;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Column(
-        children: [
-          InkWell(
-            onTap: () {
-              context
-                  .read<PopularTvDetailCubit>()
-                  .fetchPopularTvDetail(popTvs[index].popTvId!.toDouble());
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => TvDetailPage(
-                    showId: popTvs[index].popTvId!.toDouble(),
-                  ),
-                ),
-              );
-            },
-            child: Stack(
-              // alignment: Alignment.topRight,
-              children: [
-                Container(
-                  height: 170,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    shape: BoxShape.rectangle,
-                    image: DecorationImage(
-                      fit: BoxFit.contain,
-                      image: NetworkImage(
-                        'https://image.tmdb.org/t/p/w500${popTvs[index].popTvPoster}',
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 7,
-                  left: 67,
-                  right: 0,
-                  bottom: 140,
-                  child: IconButton(
-                    onPressed: () {
-                      if (favCubit.isShowFavorited(popTvs[index]) == true) {
-                        favCubit.removeFavShow(popTvs[index]);
-                        return;
-                      }
-                      favCubit.addFavShow(popTvs[index]);
-                    },
-                    icon: (favCubit.isShowFavorited(popTvs[index]))
-                        ? const Icon(
-                            Icons.favorite_rounded,
-                            color: Colors.red,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black45,
-                                blurRadius: 20,
-                                offset: Offset(0, 2.0),
-                              )
-                            ],
-                          )
-                        : const Icon(
-                            Icons.favorite_outline_rounded,
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black45,
-                                blurRadius: 20,
-                                offset: Offset(0, 2.0),
-                              )
-                            ],
-                          ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 45,
-            child: Text(
-              popTvs[index].popTvTitle ?? '',
-              style: const TextStyle(
-                fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: Colors.white70,
-              ),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

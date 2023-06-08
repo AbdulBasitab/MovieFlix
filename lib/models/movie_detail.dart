@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'movie_genre.dart';
-part 'moviedetail_model.g.dart';
+import 'genre.dart';
+part 'movie_detail.g.dart';
 
 @JsonSerializable(explicitToJson: true)
-class TrendingMovieDetail {
+class MovieDetail {
   @JsonKey(name: 'title')
   final String? movieDetailTitle;
 
@@ -28,7 +28,7 @@ class TrendingMovieDetail {
   @JsonKey(name: 'genres')
   final List<Genre> genres;
 
-  TrendingMovieDetail({
+  MovieDetail({
     this.movieDetailTitle,
     this.movieBackdrop,
     this.movieDetailId,
@@ -39,8 +39,8 @@ class TrendingMovieDetail {
     this.genres = const [],
   });
 
-  factory TrendingMovieDetail.fromJson(Map<String, dynamic> json) =>
-      _$TrendingMovieDetailFromJson(json);
+  factory MovieDetail.fromJson(Map<String, dynamic> json) =>
+      _$MovieDetailFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TrendingMovieDetailToJson(this);
+  Map<String, dynamic> toJson() => _$MovieDetailToJson(this);
 }

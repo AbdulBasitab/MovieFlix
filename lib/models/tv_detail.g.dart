@@ -1,14 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'populartv_detail.dart';
+part of 'tv_detail.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-PopularTvDetailModel _$PopularTvDetailModelFromJson(
-        Map<String, dynamic> json) =>
-    PopularTvDetailModel(
+TvDetail _$TvDetailFromJson(Map<String, dynamic> json) => TvDetail(
       tvBackdrop: json['backdrop_path'] as String?,
       tvTitle: json['name'] as String?,
       tvId: json['id'] as int?,
@@ -20,13 +18,11 @@ PopularTvDetailModel _$PopularTvDetailModelFromJson(
       status: json['status'] as String?,
       rating: json['vote_average'] as num?,
       genres: (json['genres'] as List<dynamic>?)
-          ?.map((e) => TvGenre.fromJson(e as Map<String, dynamic>))
+          ?.map((e) => Genre.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 
-Map<String, dynamic> _$PopularTvDetailModelToJson(
-        PopularTvDetailModel instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$TvDetailToJson(TvDetail instance) => <String, dynamic>{
       'backdrop_path': instance.tvBackdrop,
       'name': instance.tvTitle,
       'id': instance.tvId,
