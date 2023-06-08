@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/models/popular_tv_model.dart';
-import 'package:movies_app/screens/tv_detail_screen.dart';
+import 'package:movies_app/screens/tv_screens/tv_detail_screen.dart';
 
-import '../cubit/api_cubit/api_service_cubit.dart';
-import '../cubit/fav_cubit/favourite_cubit.dart';
-import '../cubit/fav_cubit/favourite_cubit_state.dart';
+import '../../cubit/api_cubit/api_service_cubit.dart';
+import '../../cubit/fav_cubit/favourite_cubit.dart';
+import '../../cubit/fav_cubit/favourite_cubit_state.dart';
 
 class FavShows extends StatefulWidget {
   const FavShows({Key? key}) : super(key: key);
@@ -24,6 +24,7 @@ class _FavShowsState extends State<FavShows> {
         backgroundColor: Colors.blue.shade900,
         elevation: 2,
         toolbarHeight: 65,
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.only(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../cubit/api_cubit/api_service_cubit.dart';
-import '../cubit/api_cubit/api_service_cubit_state.dart';
+import '../../cubit/api_cubit/api_service_cubit.dart';
+import '../../cubit/api_cubit/api_service_cubit_state.dart';
 
 class TvDetailPage extends StatefulWidget {
   final double showId;

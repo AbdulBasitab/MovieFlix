@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/cubit/api_cubit/api_service_cubit.dart';
 import 'package:movies_app/models/trending_movie_model.dart';
-import 'package:movies_app/screens/movie_detail_screen.dart';
+import 'package:movies_app/screens/movie_screens/movie_detail_screen.dart';
 
-import '../cubit/fav_cubit/favourite_cubit.dart';
-import '../cubit/fav_cubit/favourite_cubit_state.dart';
+import '../../cubit/fav_cubit/favourite_cubit.dart';
+import '../../cubit/fav_cubit/favourite_cubit_state.dart';
 
 class FavMovies extends StatefulWidget {
   const FavMovies({Key? key}) : super(key: key);
@@ -24,6 +24,7 @@ class _FavMoviesState extends State<FavMovies> {
         backgroundColor: Colors.blue.shade900,
         elevation: 2,
         toolbarHeight: 65,
+        centerTitle: true,
       ),
       body: Padding(
         padding: const EdgeInsets.only(

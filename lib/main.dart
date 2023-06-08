@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/screens/home_screen.dart';
+import 'package:movies_app/screens/home_screen/home_screen.dart';
 
 import 'cubit/api_cubit/api_service_cubit.dart';
 import 'cubit/fav_cubit/favourite_cubit.dart';

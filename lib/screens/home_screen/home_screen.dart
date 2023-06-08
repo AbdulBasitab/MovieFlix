@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/widgets/trending_movies_widget.dart';
+import 'package:movies_app/screens/home_screen/components/trending_movies_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../cubit/api_cubit/api_service_cubit.dart';
-import '../widgets/popular_tv_widget.dart';
-import 'fav_movies_screen.dart';
-import 'fav_shows_screen.dart';
+import '../../cubit/api_cubit/api_service_cubit.dart';
+import 'components/popular_tv_widget.dart';
+import '../movie_screens/fav_movies_screen.dart';
+import '../tv_screens/fav_shows_screen.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

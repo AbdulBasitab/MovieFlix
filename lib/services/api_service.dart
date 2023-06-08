@@ -6,6 +6,7 @@ import '../models/trending_movie_model.dart';
 import '../models/popular_tv_model.dart';
 import '../models/populartv_detail.dart';
 
+// import '../constants/data_constants.dart';
 class ApiHandler {
   final String baseUrl = 'https://api.themoviedb.org/3';
   final String apiKey = '2f524b9d4ecc59568226e745cef4ffe0';
@@ -13,10 +14,12 @@ class ApiHandler {
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZjUyNGI5ZDRlY2M1OTU2ODIyNmU3NDVjZWY0ZmZlMCIsInN1YiI6IjYzNmU0MWM2ZDdmYmRhMDBlN2I3Nzc4OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pIhLyoiTyNqDfoc0RQqNHVRyb8ZxcsZzDTcD1u29WsI';
 
   Future<List<TrendingMovie>> fetchTrendingMovies() async {
-    final response = await http
-        .get(Uri.parse('$baseUrl/trending/movie/week?api_key=$apiKey'));
+    final response = await http.get(
+      Uri.parse('$baseUrl/trending/movie/week?api_key=$apiKey'),
+    );
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as Map<String, dynamic>;
+      print(data.toString());
       var trendMovies = <TrendingMovie>[];
       trendMovies = <TrendingMovie>[
         ...data['results']
