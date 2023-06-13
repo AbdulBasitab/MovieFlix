@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/constants/data_constants.dart';
 import 'package:movies_app/models/movie.dart';
 import 'package:movies_app/widgets/image_widget.dart';
 import '../../cubit/api_cubit/api_service_cubit.dart';
@@ -87,7 +88,7 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
                       ),
                     ),
                     Text(
-                      widget.movie.releaseDate.toString(),
+                      widget.movie.releaseDate!.formatDate().toString(),
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),

@@ -1,5 +1,3 @@
-
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
@@ -21,13 +19,18 @@ class ImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CachedNetworkImage(
-        placeholder: (context, url) => const Center(
-              child: CircularProgressIndicator(),
-            ),
-        imageUrl: imageUrl ?? '',
-        fit: BoxFit.cover,
-        width: width != 0.0 ? width : null,
-        height: height != 0.0 ? height : null,
-        errorWidget: (context, url, error) => Icon(Icons.error_outline_outlined,size: iconSize,),);
+      placeholder: (context, url) => const Center(
+        child: CircularProgressIndicator(),
+      ),
+      imageUrl: imageUrl ?? '',
+      fit: BoxFit.cover,
+      width: width != 0.0 ? width : null,
+      height: height != 0.0 ? height : null,
+      errorWidget: (context, url, error) => Icon(
+        Icons.error_outline_outlined,
+        size: iconSize,
+        color: Colors.red,
+      ),
+    );
   }
 }

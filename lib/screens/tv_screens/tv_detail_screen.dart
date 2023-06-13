@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/constants/data_constants.dart';
 import 'package:movies_app/models/tv_show.dart';
 import '../../cubit/api_cubit/api_service_cubit.dart';
 import '../../cubit/api_cubit/api_service_cubit_state.dart';
@@ -91,7 +92,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                       ),
                     ),
                     Text(
-                      widget.tvShow.firstairDate.toString(),
+                      widget.tvShow.firstairDate!.formatDate().toString(),
                       style: const TextStyle(
                           color: Colors.white, fontWeight: FontWeight.bold),
                     ),
