@@ -63,15 +63,22 @@ class _PopularTvPageState extends State<PopularTvPage> {
           );
         } else if (snapshot is LoadingMovieState || snapshot is InitCubit) {
           return const SliverToBoxAdapter(
-              child: Center(child: CircularProgressIndicator()));
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         } else if (snapshot is ErrorMovieState) {
           return const SliverToBoxAdapter(
-              child: Center(
-            child: CircularProgressIndicator(),
-          ));
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         }
         return const SliverToBoxAdapter(
-            child: Center(child: CircularProgressIndicator()));
+          child: Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
       },
     );
   }

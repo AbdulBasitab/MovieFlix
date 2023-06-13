@@ -43,3 +43,9 @@ class PopularMovieDetailState extends ApiServiceCubit {
     required this.popularTvDetail,
   });
 }
+
+class SearchMoviesState extends ApiServiceCubit {
+  final List<Movie> searchedMovies;
+
+  SearchMoviesState(this.searchedMovies);
+}

@@ -15,6 +15,7 @@ class MoviesCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
     emit(LoadingMovieState());
     final response = await http
         .get(Uri.parse('$baseUrl/trending/movie/week?api_key=$apiKey'));
+    // print(response.body);
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as Map<String, dynamic>;
       var trendMovies = <Movie>[];
@@ -94,6 +95,29 @@ class PopularTvDetailCubit extends Cubit<ApiServiceCubit>
       emit(ErrorMovieState("Error 404"));
       throw Exception('Failed to load details');
     }
+  }
+}
+
+class SearchMoviesShowCubit extends Cubit<ApiServiceCubit>
+    with ApiServiceConstants {
+  SearchMoviesShowCubit() : super(InitCubit());
+
+  Future<List<Movie>> searchMovieAndShowCubit(String query) async {
+    emit(LoadingMovieState());
+    var response = await http.get(Uri.parse(
+        "$baseUrl/search/movie?query=$query&include_adult=false&language=en-US&page=1&api_key=$apiKey"));
+    print(response.body);
+    final data = json.decode(response.body) as Map<String, dynamic>;
+    var searchedMovies = <Movie>[];
+    searchedMovies = [
+      ...data['results'].map((movie) => Movie.fromJson(movie)).toList()
+    ];
+    if (searchedMovies.isNotEmpty) {
+      emit(SearchMoviesState(searchedMovies));
+    } else {
+      emit(ErrorMovieState("No Movies found"));
+    }
+    return searchedMovies;
   }
 }
 

@@ -1,7 +1,9 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/screens/home_screen/components/trending_movies_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:movies_app/screens/search_screen/search_screen.dart';
 import '../../cubit/api_cubit/api_service_cubit.dart';
 import 'components/popular_tv_widget.dart';
 import '../movie_screens/fav_movies_screen.dart';
@@ -41,12 +43,24 @@ class _HomePageState extends State<HomePage> {
           elevation: 2,
           toolbarHeight: 65,
           actions: [
-            IconButton(
-              tooltip: "Search",
-              onPressed: () {},
-              icon: const Icon(
-                Icons.search_rounded,
-                size: 24,
+            Hero(
+              tag: 'Searchicon',
+              child: IconButton(
+                tooltip: "Search",
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const SearchScreen();
+                      },
+                    ),
+                  );
+                },
+                icon: const Icon(
+                  Icons.search_rounded,
+                  size: 24,
+                ),
               ),
             ),
           ],

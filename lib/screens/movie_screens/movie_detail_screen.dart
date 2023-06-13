@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/models/movie.dart';
+import 'package:movies_app/widgets/image_widget.dart';
 import '../../cubit/api_cubit/api_service_cubit.dart';
 import '../../cubit/api_cubit/api_service_cubit_state.dart';
 
@@ -47,15 +48,12 @@ class _MovieDetailPageState extends State<MovieDetailPage> {
               children: [
                 Stack(
                   children: [
-                    Image(
+                    ImageWidget(
                       height: 235,
                       width: MediaQuery.of(context).size.width,
-                      // ignore: prefer_interpolation_to_compose_strings
-                      image: NetworkImage(
-                        // ignore: prefer_interpolation_to_compose_strings
-                        'https://image.tmdb.org/t/p/w500' +
-                            widget.movie.backdrop.toString(),
-                      ),
+                      imageUrl:
+                          'https://image.tmdb.org/t/p/w500${widget.movie.backdrop}',
+                      iconSize: 24,
                     ),
                   ],
                 ),
