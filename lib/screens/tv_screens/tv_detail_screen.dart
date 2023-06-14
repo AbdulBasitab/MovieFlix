@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
-import 'package:movies_app/models/tv_show.dart';
 import '../../cubit/api_cubit/api_service_cubit.dart';
 import '../../cubit/api_cubit/api_service_cubit_state.dart';
+import '../../models/tv_show/tv_show.dart';
 
 class TvDetailPage extends StatefulWidget {
   final TvShow tvShow;

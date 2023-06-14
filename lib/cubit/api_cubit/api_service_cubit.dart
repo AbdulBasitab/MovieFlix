@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
-import '../../models/movie_detail.dart';
-import '../../models/tv_show.dart';
-import '../../models/tv_detail.dart';
-import '../../models/movie.dart';
+import '../../models/movie/movie.dart';
+import '../../models/movie_detail/movie_detail.dart';
+import '../../models/tv_detail/tv_detail.dart';
+import '../../models/tv_show/tv_show.dart';
 import 'api_service_cubit_state.dart';
 
 class MoviesCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
@@ -102,7 +102,7 @@ class SearchMoviesShowCubit extends Cubit<ApiServiceCubit>
     with ApiServiceConstants {
   SearchMoviesShowCubit() : super(InitCubit());
 
-  Future<List<Movie>> searchMovieAndShowCubit(String query) async {
+  Future<List<Movie>> searchMovies(String query) async {
     emit(LoadingMovieState());
     var response = await http.get(Uri.parse(
         "$baseUrl/search/movie?query=$query&include_adult=false&language=en-US&page=1&api_key=$apiKey"));
@@ -113,11 +113,35 @@ class SearchMoviesShowCubit extends Cubit<ApiServiceCubit>
       ...data['results'].map((movie) => Movie.fromJson(movie)).toList()
     ];
     if (searchedMovies.isNotEmpty) {
+      searchedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
       emit(SearchMoviesState(searchedMovies));
     } else {
       emit(ErrorMovieState("No Movies found"));
     }
     return searchedMovies;
+  }
+}
+
+class SimilarMoviesCubit extends Cubit<ApiServiceCubit>
+    with ApiServiceConstants {
+  SimilarMoviesCubit() : super(InitCubit());
+
+  Future<List<Movie>> fetchSimilarMovies(int movieId) async {
+    emit(LoadingMovieState());
+    var response = await http.get(Uri.parse(
+        "$baseUrl/movie/$movieId/similar?language=en-US&page=1&api_key=$apiKey"));
+    print(response.body);
+    final data = json.decode(response.body) as Map<String, dynamic>;
+    var similarMovies = <Movie>[];
+    similarMovies = [
+      ...data['results'].map((movie) => Movie.fromJson(movie)).toList()
+    ];
+    if (similarMovies.isNotEmpty) {
+      emit(SimilarMoviesState(similarMovies));
+    } else {
+      emit(ErrorMovieState("No Movies found"));
+    }
+    return similarMovies;
   }
 }
 

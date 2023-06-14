@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/models/movie.dart';
 import 'package:movies_app/screens/movie_screens/movie_detail_screen.dart';
 
 import '../../cubit/api_cubit/api_service_cubit.dart';
 import '../../cubit/fav_cubit/favourite_cubit.dart';
 import '../../cubit/fav_cubit/favourite_cubit_state.dart';
+import '../../models/movie/movie.dart';
 
 class FavMovies extends StatefulWidget {
   const FavMovies({Key? key}) : super(key: key);

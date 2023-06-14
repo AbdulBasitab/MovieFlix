@@ -1,8 +1,9 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:movies_app/models/movie_detail.dart';
-import 'package:movies_app/models/tv_show.dart';
-import 'package:movies_app/models/tv_detail.dart';
-import 'package:movies_app/models/movie.dart';
+
+import '../../models/movie/movie.dart';
+import '../../models/movie_detail/movie_detail.dart';
+import '../../models/tv_detail/tv_detail.dart';
+import '../../models/tv_show/tv_show.dart';
 
 abstract class ApiServiceCubit {}
 
@@ -48,4 +49,16 @@ class SearchMoviesState extends ApiServiceCubit {
   final List<Movie> searchedMovies;
 
   SearchMoviesState(this.searchedMovies);
+}
+
+class SimilarMoviesState extends ApiServiceCubit {
+  final List<Movie> similarMovies;
+
+  SimilarMoviesState(this.similarMovies);
+}
+
+class RecommendedMoviesState extends ApiServiceCubit {
+  final List<Movie> recommendedMovies;
+
+  RecommendedMoviesState(this.recommendedMovies);
 }

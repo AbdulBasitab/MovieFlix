@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'genre.dart';
+
+import '../genre/genre.dart';
+
 part 'movie_detail.g.dart';
 
 @JsonSerializable(explicitToJson: true)

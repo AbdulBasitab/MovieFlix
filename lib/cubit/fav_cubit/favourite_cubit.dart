@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/models/tv_show.dart';
-import 'package:movies_app/models/movie.dart';
+import '../../models/movie/movie.dart';
+import '../../models/tv_show/tv_show.dart';
 import 'favourite_cubit_state.dart';
 
 class FavouriteMoviesShowsCubit extends Cubit<FavMoviesShowsCubitState> {

@@ -24,6 +24,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => MovieDetailCubit()),
         BlocProvider(create: (_) => FavouriteMoviesShowsCubit()),
         BlocProvider(create: (_) => SearchMoviesShowCubit()),
+        BlocProvider(create: (_) => SimilarMoviesCubit()),
       ],
       child: MaterialApp(
         title: "MovieFlix",

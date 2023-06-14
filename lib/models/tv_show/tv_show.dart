@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 
-import 'genre.dart';
+import '../genre/genre.dart';
 
 part 'tv_show.g.dart';
 

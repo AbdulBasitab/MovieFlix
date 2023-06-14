@@ -33,14 +33,28 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Colors.blue.shade900,
           //foregroundColor: Colors.white,
-          title: const Text(
-            'MovieFlix',
-            style: TextStyle(
-              fontSize: 22,
-            ),
+
+          title: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            textBaseline: TextBaseline.ideographic,
+            children: [
+              const SizedBox(width: 5),
+              Image.asset(
+                'assets/logo/movieflix.png',
+                scale: 14,
+              ),
+              const SizedBox(width: 7),
+              const Text(
+                'MovieFlix',
+                style: TextStyle(
+                  fontSize: 22,
+                  height: 1.6,
+                ),
+              ),
+            ],
           ),
           centerTitle: true,
-          elevation: 2,
+          elevation: 10,
           toolbarHeight: 65,
           actions: [
             Hero(

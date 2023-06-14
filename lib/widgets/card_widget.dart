@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/models/movie.dart';
 import '../cubit/fav_cubit/favourite_cubit.dart';
-import '../models/tv_show.dart';
+import '../models/movie/movie.dart';
+import '../models/tv_show/tv_show.dart';
 
 class MovieTvCardWidget extends StatelessWidget {
   const MovieTvCardWidget({

@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 class DataConstants {
   static const baseUrl = 'https://api.themoviedb.org/3';
   static const apiKey = '2f524b9d4ecc59568226e745cef4ffe0';
@@ -24,3 +26,10 @@ extension StringExtensions on String {
     return this;
   }
 }
+
+List<Widget> movieDetailPageTabs = const [
+  Text("Similar"),
+  Text("Reviews"),
+  Text("Where to watch"),
+  Text("Recommendations")
+];
