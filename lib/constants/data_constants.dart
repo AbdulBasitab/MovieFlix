@@ -31,5 +31,5 @@ List<Widget> movieDetailPageTabs = const [
   Text("Similar"),
   Text("Reviews"),
   Text("Where to watch"),
-  Text("Recommendations")
+  Text("Recommendation")
 ];

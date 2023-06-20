@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
+import 'package:movies_app/models/review/review.dart';
+import 'package:movies_app/models/watch_provider/watch_provider.dart';
 import '../../models/movie/movie.dart';
 import '../../models/movie_detail/movie_detail.dart';
 import '../../models/tv_detail/tv_detail.dart';
@@ -137,11 +140,96 @@ class SimilarMoviesCubit extends Cubit<ApiServiceCubit>
       ...data['results'].map((movie) => Movie.fromJson(movie)).toList()
     ];
     if (similarMovies.isNotEmpty) {
+      similarMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
       emit(SimilarMoviesState(similarMovies));
     } else {
-      emit(ErrorMovieState("No Movies found"));
+      emit(ErrorMovieState("No Similar Movies found"));
     }
     return similarMovies;
+  }
+}
+
+class MovieReviewsCubit extends Cubit<ApiServiceCubit>
+    with ApiServiceConstants {
+  MovieReviewsCubit() : super(InitCubit());
+
+  Future<List<Review>> fetchMovieReviews(int movieId) async {
+    emit(LoadingMovieState());
+    var response = await http.get(Uri.parse(
+        "$baseUrl/movie/$movieId/reviews?language=en-US&page=1&api_key=$apiKey"));
+    print(response.body);
+    final data = json.decode(response.body) as Map<String, dynamic>;
+    var movieReviews = <Review>[];
+    movieReviews = [
+      ...data['results'].map((review) => Review.fromJson(review)).toList()
+    ];
+    if (movieReviews.isNotEmpty) {
+      emit(ReviewsMoviesState(movieReviews));
+    } else {
+      emit(ErrorMovieState("No Reviews found"));
+    }
+    return movieReviews;
+  }
+}
+
+class RecommendedMoviesCubit extends Cubit<ApiServiceCubit>
+    with ApiServiceConstants {
+  RecommendedMoviesCubit() : super(InitCubit());
+
+  Future<List<Movie>> fetchRecommendedMovies(int movieId) async {
+    emit(LoadingMovieState());
+    var response = await http.get(Uri.parse(
+        "$baseUrl/movie/$movieId/recommendations?language=en-US&page=1&api_key=$apiKey"));
+    print(response.body);
+    final data = json.decode(response.body) as Map<String, dynamic>;
+    var recommendedMovies = <Movie>[];
+    recommendedMovies = [
+      ...data['results'].map((movie) => Movie.fromJson(movie)).toList()
+    ];
+    if (recommendedMovies.isNotEmpty) {
+      recommendedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
+      emit(RecommendedMoviesState(recommendedMovies));
+    } else {
+      emit(ErrorMovieState("No Recommendations found"));
+    }
+    return recommendedMovies;
+  }
+}
+
+class MovieWatchProviderCubit extends Cubit<ApiServiceCubit>
+    with ApiServiceConstants {
+  MovieWatchProviderCubit() : super(InitCubit());
+
+  Future<WatchProvider?> fetchMovieWatchProviders(int movieId) async {
+    emit(LoadingMovieState());
+    try {
+      var response = await http.get(
+          Uri.parse(
+            "$baseUrl/movie/$movieId/watch/providers",
+          ),
+          headers: {
+            'accept': 'application/json',
+            'Authorization':
+                'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZjUyNGI5ZDRlY2M1OTU2ODIyNmU3NDVjZWY0ZmZlMCIsInN1YiI6IjYzNmU0MWM2ZDdmYmRhMDBlN2I3Nzc4OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pIhLyoiTyNqDfoc0RQqNHVRyb8ZxcsZzDTcD1u29WsI'
+          });
+      print(response.body);
+      final data = json.decode(response.body) as Map<String, dynamic>;
+      WatchProvider? movieProviderSingleCountry;
+      var watchProvidersData = data['results'];
+      var singleWatchProvider = watchProvidersData['US'];
+      movieProviderSingleCountry = WatchProvider.fromJson(singleWatchProvider);
+
+      if (movieProviderSingleCountry != null) {
+        emit(MovieWatchProviderState(movieProviderSingleCountry));
+      } else {
+        emit(ErrorMovieState("No Watch Providers found"));
+      }
+      return movieProviderSingleCountry;
+    } catch (e) {
+      debugPrint(e.toString());
+      emit(ErrorMovieState("No Watch Providers found"));
+      return null;
+    }
   }
 }
 

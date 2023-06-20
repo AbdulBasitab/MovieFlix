@@ -90,7 +90,7 @@ class _SearchScreenState extends State<SearchScreen> {
                         ),
                         child: ListView.builder(
                             physics: const ClampingScrollPhysics(),
-                            itemCount: state.searchedMovies.length,
+                            itemCount: searchedMovies.length,
                             itemBuilder: (context, index) {
                               return Padding(
                                 padding: const EdgeInsets.only(

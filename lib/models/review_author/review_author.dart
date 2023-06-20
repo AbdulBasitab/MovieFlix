@@ -5,14 +5,14 @@ part 'review_author.g.dart';
 @JsonSerializable()
 class ReviewAuthor {
   @JsonKey(name: 'name')
-  String name;
+  String? name;
   @JsonKey(name: 'rating')
-  int? rating;
+  double? rating;
   @JsonKey(name: 'avatar_path')
   String? authorAvatar;
 
   ReviewAuthor({
-    required this.name,
+    this.name,
     this.rating,
     this.authorAvatar,
   });

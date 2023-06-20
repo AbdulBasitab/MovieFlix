@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import '../cubit/fav_cubit/favourite_cubit.dart';
 import '../models/movie/movie.dart';
@@ -41,7 +42,7 @@ class MovieTvCardWidget extends StatelessWidget {
                     shape: BoxShape.rectangle,
                     image: DecorationImage(
                       fit: BoxFit.contain,
-                      image: NetworkImage(
+                      image: CachedNetworkImageProvider(
                         posterImage,
                       ),
                     ),

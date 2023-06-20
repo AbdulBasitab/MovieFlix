@@ -1,5 +1,8 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
+import 'package:movies_app/models/review/review.dart';
+import 'package:movies_app/models/watch_provider/watch_provider.dart';
+
 import '../../models/movie/movie.dart';
 import '../../models/movie_detail/movie_detail.dart';
 import '../../models/tv_detail/tv_detail.dart';
@@ -57,8 +60,20 @@ class SimilarMoviesState extends ApiServiceCubit {
   SimilarMoviesState(this.similarMovies);
 }
 
+class ReviewsMoviesState extends ApiServiceCubit {
+  final List<Review> movieReviews;
+
+  ReviewsMoviesState(this.movieReviews);
+}
+
 class RecommendedMoviesState extends ApiServiceCubit {
   final List<Movie> recommendedMovies;
 
   RecommendedMoviesState(this.recommendedMovies);
+}
+
+class MovieWatchProviderState extends ApiServiceCubit {
+  final WatchProvider movieWatchProvider;
+
+  MovieWatchProviderState(this.movieWatchProvider);
 }

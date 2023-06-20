@@ -7,14 +7,19 @@ part 'review.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Review {
+  @JsonKey(name: 'author')
+  String? authorUserName;
   @JsonKey(name: 'author_details')
   ReviewAuthor author;
   @JsonKey(name: 'content')
-  String? content;
-
+  String? reviewContent;
+  @JsonKey(name: 'created_at')
+  String? datePosted;
   Review({
+    this.authorUserName,
     required this.author,
-    this.content,
+    this.reviewContent,
+    this.datePosted,
   });
 
   factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);

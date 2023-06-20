@@ -48,6 +48,7 @@ dependencies:
       url: https://github.com/lucasmiranda5/flutter_cached_network_image.git
       ref: dart3
       path: cached_network_image
+  firebase_core: ^2.14.0
 
 dev_dependencies:
   flutter_test:

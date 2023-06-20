@@ -7,8 +7,8 @@ part of 'review_author.dart';
 // **************************************************************************
 
 ReviewAuthor _$ReviewAuthorFromJson(Map<String, dynamic> json) => ReviewAuthor(
-      name: json['name'] as String,
-      rating: json['rating'] as int?,
+      name: json['name'] as String?,
+      rating: (json['rating'] as num?)?.toDouble(),
       authorAvatar: json['avatar_path'] as String?,
     );
 
