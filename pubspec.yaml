@@ -49,6 +49,8 @@ dependencies:
       ref: dart3
       path: cached_network_image
   firebase_core: ^2.14.0
+  api_cache_manager: ^1.0.2
+  salomon_bottom_bar: ^3.3.2
 
 dev_dependencies:
   flutter_test:

@@ -1,27 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../cubit/api_cubit/api_service_cubit.dart';
+import '../../../cubit/api_cubit/api_service_bloc.dart';
 import '../../../cubit/api_cubit/api_service_cubit_state.dart';
 import '../../../cubit/fav_cubit/favourite_cubit.dart';
 import '../../../widgets/card_widget.dart';
 import '../../tv_screens/tv_detail_screen.dart';
 
-class PopularTvPage extends StatefulWidget {
-  const PopularTvPage({
+class PopularTvWidget extends StatefulWidget {
+  const PopularTvWidget({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<PopularTvPage> createState() => _PopularTvPageState();
+  State<PopularTvWidget> createState() => _PopularTvWidgetState();
 }
 
-class _PopularTvPageState extends State<PopularTvPage> {
+class _PopularTvWidgetState extends State<PopularTvWidget> {
   @override
   Widget build(BuildContext context) {
     final favCubit = context.watch<FavouriteMoviesShowsCubit>();
-    return BlocBuilder<TvShowsCubit, ApiServiceCubit>(
+    return BlocBuilder<TvShowsCubit, ApiServiceBloc>(
       builder: (context, snapshot) {
-        if (snapshot is PopularMoviesState) {
+        if (snapshot is FetchPopularTvShows) {
           final popTvs = snapshot.popularTvList;
           return SliverGrid.builder(
             itemCount: snapshot.popularTvList.length,

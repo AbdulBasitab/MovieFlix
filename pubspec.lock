@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.13.0"
+  api_cache_manager:
+    dependency: "direct main"
+    description:
+      name: api_cache_manager
+      sha256: "675dee8d3e8d6ec690f4d443b25bb398f1b31c1c1cb219c7c19531c62d20aed9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   archive:
     dependency: transitive
     description:
@@ -660,6 +668,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  salomon_bottom_bar:
+    dependency: "direct main"
+    description:
+      name: salomon_bottom_bar
+      sha256: e20abf2e449749432223a8b4e6647c212eef6c2b638e0ed8cc92eff9529c2b48
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.2"
   shelf:
     dependency: transitive
     description:

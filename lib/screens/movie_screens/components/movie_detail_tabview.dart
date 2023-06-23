@@ -28,22 +28,22 @@ class _MoviesDetailTabViewWidgetState extends State<MoviesDetailTabViewWidget> {
         Visibility(
           maintainState: true,
           visible: widget.selectedIndex == 0,
-          child: const SimilarMoviesWidget(),
+          child: const RecommendedMoviesWidget(),
         ),
         Visibility(
           maintainState: true,
           visible: widget.selectedIndex == 1,
-          child: const ReviewsWidget(),
+          child: const SimilarMoviesWidget(),
         ),
         Visibility(
           maintainState: true,
           visible: widget.selectedIndex == 2,
-          child: const WhereToWatchWidget(),
+          child: const ReviewsWidget(),
         ),
         Visibility(
           maintainState: true,
           visible: widget.selectedIndex == 3,
-          child: const RecommendedMoviesWidget(),
+          child: const WhereToWatchWidget(),
         ),
       ],
     );

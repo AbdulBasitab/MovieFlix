@@ -27,7 +27,7 @@ class _CustomMaterial3SearchBarState extends State<CustomMaterial3SearchBar> {
     return SizedBox(
       width: MediaQuery.of(context).size.width - 69,
       child: Material(
-        color: Colors.black,
+        color: Colors.grey.shade800,
         //shadowColor: Colors.white,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(50.0),

@@ -28,8 +28,8 @@ extension StringExtensions on String {
 }
 
 List<Widget> movieDetailPageTabs = const [
+  Text("Recommended"),
   Text("Similar"),
   Text("Reviews"),
-  Text("Where to watch"),
-  Text("Recommendation")
+  Text("Where to watch")
 ];

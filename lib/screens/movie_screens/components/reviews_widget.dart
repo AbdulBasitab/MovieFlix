@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../cubit/api_cubit/api_service_cubit.dart';
+import '../../../cubit/api_cubit/api_service_bloc.dart';
 import '../../../cubit/api_cubit/api_service_cubit_state.dart';
 import '../../../widgets/image_widget.dart';
 
@@ -12,9 +12,9 @@ class ReviewsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieReviewsCubit, ApiServiceCubit>(
+    return BlocBuilder<MovieReviewsCubit, ApiServiceBloc>(
       builder: (context, state) {
-        if (state is ReviewsMoviesState) {
+        if (state is FetchMovieReviews) {
           return SizedBox(
             height: 400,
             child: ListView.builder(

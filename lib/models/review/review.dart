@@ -15,11 +15,14 @@ class Review {
   String? reviewContent;
   @JsonKey(name: 'created_at')
   String? datePosted;
+  @JsonKey(includeFromJson: false)
+  bool isExpanded;
   Review({
     this.authorUserName,
     required this.author,
     this.reviewContent,
     this.datePosted,
+    this.isExpanded = false,
   });
 
   factory Review.fromJson(Map<String, dynamic> json) => _$ReviewFromJson(json);

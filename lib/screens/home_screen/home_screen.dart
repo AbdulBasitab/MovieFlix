@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/screens/home_screen/components/trending_movies_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/screens/search_screen/search_screen.dart';
-import '../../cubit/api_cubit/api_service_cubit.dart';
+import '../../cubit/api_cubit/api_service_bloc.dart';
 import 'components/popular_tv_widget.dart';
 import '../movie_screens/fav_movies_screen.dart';
 import '../tv_screens/fav_shows_screen.dart';
@@ -15,24 +15,25 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      context.read<MoviesCubit>().fetchTrendingMovies();
-      context.read<TvShowsCubit>().fetchPopularTv();
-    });
+    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    context.read<ApiServiceBloc>().fetchTrendingMovies();
+    context.read<TvShowsCubit>().fetchPopularTv();
+    // });
   }
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: Colors.blue.shade900,
-          //foregroundColor: Colors.white,
-
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             textBaseline: TextBaseline.ideographic,
@@ -56,24 +57,21 @@ class _HomePageState extends State<HomePage> {
           elevation: 10,
           toolbarHeight: 65,
           actions: [
-            Hero(
-              tag: 'Searchicon',
-              child: IconButton(
-                tooltip: "Search",
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const SearchScreen();
-                      },
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.search_rounded,
-                  size: 24,
-                ),
+            IconButton(
+              tooltip: "Search",
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return const SearchScreen();
+                    },
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.search_rounded,
+                size: 24,
               ),
             ),
           ],
@@ -122,7 +120,7 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
             ),
-            const TrendingMoviesPage(),
+            const TrendingMoviesWidget(),
             SliverToBoxAdapter(
               child: Container(
                 alignment: Alignment.topLeft,
@@ -159,10 +157,14 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            const PopularTvPage(),
+            const PopularTvWidget(),
           ],
         ),
       ),
     );
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

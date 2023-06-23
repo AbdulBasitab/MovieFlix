@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/widgets/image_widget.dart';
 
-import '../../../cubit/api_cubit/api_service_cubit.dart';
+import '../../../cubit/api_cubit/api_service_bloc.dart';
 import '../../../cubit/api_cubit/api_service_cubit_state.dart';
 
 class SimilarMoviesWidget extends StatelessWidget {
@@ -12,9 +12,9 @@ class SimilarMoviesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SimilarMoviesCubit, ApiServiceCubit>(
+    return BlocBuilder<SimilarMoviesCubit, ApiServiceBloc>(
       builder: (context, state) {
-        if (state is SimilarMoviesState) {
+        if (state is FetchSimilarMovies) {
           return SizedBox(
             height: 200,
             child: ListView.builder(

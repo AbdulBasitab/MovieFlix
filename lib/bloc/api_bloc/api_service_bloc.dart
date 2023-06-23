@@ -9,13 +9,26 @@ import '../../models/movie/movie.dart';
 import '../../models/movie_detail/movie_detail.dart';
 import '../../models/tv_detail/tv_detail.dart';
 import '../../models/tv_show/tv_show.dart';
-import 'api_service_cubit_state.dart';
 
-class MoviesCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
-  MoviesCubit() : super(InitCubit());
+part 'api_service_state_event.dart';
 
-  Future<void> fetchTrendingMovies() async {
-    emit(LoadingMovieState());
+class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
+    with ApiServiceConstants {
+  ApiServiceBloc()
+      : super(ApiServiceState(
+          dataStatus: DataStatus.loading,
+          trendingMovies: [],
+          recommendedMovies: [],
+          similarMovies: [],
+          popularTvShows: [],
+          searchedMovies: [],
+          movieReviews: [],
+        )) {
+    on<FetchTrendingMovies>((event, emit) => fetchTrendingMovies(emit));
+  }
+
+  Future<void> fetchTrendingMovies(Emitter<ApiServiceState> emit) async {
+    emit(state.copyWith(dataStatus: DataStatus.loading));
     final response = await http
         .get(Uri.parse('$baseUrl/trending/movie/week?api_key=$apiKey'));
     // print(response.body);
@@ -38,7 +51,7 @@ class MoviesCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
   }
 }
 
-class MovieDetailCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
+class MovieDetailCubit extends Cubit<ApiServiceBloc> with ApiServiceConstants {
   MovieDetailCubit() : super(InitCubit());
 
   Future<void> fetchTrendingMovieDetail(double moviekey) async {
@@ -50,7 +63,7 @@ class MovieDetailCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
       var movieDetails = json.decode(response.body);
       var movieDetail = MovieDetail.fromJson(movieDetails);
       // print(movieDetail);
-      emit(TrendingMovieDetailState(movieDetail: movieDetail));
+      emit(fetchMovieDetail(movieDetail: movieDetail));
     } else {
       emit(ErrorMovieState("Error 404"));
       throw Exception('Failed to load details');
@@ -58,7 +71,7 @@ class MovieDetailCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
   }
 }
 
-class TvShowsCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
+class TvShowsCubit extends Cubit<ApiServiceBloc> with ApiServiceConstants {
   TvShowsCubit() : super(InitCubit());
 
   Future<void> fetchPopularTv() async {
@@ -71,7 +84,7 @@ class TvShowsCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
       popularTvShows = <TvShow>[
         ...data['results'].map((trendtv) => TvShow.fromJson(trendtv)).toList()
       ];
-      emit(PopularMoviesState(popularTvList: popularTvShows));
+      emit(FetchPopularTvShows(popularTvList: popularTvShows));
     } else {
       // If the response was umexpected, throw an error.
       emit(ErrorMovieState("Error 404"));
@@ -80,7 +93,7 @@ class TvShowsCubit extends Cubit<ApiServiceCubit> with ApiServiceConstants {
   }
 }
 
-class PopularTvDetailCubit extends Cubit<ApiServiceCubit>
+class PopularTvDetailCubit extends Cubit<ApiServiceBloc>
     with ApiServiceConstants {
   PopularTvDetailCubit() : super(InitCubit());
 
@@ -93,7 +106,7 @@ class PopularTvDetailCubit extends Cubit<ApiServiceCubit>
       var poptvDetails = json.decode(response.body);
       var poptvDetail = TvDetail.fromJson(poptvDetails);
 
-      emit(PopularMovieDetailState(popularTvDetail: poptvDetail));
+      emit(FetchPopularShowDetail(popularTvDetail: poptvDetail));
     } else {
       emit(ErrorMovieState("Error 404"));
       throw Exception('Failed to load details');
@@ -101,7 +114,7 @@ class PopularTvDetailCubit extends Cubit<ApiServiceCubit>
   }
 }
 
-class SearchMoviesShowCubit extends Cubit<ApiServiceCubit>
+class SearchMoviesShowCubit extends Cubit<ApiServiceBloc>
     with ApiServiceConstants {
   SearchMoviesShowCubit() : super(InitCubit());
 
@@ -117,7 +130,7 @@ class SearchMoviesShowCubit extends Cubit<ApiServiceCubit>
     ];
     if (searchedMovies.isNotEmpty) {
       searchedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
-      emit(SearchMoviesState(searchedMovies));
+      emit(FetchSearchedMovies(searchedMovies));
     } else {
       emit(ErrorMovieState("No Movies found"));
     }
@@ -125,7 +138,7 @@ class SearchMoviesShowCubit extends Cubit<ApiServiceCubit>
   }
 }
 
-class SimilarMoviesCubit extends Cubit<ApiServiceCubit>
+class SimilarMoviesCubit extends Cubit<ApiServiceBloc>
     with ApiServiceConstants {
   SimilarMoviesCubit() : super(InitCubit());
 
@@ -141,7 +154,7 @@ class SimilarMoviesCubit extends Cubit<ApiServiceCubit>
     ];
     if (similarMovies.isNotEmpty) {
       similarMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
-      emit(SimilarMoviesState(similarMovies));
+      emit(FetchSimilarMovies(similarMovies));
     } else {
       emit(ErrorMovieState("No Similar Movies found"));
     }
@@ -149,8 +162,7 @@ class SimilarMoviesCubit extends Cubit<ApiServiceCubit>
   }
 }
 
-class MovieReviewsCubit extends Cubit<ApiServiceCubit>
-    with ApiServiceConstants {
+class MovieReviewsCubit extends Cubit<ApiServiceBloc> with ApiServiceConstants {
   MovieReviewsCubit() : super(InitCubit());
 
   Future<List<Review>> fetchMovieReviews(int movieId) async {
@@ -164,7 +176,7 @@ class MovieReviewsCubit extends Cubit<ApiServiceCubit>
       ...data['results'].map((review) => Review.fromJson(review)).toList()
     ];
     if (movieReviews.isNotEmpty) {
-      emit(ReviewsMoviesState(movieReviews));
+      emit(FetchMovieReviews(movieReviews));
     } else {
       emit(ErrorMovieState("No Reviews found"));
     }
@@ -172,7 +184,7 @@ class MovieReviewsCubit extends Cubit<ApiServiceCubit>
   }
 }
 
-class RecommendedMoviesCubit extends Cubit<ApiServiceCubit>
+class RecommendedMoviesCubit extends Cubit<ApiServiceBloc>
     with ApiServiceConstants {
   RecommendedMoviesCubit() : super(InitCubit());
 
@@ -188,7 +200,7 @@ class RecommendedMoviesCubit extends Cubit<ApiServiceCubit>
     ];
     if (recommendedMovies.isNotEmpty) {
       recommendedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
-      emit(RecommendedMoviesState(recommendedMovies));
+      emit(FetchRecommendedMovies(recommendedMovies));
     } else {
       emit(ErrorMovieState("No Recommendations found"));
     }
@@ -196,7 +208,7 @@ class RecommendedMoviesCubit extends Cubit<ApiServiceCubit>
   }
 }
 
-class MovieWatchProviderCubit extends Cubit<ApiServiceCubit>
+class MovieWatchProviderCubit extends Cubit<ApiServiceBloc>
     with ApiServiceConstants {
   MovieWatchProviderCubit() : super(InitCubit());
 
@@ -220,7 +232,7 @@ class MovieWatchProviderCubit extends Cubit<ApiServiceCubit>
       movieProviderSingleCountry = WatchProvider.fromJson(singleWatchProvider);
 
       if (movieProviderSingleCountry != null) {
-        emit(MovieWatchProviderState(movieProviderSingleCountry));
+        emit(FetchMovieWatchProvider(movieProviderSingleCountry));
       } else {
         emit(ErrorMovieState("No Watch Providers found"));
       }

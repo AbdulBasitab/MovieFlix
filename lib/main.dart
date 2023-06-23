@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/screens/home_screen/home_screen.dart';
+import 'package:movies_app/constants/theme_constants.dart';
+import 'package:movies_app/screens/home_screen/bottom_nav_bar.dart';
 
-import 'cubit/api_cubit/api_service_cubit.dart';
+import 'cubit/api_cubit/api_service_bloc.dart';
 import 'cubit/fav_cubit/favourite_cubit.dart';
 
 void main() {
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (_) => MoviesCubit()),
+        BlocProvider(create: (_) => ApiServiceBloc()),
         BlocProvider(create: (_) => TvShowsCubit()),
         BlocProvider(create: (_) => PopularTvDetailCubit()),
         BlocProvider(create: (_) => MovieDetailCubit()),
@@ -27,15 +28,17 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (_) => SimilarMoviesCubit()),
         BlocProvider(create: (_) => RecommendedMoviesCubit()),
         BlocProvider(create: (_) => MovieReviewsCubit()),
-         BlocProvider(create: (_) => MovieWatchProviderCubit()),
+        BlocProvider(create: (_) => MovieWatchProviderCubit()),
       ],
       child: MaterialApp(
         title: "MovieFlix",
+        restorationScopeId: 'root',
         color: Colors.white,
-        home: const HomePage(),
+        home: const BottomNavBar(),
         debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-            brightness: Brightness.dark, primaryColor: Colors.blue.shade800),
+        theme: AppTheme.darkTheme(),
+        // ThemeData(
+        //     brightness: Brightness.dark, primaryColor: Colors.blue.shade800),
       ),
     );
   }

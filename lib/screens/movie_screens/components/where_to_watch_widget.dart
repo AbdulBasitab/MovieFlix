@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/cubit/api_cubit/api_service_cubit.dart';
+import 'package:movies_app/cubit/api_cubit/api_service_bloc.dart';
 import 'package:movies_app/cubit/api_cubit/api_service_cubit_state.dart';
 import 'package:movies_app/widgets/image_widget.dart';
 
@@ -9,13 +9,27 @@ class WhereToWatchWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieWatchProviderCubit, ApiServiceCubit>(
+    return BlocBuilder<MovieWatchProviderCubit, ApiServiceBloc>(
       builder: (context, state) {
-        if (state is MovieWatchProviderState) {
+        if (state is FetchMovieWatchProvider) {
           return SizedBox(
-            height: 540,
+            height: ((state.movieWatchProvider.buyOptions == null &&
+                        state.movieWatchProvider.rentOptions == null) ||
+                    (state.movieWatchProvider.buyOptions == null &&
+                        state.movieWatchProvider.flatrateOptions == null) ||
+                    (state.movieWatchProvider.flatrateOptions == null &&
+                        state.movieWatchProvider.rentOptions == null))
+                ? 185
+                : (state.movieWatchProvider.buyOptions == null)
+                    ? 350
+                    : (state.movieWatchProvider.rentOptions == null)
+                        ? 350
+                        : (state.movieWatchProvider.flatrateOptions == null)
+                            ? 350
+                            : 530,
             child: ListView(
               scrollDirection: Axis.vertical,
+              physics: const NeverScrollableScrollPhysics(),
               padding: const EdgeInsets.all(10),
               children: [
                 Visibility(
@@ -61,7 +75,7 @@ class WhereToWatchWidget extends StatelessWidget {
                                         height: 80,
                                         width: 80,
                                         imageUrl:
-                                            "https://image.tmdb.org/t/p/w500${buyList![index].logoPath}",
+                                            "https://image.tmdb.org/t/p/w500${buyList?[index].logoPath}",
                                       ),
                                     ),
                                   ),
@@ -69,7 +83,7 @@ class WhereToWatchWidget extends StatelessWidget {
                                   SizedBox(
                                     width: 90,
                                     child: Text(
-                                      buyList[index].providerName ?? '',
+                                      buyList?[index].providerName ?? '',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(
@@ -132,14 +146,14 @@ class WhereToWatchWidget extends StatelessWidget {
                                           height: 80,
                                           width: 80,
                                           imageUrl:
-                                              "https://image.tmdb.org/t/p/w500${rentList![index].logoPath}"),
+                                              "https://image.tmdb.org/t/p/w500${rentList?[index].logoPath}"),
                                     ),
                                   ),
                                   const SizedBox(height: 4),
                                   SizedBox(
                                     width: 90,
                                     child: Text(
-                                      rentList[index].providerName ?? '',
+                                      rentList?[index].providerName ?? '',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: const TextStyle(

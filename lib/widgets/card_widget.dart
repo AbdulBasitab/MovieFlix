@@ -1,5 +1,5 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:movies_app/widgets/image_widget.dart';
 import '../cubit/fav_cubit/favourite_cubit.dart';
 import '../models/movie/movie.dart';
 import '../models/tv_show/tv_show.dart';
@@ -35,52 +35,11 @@ class MovieTvCardWidget extends StatelessWidget {
             child: Stack(
               // alignment: Alignment.topRight,
               children: [
-                Container(
+                SizedBox(
                   height: 170,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(10),
-                    shape: BoxShape.rectangle,
-                    image: DecorationImage(
-                      fit: BoxFit.contain,
-                      image: CachedNetworkImageProvider(
-                        posterImage,
-                      ),
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 7,
-                  left: 67,
-                  right: 0,
-                  bottom: 140,
-                  child: IconButton(
-                    onPressed: onFavouriteTap,
-                    icon: ((fromTrendingMovie)
-                            ? favCubit.isMovieFavorited(trendingMovie!)
-                            : favCubit.isShowFavorited(popTv!))
-                        ? const Icon(
-                            Icons.favorite_rounded,
-                            color: Colors.red,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black45,
-                                blurRadius: 20,
-                                offset: Offset(0, 2.0),
-                              )
-                            ],
-                          )
-                        : const Icon(
-                            Icons.favorite_outline_rounded,
-                            color: Colors.white,
-                            shadows: [
-                              Shadow(
-                                color: Colors.black45,
-                                blurRadius: 20,
-                                offset: Offset(0, 2.0),
-                              )
-                            ],
-                          ),
-                  ),
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: ImageWidget(imageUrl: posterImage)),
                 ),
               ],
             ),

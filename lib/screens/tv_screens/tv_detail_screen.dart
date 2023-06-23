@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
-import '../../cubit/api_cubit/api_service_cubit.dart';
+import 'package:movies_app/widgets/image_widget.dart';
+import '../../cubit/api_cubit/api_service_bloc.dart';
 import '../../cubit/api_cubit/api_service_cubit_state.dart';
+import '../../cubit/fav_cubit/favourite_cubit.dart';
 import '../../models/tv_show/tv_show.dart';
 
 class TvDetailPage extends StatefulWidget {
@@ -25,6 +27,8 @@ class _TvDetailPageState extends State<TvDetailPage> {
 
   @override
   Widget build(BuildContext context) {
+    var favCubit = context.watch<FavouriteMoviesShowsCubit>();
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -36,12 +40,29 @@ class _TvDetailPageState extends State<TvDetailPage> {
           ),
         ),
         centerTitle: true,
+        actions: [
+          IconButton(
+            onPressed: () {
+              favCubit.addFavShow(widget.tvShow);
+            },
+            icon: Icon(
+              (favCubit.isShowFavorited(widget.tvShow))
+                  ? Icons.bookmark_added_rounded
+                  : Icons.bookmark_outline_rounded,
+              size: 26,
+              color: (favCubit.isShowFavorited(widget.tvShow))
+                  ? Colors.amber.shade500
+                  : Colors.white,
+            ),
+          ),
+        ],
       ),
-      body: BlocBuilder<PopularTvDetailCubit, ApiServiceCubit>(
+      body: BlocBuilder<PopularTvDetailCubit, ApiServiceBloc>(
           builder: (context, snapshot) {
-        if (snapshot is PopularMovieDetailState) {
+        if (snapshot is FetchPopularShowDetail) {
           final tvShow = snapshot.popularTvDetail;
           return SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -49,14 +70,11 @@ class _TvDetailPageState extends State<TvDetailPage> {
                 Stack(
                   children: [
                     if (widget.tvShow.backdrop != null)
-                      Image(
+                      ImageWidget(
                         height: 235,
-                        width: MediaQuery.of(context).size.width,
-                        image: NetworkImage(
-                          // ignore: prefer_interpolation_to_compose_strings
-                          'https://image.tmdb.org/t/p/w500' +
-                              widget.tvShow.backdrop.toString(),
-                        ),
+                        width: double.infinity,
+                        imageUrl:
+                            'https://image.tmdb.org/t/p/w500${widget.tvShow.backdrop}',
                       ),
                     if (widget.tvShow.backdrop == null)
                       const Text('Error Loading Image'),
