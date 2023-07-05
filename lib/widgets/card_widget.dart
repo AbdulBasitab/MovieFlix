@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/widgets/image_widget.dart';
-import '../cubit/fav_cubit/favourite_cubit.dart';
+import '../bloc/fav_cubit/favourite_cubit.dart';
 import '../models/movie/movie.dart';
 import '../models/tv_show/tv_show.dart';
 

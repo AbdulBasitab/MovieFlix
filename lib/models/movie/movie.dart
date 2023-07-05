@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:json_annotation/json_annotation.dart';
 
 // import 'genre.dart';
@@ -45,15 +46,28 @@ class Movie {
   Map<String, dynamic> toJson() => _$MovieToJson(this);
 
   @override
-  bool operator ==(Object other) {
+  bool operator ==(covariant Movie other) {
     if (identical(this, other)) return true;
 
-    return other is Movie &&
+    return other.title == title &&
+        other.poster == poster &&
         other.id == id &&
-        other.title == title &&
-        other.poster == poster;
+        other.backdrop == backdrop &&
+        other.description == description &&
+        other.rating == rating &&
+        other.releaseDate == releaseDate &&
+        other.runTime == runTime;
   }
 
   @override
-  int get hashCode => id.hashCode ^ title.hashCode ^ poster.hashCode;
+  int get hashCode {
+    return title.hashCode ^
+        poster.hashCode ^
+        id.hashCode ^
+        backdrop.hashCode ^
+        description.hashCode ^
+        rating.hashCode ^
+        releaseDate.hashCode ^
+        runTime.hashCode;
+  }
 }

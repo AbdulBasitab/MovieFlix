@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
-import 'package:movies_app/cubit/fav_cubit/favourite_cubit.dart';
 import 'package:movies_app/models/review/review.dart';
 import 'package:movies_app/widgets/image_widget.dart';
-import '../../cubit/api_cubit/api_service_bloc.dart';
-import '../../cubit/api_cubit/api_service_cubit_state.dart';
+import '../../bloc/fav_cubit/favourite_cubit.dart';
 import '../../models/movie/movie.dart';
 import 'components/movie_detail_tabview.dart';
 
@@ -41,14 +41,16 @@ class _MovieDetailPageState extends State<MovieDetailPage>
     movieDetailTabController = TabController(length: 4, vsync: this);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Future.delayed(const Duration(seconds: 1), () {
-        context.read<SimilarMoviesCubit>().fetchSimilarMovies(widget.movie.id!);
         context
-            .read<RecommendedMoviesCubit>()
-            .fetchRecommendedMovies(widget.movie.id!);
-        context.read<MovieReviewsCubit>().fetchMovieReviews(widget.movie.id!);
+            .read<ApiServiceBloc>()
+            .add(FetchSimilarMovies(widget.movie.id!));
         context
-            .read<MovieWatchProviderCubit>()
-            .fetchMovieWatchProviders(widget.movie.id!);
+            .read<ApiServiceBloc>()
+            .add(FetchRecommendedMovies(widget.movie.id!));
+        context.read<ApiServiceBloc>().add(FetchMovieReviews(widget.movie.id!));
+        context
+            .read<ApiServiceBloc>()
+            .add(FetchMovieWatchProvider(widget.movie.id!));
       });
     });
   }
@@ -56,45 +58,45 @@ class _MovieDetailPageState extends State<MovieDetailPage>
   @override
   Widget build(BuildContext context) {
     var favCubit = context.watch<FavouriteMoviesShowsCubit>();
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        centerTitle: true,
-        title: const Text(
-          "Detail",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 21,
-          ),
-        ),
-        actions: [
-          IconButton(
-            onPressed: () {
-              favCubit.addFavMovie(widget.movie);
-            },
-            icon: Icon(
-              (favCubit.isMovieFavorited(widget.movie))
-                  ? Icons.bookmark_added_rounded
-                  : Icons.bookmark_outline_rounded,
-              size: 26,
-              color: (favCubit.isMovieFavorited(widget.movie))
-                  ? Colors.amber.shade500
-                  : Colors.white,
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: Colors.blue.shade900,
+          centerTitle: true,
+          title: Text(
+            "Detail",
+            style: GoogleFonts.raleway(
+              color: Colors.white,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        ],
-      ),
-      body: BlocBuilder<MovieDetailCubit, ApiServiceBloc>(
-          builder: (context, snapshot) {
-        if (snapshot is fetchMovieDetail) {
-          final movie = snapshot.movieDetail;
-          return ListView(
-            physics: const BouncingScrollPhysics(),
-            shrinkWrap: true,
-            children: [
-              Hero(
-                tag: widget.heroTag,
-                child: Column(
+          actions: [
+            IconButton(
+              onPressed: () {
+                favCubit.addFavMovie(widget.movie);
+              },
+              icon: Icon(
+                (favCubit.isMovieFavorited(widget.movie))
+                    ? Icons.bookmark_added_rounded
+                    : Icons.bookmark_outline_rounded,
+                size: 26,
+                color: (favCubit.isMovieFavorited(widget.movie))
+                    ? Colors.amber.shade500
+                    : Colors.white,
+              ),
+            ),
+          ],
+        ),
+        body: BlocBuilder<ApiServiceBloc, ApiServiceState>(
+            builder: (context, state) {
+          if (state.movieDetail != null) {
+            final movie = state.movieDetail;
+            return ListView(
+              physics: const BouncingScrollPhysics(),
+              shrinkWrap: true,
+              children: [
+                Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -153,7 +155,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                           ),
                         ),
                         Text(
-                          '${durationToString(movie.runTime as int)} min',
+                          '${durationToString(movie?.runTime as int)} min',
                         ),
                       ],
                     ),
@@ -202,7 +204,8 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                             ),
                           ),
                         ),
-                        if (movie.genres.isNotEmpty && movie.genres.length == 1)
+                        if (movie!.genres.isNotEmpty &&
+                            movie.genres.length == 1)
                           Text(
                             movie.genres.elementAt(0).name.toString(),
                             style: const TextStyle(
@@ -276,19 +279,23 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                     const SizedBox(height: 10),
                   ],
                 ),
-              ),
-            ],
-          );
-        } else if (snapshot is ErrorMovieState) {
-          return const Center(child: Text('Error 404'));
-        } else if (snapshot is LoadingMovieState) {
-          return const Center(child: CircularProgressIndicator());
-        } else {
-          return const Center(
-            child: Text("Some Error Occured"),
-          );
-        }
-      }),
+              ],
+            );
+          } else if (state.dataStatus == DataStatus.error &&
+              state.movieDetail == null) {
+            return Center(
+                child: Text(state.errorMessage ?? "Some Error Occured"));
+          }
+          // else if (state.dataStatus == DataStatus.loading) {
+          //   return const Center(child: CircularProgressIndicator());
+          // }
+          else {
+            return const Center(
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
+        }),
+      ),
     );
   }
 }

@@ -6,6 +6,7 @@ enum DataStatus { success, error, loading }
 
 class ApiServiceState {
   final DataStatus? dataStatus;
+  final String? errorMessage;
   final List<Movie> trendingMovies;
   final List<TvShow> popularTvShows;
   final MovieDetail? movieDetail;
@@ -20,6 +21,7 @@ class ApiServiceState {
       {this.dataStatus,
       required this.trendingMovies,
       required this.popularTvShows,
+      this.errorMessage,
       this.movieDetail,
       this.popularTvDetail,
       required this.searchedMovies,
@@ -30,6 +32,7 @@ class ApiServiceState {
 
   ApiServiceState copyWith({
     DataStatus? dataStatus,
+    String? errorMessage,
     List<Movie>? trendingMovies,
     List<TvShow>? popularTvShows,
     MovieDetail? movieDetail,
@@ -42,6 +45,7 @@ class ApiServiceState {
   }) {
     return ApiServiceState(
       dataStatus: dataStatus ?? this.dataStatus,
+      errorMessage: errorMessage ?? this.errorMessage,
       trendingMovies: trendingMovies ?? this.trendingMovies,
       popularTvShows: popularTvShows ?? this.popularTvShows,
       movieDetail: movieDetail ?? this.movieDetail,
@@ -72,10 +76,10 @@ class FetchPopularTvShows extends ApiServiceEvent {
   FetchPopularTvShows();
 }
 
-class FetchPopularShowDetail extends ApiServiceEvent {
-  final TvDetail popularTvDetail;
-  FetchPopularShowDetail({
-    required this.popularTvDetail,
+class FetchTvShowDetail extends ApiServiceEvent {
+  final int tvShowId;
+  FetchTvShowDetail({
+    required this.tvShowId,
   });
 }
 

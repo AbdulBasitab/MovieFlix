@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/screens/home_screen/components/trending_movies_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:movies_app/screens/search_screen/search_screen.dart';
-import '../../cubit/api_cubit/api_service_bloc.dart';
+import '../../bloc/api_bloc/api_service_bloc.dart';
 import 'components/popular_tv_widget.dart';
-import '../movie_screens/fav_movies_screen.dart';
-import '../tv_screens/fav_shows_screen.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key, required this.scrollController});
+
+  final ScrollController scrollController;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -21,8 +20,8 @@ class _HomePageState extends State<HomePage>
   void initState() {
     super.initState();
     // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    context.read<ApiServiceBloc>().fetchTrendingMovies();
-    context.read<TvShowsCubit>().fetchPopularTv();
+    context.read<ApiServiceBloc>().add(FetchTrendingMovies());
+    context.read<ApiServiceBloc>().add(FetchPopularTvShows());
     // });
   }
 
@@ -44,39 +43,20 @@ class _HomePageState extends State<HomePage>
                 scale: 14,
               ),
               const SizedBox(width: 7),
-              const Text(
+              Text(
                 'MovieFlix',
-                style: TextStyle(
-                  fontSize: 22,
-                  height: 1.6,
-                ),
+                style: GoogleFonts.raleway(
+                    fontSize: 22, height: 1.6, fontWeight: FontWeight.w600),
               ),
             ],
           ),
           centerTitle: true,
           elevation: 10,
           toolbarHeight: 65,
-          actions: [
-            IconButton(
-              tooltip: "Search",
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return const SearchScreen();
-                    },
-                  ),
-                );
-              },
-              icon: const Icon(
-                Icons.search_rounded,
-                size: 24,
-              ),
-            ),
-          ],
         ),
         body: CustomScrollView(
+          controller: widget.scrollController,
+          physics: const BouncingScrollPhysics(),
           slivers: [
             SliverToBoxAdapter(
               child: Column(
@@ -84,9 +64,10 @@ class _HomePageState extends State<HomePage>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Container(
+                    height: 70,
                     alignment: Alignment.topLeft,
                     padding: const EdgeInsets.only(
-                      top: 15,
+                      top: 20,
                       bottom: 10,
                       left: 10,
                       right: 10,
@@ -101,19 +82,19 @@ class _HomePageState extends State<HomePage>
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const FavMovies()),
-                            );
-                          },
-                          icon: const Icon(
-                            Icons.favorite_border_rounded,
-                            color: Colors.amber,
-                          ),
-                        ),
+                        // IconButton(
+                        //   onPressed: () {
+                        //     Navigator.push(
+                        //       context,
+                        //       MaterialPageRoute(
+                        //           builder: (context) => const FavMovies()),
+                        //     );
+                        //   },
+                        //   icon: const Icon(
+                        //     Icons.favorite_border_rounded,
+                        //     color: Colors.amber,
+                        //   ),
+                        // ),
                       ],
                     ),
                   ),
@@ -123,9 +104,10 @@ class _HomePageState extends State<HomePage>
             const TrendingMoviesWidget(),
             SliverToBoxAdapter(
               child: Container(
+                height: 70,
                 alignment: Alignment.topLeft,
                 padding: const EdgeInsets.only(
-                  top: 10,
+                  top: 20,
                   bottom: 15,
                   left: 10,
                   right: 10,
@@ -140,19 +122,19 @@ class _HomePageState extends State<HomePage>
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    IconButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const FavShows()),
-                        );
-                      },
-                      icon: const Icon(
-                        Icons.favorite_border_rounded,
-                        color: Colors.amber,
-                      ),
-                    ),
+                    // IconButton(
+                    //   onPressed: () {
+                    //     Navigator.push(
+                    //       context,
+                    //       MaterialPageRoute(
+                    //           builder: (context) => const FavShows()),
+                    //     );
+                    //   },
+                    //   icon: const Icon(
+                    //     Icons.favorite_border_rounded,
+                    //     color: Colors.amber,
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

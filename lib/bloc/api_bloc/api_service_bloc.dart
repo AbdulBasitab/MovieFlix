@@ -25,8 +25,23 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
           movieReviews: [],
         )) {
     on<FetchTrendingMovies>((event, emit) => fetchTrendingMovies(emit));
+    on<FetchMovieDetail>(
+        (event, emit) => fetchMovieDetail(event.movieId, emit));
+    on<FetchPopularTvShows>((event, emit) => fetchPopularTvShows(emit));
+    on<FetchTvShowDetail>(
+        (event, emit) => fetchTvShowDetail(event.tvShowId, emit));
+    on<FetchSearchedMovies>((event, emit) => searchMovies(event.query, emit));
+    on<FetchSimilarMovies>(
+        (event, emit) => fetchSimilarMovies(event.movieId, emit));
+    on<FetchRecommendedMovies>(
+        (event, emit) => fetchRecommendedMovies(event.movieId, emit));
+    on<FetchMovieReviews>(
+        (event, emit) => fetchMovieReviews(event.movieId, emit));
+    on<FetchMovieWatchProvider>(
+        (event, emit) => fetchMovieWatchProviders(event.movieId, emit));
   }
 
+  /// This function fetches trending movies
   Future<void> fetchTrendingMovies(Emitter<ApiServiceState> emit) async {
     emit(state.copyWith(dataStatus: DataStatus.loading));
     final response = await http
@@ -41,21 +56,20 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
             .toList()
       ];
 
-      emit(TrendingMovieState(trendingMovies: trendMovies));
+      emit(state.copyWith(
+          trendingMovies: trendMovies, dataStatus: DataStatus.success));
       //return trendMovies;
     } else {
       // If the response was umexpected, throw an error.
-      emit(ErrorMovieState("Failed to load movies"));
-      throw Exception('Failed to load movies');
+      emit(state.copyWith(
+          dataStatus: DataStatus.error,
+          errorMessage: 'Failed to fetch Movies'));
     }
   }
-}
 
-class MovieDetailCubit extends Cubit<ApiServiceBloc> with ApiServiceConstants {
-  MovieDetailCubit() : super(InitCubit());
-
-  Future<void> fetchTrendingMovieDetail(double moviekey) async {
-    emit(LoadingMovieState());
+  Future<void> fetchMovieDetail(
+      int moviekey, Emitter<ApiServiceState> emit) async {
+    emit(state.copyWith(dataStatus: DataStatus.loading));
     final response =
         await http.get(Uri.parse('$baseUrl/movie/$moviekey?api_key=$apiKey'));
     print(response);
@@ -63,19 +77,18 @@ class MovieDetailCubit extends Cubit<ApiServiceBloc> with ApiServiceConstants {
       var movieDetails = json.decode(response.body);
       var movieDetail = MovieDetail.fromJson(movieDetails);
       // print(movieDetail);
-      emit(fetchMovieDetail(movieDetail: movieDetail));
+      emit(state.copyWith(
+          movieDetail: movieDetail, dataStatus: DataStatus.success));
     } else {
-      emit(ErrorMovieState("Error 404"));
-      throw Exception('Failed to load details');
+      emit(state.copyWith(
+          dataStatus: DataStatus.error,
+          errorMessage: "Failed to load movie detail"));
+      // throw Exception('Failed to load details');
     }
   }
-}
 
-class TvShowsCubit extends Cubit<ApiServiceBloc> with ApiServiceConstants {
-  TvShowsCubit() : super(InitCubit());
-
-  Future<void> fetchPopularTv() async {
-    emit(LoadingMovieState());
+  Future<void> fetchPopularTvShows(Emitter<ApiServiceState> emit) async {
+    emit(state.copyWith(dataStatus: DataStatus.loading));
     final response = await http.get(Uri.parse(
         '$baseUrl/tv/top_rated?api_key=$apiKey&language=en-US&page=1'));
     if (response.statusCode == 200) {
@@ -84,21 +97,20 @@ class TvShowsCubit extends Cubit<ApiServiceBloc> with ApiServiceConstants {
       popularTvShows = <TvShow>[
         ...data['results'].map((trendtv) => TvShow.fromJson(trendtv)).toList()
       ];
-      emit(FetchPopularTvShows(popularTvList: popularTvShows));
+      emit(state.copyWith(
+          popularTvShows: popularTvShows, dataStatus: DataStatus.success));
     } else {
       // If the response was umexpected, throw an error.
-      emit(ErrorMovieState("Error 404"));
-      throw Exception('Failed to load movies');
+      emit(state.copyWith(
+          dataStatus: DataStatus.error,
+          errorMessage: "Failed to load tv shows"));
+      //throw Exception('Failed to load movies');
     }
   }
-}
 
-class PopularTvDetailCubit extends Cubit<ApiServiceBloc>
-    with ApiServiceConstants {
-  PopularTvDetailCubit() : super(InitCubit());
-
-  Future<void> fetchPopularTvDetail(double tvKey) async {
-    emit(LoadingMovieState());
+  Future<void> fetchTvShowDetail(
+      int tvKey, Emitter<ApiServiceState> emit) async {
+    emit(state.copyWith(dataStatus: DataStatus.loading));
     final response = await http
         .get(Uri.parse('$baseUrl/tv/$tvKey?api_key=$apiKey&language=en-US'));
     // print(response.body);
@@ -106,20 +118,19 @@ class PopularTvDetailCubit extends Cubit<ApiServiceBloc>
       var poptvDetails = json.decode(response.body);
       var poptvDetail = TvDetail.fromJson(poptvDetails);
 
-      emit(FetchPopularShowDetail(popularTvDetail: poptvDetail));
+      emit(state.copyWith(
+          popularTvDetail: poptvDetail, dataStatus: DataStatus.success));
     } else {
-      emit(ErrorMovieState("Error 404"));
-      throw Exception('Failed to load details');
+      emit(state.copyWith(
+          dataStatus: DataStatus.error,
+          errorMessage: "Failed to load show details"));
+      //throw Exception('Failed to load details');
     }
   }
-}
 
-class SearchMoviesShowCubit extends Cubit<ApiServiceBloc>
-    with ApiServiceConstants {
-  SearchMoviesShowCubit() : super(InitCubit());
-
-  Future<List<Movie>> searchMovies(String query) async {
-    emit(LoadingMovieState());
+  Future<List<Movie>> searchMovies(
+      String query, Emitter<ApiServiceState> emit) async {
+    emit(state.copyWith(dataStatus: DataStatus.loading));
     var response = await http.get(Uri.parse(
         "$baseUrl/search/movie?query=$query&include_adult=false&language=en-US&page=1&api_key=$apiKey"));
     print(response.body);
@@ -130,20 +141,17 @@ class SearchMoviesShowCubit extends Cubit<ApiServiceBloc>
     ];
     if (searchedMovies.isNotEmpty) {
       searchedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
-      emit(FetchSearchedMovies(searchedMovies));
+      emit(state.copyWith(
+          searchedMovies: searchedMovies, dataStatus: DataStatus.success));
     } else {
-      emit(ErrorMovieState("No Movies found"));
+      emit(state.copyWith(dataStatus: DataStatus.error));
     }
     return searchedMovies;
   }
-}
 
-class SimilarMoviesCubit extends Cubit<ApiServiceBloc>
-    with ApiServiceConstants {
-  SimilarMoviesCubit() : super(InitCubit());
-
-  Future<List<Movie>> fetchSimilarMovies(int movieId) async {
-    emit(LoadingMovieState());
+  Future<List<Movie>> fetchSimilarMovies(
+      int movieId, Emitter<ApiServiceState> emit) async {
+    //  emit(state.copyWith(dataStatus: DataStatus.loading));
     var response = await http.get(Uri.parse(
         "$baseUrl/movie/$movieId/similar?language=en-US&page=1&api_key=$apiKey"));
     print(response.body);
@@ -154,19 +162,19 @@ class SimilarMoviesCubit extends Cubit<ApiServiceBloc>
     ];
     if (similarMovies.isNotEmpty) {
       similarMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
-      emit(FetchSimilarMovies(similarMovies));
+      emit(state.copyWith(
+          similarMovies: similarMovies, dataStatus: DataStatus.success));
     } else {
-      emit(ErrorMovieState("No Similar Movies found"));
+      emit(state.copyWith(
+          dataStatus: DataStatus.error,
+          errorMessage: "Failed to load similar movies"));
     }
     return similarMovies;
   }
-}
 
-class MovieReviewsCubit extends Cubit<ApiServiceBloc> with ApiServiceConstants {
-  MovieReviewsCubit() : super(InitCubit());
-
-  Future<List<Review>> fetchMovieReviews(int movieId) async {
-    emit(LoadingMovieState());
+  Future<List<Review>> fetchMovieReviews(
+      int movieId, Emitter<ApiServiceState> emit) async {
+    // emit(state.copyWith(dataStatus: DataStatus.loading));
     var response = await http.get(Uri.parse(
         "$baseUrl/movie/$movieId/reviews?language=en-US&page=1&api_key=$apiKey"));
     print(response.body);
@@ -176,20 +184,19 @@ class MovieReviewsCubit extends Cubit<ApiServiceBloc> with ApiServiceConstants {
       ...data['results'].map((review) => Review.fromJson(review)).toList()
     ];
     if (movieReviews.isNotEmpty) {
-      emit(FetchMovieReviews(movieReviews));
+      emit(state.copyWith(
+          movieReviews: movieReviews, dataStatus: DataStatus.success));
     } else {
-      emit(ErrorMovieState("No Reviews found"));
+      emit(state.copyWith(
+          dataStatus: DataStatus.error,
+          errorMessage: "Failed to load reviews"));
     }
     return movieReviews;
   }
-}
 
-class RecommendedMoviesCubit extends Cubit<ApiServiceBloc>
-    with ApiServiceConstants {
-  RecommendedMoviesCubit() : super(InitCubit());
-
-  Future<List<Movie>> fetchRecommendedMovies(int movieId) async {
-    emit(LoadingMovieState());
+  Future<List<Movie>> fetchRecommendedMovies(
+      int movieId, Emitter<ApiServiceState> emit) async {
+    // emit(state.copyWith(dataStatus: DataStatus.loading));
     var response = await http.get(Uri.parse(
         "$baseUrl/movie/$movieId/recommendations?language=en-US&page=1&api_key=$apiKey"));
     print(response.body);
@@ -200,20 +207,20 @@ class RecommendedMoviesCubit extends Cubit<ApiServiceBloc>
     ];
     if (recommendedMovies.isNotEmpty) {
       recommendedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
-      emit(FetchRecommendedMovies(recommendedMovies));
+      emit(state.copyWith(
+          recommendedMovies: recommendedMovies,
+          dataStatus: DataStatus.success));
     } else {
-      emit(ErrorMovieState("No Recommendations found"));
+      emit(state.copyWith(
+          errorMessage: "Failed to load recommended movies",
+          dataStatus: DataStatus.error));
     }
     return recommendedMovies;
   }
-}
 
-class MovieWatchProviderCubit extends Cubit<ApiServiceBloc>
-    with ApiServiceConstants {
-  MovieWatchProviderCubit() : super(InitCubit());
-
-  Future<WatchProvider?> fetchMovieWatchProviders(int movieId) async {
-    emit(LoadingMovieState());
+  Future<void> fetchMovieWatchProviders(
+      int movieId, Emitter<ApiServiceState> emit) async {
+    // emit(state.copyWith(dataStatus: DataStatus.loading));
     try {
       var response = await http.get(
           Uri.parse(
@@ -232,15 +239,17 @@ class MovieWatchProviderCubit extends Cubit<ApiServiceBloc>
       movieProviderSingleCountry = WatchProvider.fromJson(singleWatchProvider);
 
       if (movieProviderSingleCountry != null) {
-        emit(FetchMovieWatchProvider(movieProviderSingleCountry));
+        emit(state.copyWith(movieWatchProvider: movieProviderSingleCountry));
       } else {
-        emit(ErrorMovieState("No Watch Providers found"));
+        emit(state.copyWith(
+            dataStatus: DataStatus.error,
+            errorMessage: "No watch providers found"));
       }
-      return movieProviderSingleCountry;
     } catch (e) {
       debugPrint(e.toString());
-      emit(ErrorMovieState("No Watch Providers found"));
-      return null;
+      emit(state.copyWith(
+          dataStatus: DataStatus.error,
+          errorMessage: "No watch providers found"));
     }
   }
 }

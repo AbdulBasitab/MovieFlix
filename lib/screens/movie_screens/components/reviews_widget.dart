@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../cubit/api_cubit/api_service_bloc.dart';
-import '../../../cubit/api_cubit/api_service_cubit_state.dart';
+import '../../../bloc/api_bloc/api_service_bloc.dart';
 import '../../../widgets/image_widget.dart';
 
 class ReviewsWidget extends StatelessWidget {
@@ -12,12 +10,14 @@ class ReviewsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieReviewsCubit, ApiServiceBloc>(
+    return BlocBuilder<ApiServiceBloc, ApiServiceState>(
       builder: (context, state) {
-        if (state is FetchMovieReviews) {
+        if (state.movieReviews.isNotEmpty &&
+            state.dataStatus == DataStatus.success) {
           return SizedBox(
             height: 400,
             child: ListView.builder(
+              physics: const BouncingScrollPhysics(),
               itemCount: state.movieReviews.length,
               itemBuilder: (context, index) {
                 if (state.movieReviews.isEmpty) {
@@ -87,18 +87,20 @@ class ReviewsWidget extends StatelessWidget {
               },
             ),
           );
-        } else if (state is LoadingMovieState) {
+        } else if (state.dataStatus == DataStatus.loading &&
+            state.movieReviews.isEmpty) {
           return const SizedBox(
             height: 90,
             child: Center(
               child: CircularProgressIndicator(),
             ),
           );
-        } else if (state is ErrorMovieState) {
+        } else if (state.dataStatus == DataStatus.error &&
+            state.movieReviews.isEmpty) {
           return SizedBox(
             height: 90,
             child: Center(
-              child: Text(state.errorMessage),
+              child: Text(state.errorMessage ?? ''),
             ),
           );
         } else {

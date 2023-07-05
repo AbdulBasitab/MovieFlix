@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class CustomMaterial3SearchBar extends StatefulWidget {
   final TextEditingController controller;
@@ -57,6 +58,11 @@ class _CustomMaterial3SearchBarState extends State<CustomMaterial3SearchBar> {
                   )
                 : null,
             hintText: 'Search Movies',
+            hintStyle: GoogleFonts.raleway(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+              color: Colors.grey.shade400,
+            ),
             border: InputBorder.none,
           ),
           onTap: () {

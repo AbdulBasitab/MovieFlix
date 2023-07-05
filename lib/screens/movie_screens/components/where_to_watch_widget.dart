@@ -1,30 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/cubit/api_cubit/api_service_bloc.dart';
-import 'package:movies_app/cubit/api_cubit/api_service_cubit_state.dart';
 import 'package:movies_app/widgets/image_widget.dart';
+
+import '../../../bloc/api_bloc/api_service_bloc.dart';
 
 class WhereToWatchWidget extends StatelessWidget {
   const WhereToWatchWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MovieWatchProviderCubit, ApiServiceBloc>(
+    return BlocBuilder<ApiServiceBloc, ApiServiceState>(
       builder: (context, state) {
-        if (state is FetchMovieWatchProvider) {
+        if (state.movieWatchProvider != null &&
+            state.dataStatus == DataStatus.success) {
           return SizedBox(
-            height: ((state.movieWatchProvider.buyOptions == null &&
-                        state.movieWatchProvider.rentOptions == null) ||
-                    (state.movieWatchProvider.buyOptions == null &&
-                        state.movieWatchProvider.flatrateOptions == null) ||
-                    (state.movieWatchProvider.flatrateOptions == null &&
-                        state.movieWatchProvider.rentOptions == null))
+            height: ((state.movieWatchProvider?.buyOptions == null &&
+                        state.movieWatchProvider?.rentOptions == null) ||
+                    (state.movieWatchProvider?.buyOptions == null &&
+                        state.movieWatchProvider?.flatrateOptions == null) ||
+                    (state.movieWatchProvider?.flatrateOptions == null &&
+                        state.movieWatchProvider?.rentOptions == null))
                 ? 185
-                : (state.movieWatchProvider.buyOptions == null)
+                : (state.movieWatchProvider?.buyOptions == null)
                     ? 350
-                    : (state.movieWatchProvider.rentOptions == null)
+                    : (state.movieWatchProvider?.rentOptions == null)
                         ? 350
-                        : (state.movieWatchProvider.flatrateOptions == null)
+                        : (state.movieWatchProvider?.flatrateOptions == null)
                             ? 350
                             : 530,
             child: ListView(
@@ -35,7 +36,7 @@ class WhereToWatchWidget extends StatelessWidget {
                 Visibility(
                   maintainState: true,
                   //  maintainAnimation: true,
-                  visible: (state.movieWatchProvider.buyOptions != null)
+                  visible: (state.movieWatchProvider?.buyOptions != null)
                       ? true
                       : false,
                   child: Column(
@@ -60,9 +61,9 @@ class WhereToWatchWidget extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.all(8),
                           itemCount:
-                              state.movieWatchProvider.buyOptions?.length,
+                              state.movieWatchProvider?.buyOptions?.length,
                           itemBuilder: (context, index) {
-                            var buyList = state.movieWatchProvider.buyOptions;
+                            var buyList = state.movieWatchProvider?.buyOptions;
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -103,7 +104,7 @@ class WhereToWatchWidget extends StatelessWidget {
                 Visibility(
                   maintainState: true,
                   // maintainAnimation: true,
-                  visible: (state.movieWatchProvider.rentOptions != null)
+                  visible: (state.movieWatchProvider?.rentOptions != null)
                       ? true
                       : false,
                   child: Column(
@@ -128,9 +129,10 @@ class WhereToWatchWidget extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.all(8),
                           itemCount:
-                              state.movieWatchProvider.rentOptions?.length,
+                              state.movieWatchProvider?.rentOptions?.length,
                           itemBuilder: (context, index) {
-                            var rentList = state.movieWatchProvider.rentOptions;
+                            var rentList =
+                                state.movieWatchProvider?.rentOptions;
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -173,7 +175,7 @@ class WhereToWatchWidget extends StatelessWidget {
                 Visibility(
                   maintainState: true,
                   maintainAnimation: true,
-                  visible: (state.movieWatchProvider.flatrateOptions != null)
+                  visible: (state.movieWatchProvider?.flatrateOptions != null)
                       ? true
                       : false,
                   child: Column(
@@ -198,10 +200,10 @@ class WhereToWatchWidget extends StatelessWidget {
                           scrollDirection: Axis.horizontal,
                           padding: const EdgeInsets.all(8),
                           itemCount:
-                              state.movieWatchProvider.flatrateOptions?.length,
+                              state.movieWatchProvider?.flatrateOptions?.length,
                           itemBuilder: (context, index) {
                             var flatrateList =
-                                state.movieWatchProvider.flatrateOptions;
+                                state.movieWatchProvider?.flatrateOptions;
                             return Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
@@ -244,18 +246,21 @@ class WhereToWatchWidget extends StatelessWidget {
               ],
             ),
           );
-        } else if (state is LoadingMovieState) {
+        } else if (state.dataStatus == DataStatus.loading &&
+            state.movieWatchProvider == null) {
           return const SizedBox(
             height: 90,
             child: Center(
               child: CircularProgressIndicator(),
             ),
           );
-        } else if (state is ErrorMovieState) {
+        } else if (state.dataStatus == DataStatus.error &&
+            state.movieWatchProvider == null) {
           return SizedBox(
             height: 90,
             child: Center(
-              child: Text(state.errorMessage, textAlign: TextAlign.center),
+              child: Text(state.errorMessage ?? 'Some Error occured',
+                  textAlign: TextAlign.center),
             ),
           );
         } else {

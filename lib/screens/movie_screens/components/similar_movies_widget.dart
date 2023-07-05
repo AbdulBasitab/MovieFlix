@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/widgets/image_widget.dart';
 
-import '../../../cubit/api_cubit/api_service_bloc.dart';
-import '../../../cubit/api_cubit/api_service_cubit_state.dart';
+import '../../../bloc/api_bloc/api_service_bloc.dart';
 
 class SimilarMoviesWidget extends StatelessWidget {
   const SimilarMoviesWidget({
@@ -12,13 +11,15 @@ class SimilarMoviesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SimilarMoviesCubit, ApiServiceBloc>(
+    return BlocBuilder<ApiServiceBloc, ApiServiceState>(
       builder: (context, state) {
-        if (state is FetchSimilarMovies) {
+        if (state.similarMovies.isNotEmpty &&
+            state.dataStatus == DataStatus.success) {
           return SizedBox(
             height: 200,
             child: ListView.builder(
                 scrollDirection: Axis.horizontal,
+                physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.all(8),
                 itemCount: state.similarMovies.length,
                 itemBuilder: (context, index) {
@@ -70,18 +71,21 @@ class SimilarMoviesWidget extends StatelessWidget {
                   );
                 }),
           );
-        } else if (state is LoadingMovieState) {
+        } else if (state.dataStatus == DataStatus.loading &&
+            state.similarMovies.isEmpty) {
           return const SizedBox(
             height: 90,
             child: Center(
               child: CircularProgressIndicator(),
             ),
           );
-        } else if (state is ErrorMovieState) {
+        } else if (state.dataStatus == DataStatus.error &&
+            state.similarMovies.isEmpty) {
           return SizedBox(
             height: 90,
             child: Center(
-              child: Text(state.errorMessage),
+              child:
+                  Text(state.errorMessage ?? 'Some Error Occured try again ⚠️'),
             ),
           );
         } else {

@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../cubit/api_cubit/api_service_bloc.dart';
-import '../../../cubit/api_cubit/api_service_cubit_state.dart';
-import '../../../cubit/fav_cubit/favourite_cubit.dart';
+import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
+import '../../../bloc/fav_cubit/favourite_cubit.dart';
 import '../../../widgets/card_widget.dart';
 import '../../tv_screens/tv_detail_screen.dart';
 
@@ -19,12 +18,13 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
   @override
   Widget build(BuildContext context) {
     final favCubit = context.watch<FavouriteMoviesShowsCubit>();
-    return BlocBuilder<TvShowsCubit, ApiServiceBloc>(
-      builder: (context, snapshot) {
-        if (snapshot is FetchPopularTvShows) {
-          final popTvs = snapshot.popularTvList;
+    return BlocBuilder<ApiServiceBloc, ApiServiceState>(
+      builder: (context, state) {
+        if (state.popularTvShows.isNotEmpty &&
+            state.dataStatus == DataStatus.success) {
+          final popTvs = state.popularTvShows;
           return SliverGrid.builder(
-            itemCount: snapshot.popularTvList.length,
+            itemCount: state.popularTvShows.length,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 130,
               crossAxisSpacing: 30,
@@ -40,8 +40,8 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
                 fromTrendingMovie: false,
                 onTap: () {
                   context
-                      .read<PopularTvDetailCubit>()
-                      .fetchPopularTvDetail(popTvs[index].id!.toDouble());
+                      .read<ApiServiceBloc>()
+                      .add(FetchTvShowDetail(tvShowId: popTvs[index].id!));
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -61,24 +61,61 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
               );
             },
           );
-        } else if (snapshot is LoadingMovieState || snapshot is InitCubit) {
+        } else if (state.dataStatus == DataStatus.loading &&
+            state.popularTvShows.isEmpty) {
           return const SliverToBoxAdapter(
             child: Center(
               child: CircularProgressIndicator(),
             ),
           );
-        } else if (snapshot is ErrorMovieState) {
-          return const SliverToBoxAdapter(
+        } else if (state.dataStatus == DataStatus.error &&
+            state.popularTvShows.isEmpty) {
+          return SliverToBoxAdapter(
             child: Center(
-              child: CircularProgressIndicator(),
+              child: Text(state.errorMessage ?? "Some error occured"),
             ),
+          );
+        } else {
+          final popTvs = state.popularTvShows;
+          return SliverGrid.builder(
+            itemCount: state.popularTvShows.length,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 130,
+              crossAxisSpacing: 30,
+              mainAxisSpacing: 11,
+              mainAxisExtent: 240,
+            ),
+            itemBuilder: (BuildContext ctx, index) {
+              return MovieTvCardWidget(
+                popTv: popTvs[index],
+                favCubit: favCubit,
+                posterImage:
+                    'https://image.tmdb.org/t/p/w500${popTvs[index].poster}',
+                fromTrendingMovie: false,
+                onTap: () {
+                  context
+                      .read<ApiServiceBloc>()
+                      .add(FetchTvShowDetail(tvShowId: popTvs[index].id!));
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => TvDetailPage(
+                        tvShow: popTvs[index],
+                      ),
+                    ),
+                  );
+                },
+                onFavouriteTap: () {
+                  if (favCubit.isShowFavorited(popTvs[index]) == true) {
+                    favCubit.removeFavShow(popTvs[index]);
+                    return;
+                  }
+                  favCubit.addFavShow(popTvs[index]);
+                },
+              );
+            },
           );
         }
-        return const SliverToBoxAdapter(
-          child: Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
       },
     );
   }

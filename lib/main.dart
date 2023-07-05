@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:movies_app/constants/theme_constants.dart';
 import 'package:movies_app/screens/home_screen/bottom_nav_bar.dart';
-
-import 'cubit/api_cubit/api_service_bloc.dart';
-import 'cubit/fav_cubit/favourite_cubit.dart';
+import 'bloc/api_bloc/api_service_bloc.dart';
+import 'bloc/fav_cubit/favourite_cubit.dart';
 
 void main() {
   runApp(
@@ -20,15 +20,8 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ApiServiceBloc()),
-        BlocProvider(create: (_) => TvShowsCubit()),
-        BlocProvider(create: (_) => PopularTvDetailCubit()),
-        BlocProvider(create: (_) => MovieDetailCubit()),
         BlocProvider(create: (_) => FavouriteMoviesShowsCubit()),
-        BlocProvider(create: (_) => SearchMoviesShowCubit()),
-        BlocProvider(create: (_) => SimilarMoviesCubit()),
-        BlocProvider(create: (_) => RecommendedMoviesCubit()),
-        BlocProvider(create: (_) => MovieReviewsCubit()),
-        BlocProvider(create: (_) => MovieWatchProviderCubit()),
+        BlocProvider(create: (_) => NavigationBloc()),
       ],
       child: MaterialApp(
         title: "MovieFlix",
