@@ -47,6 +47,7 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
     emit(state.copyWith(
       watchlistedMovies: state.watchlistedMovies,
     ));
+    state.isarService.removeWatchListMovieFromDB(movie);
   }
 
   void removeShowFromWatchlist(Emitter<WatchlistState> emit, TvShow show) {
