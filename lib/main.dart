@@ -3,10 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:movies_app/constants/theme_constants.dart';
 import 'package:movies_app/screens/home_screen/bottom_nav_bar.dart';
+import 'package:movies_app/services/isar_service.dart';
 import 'bloc/api_bloc/api_service_bloc.dart';
-import 'bloc/fav_cubit/favourite_cubit.dart';
+import 'bloc/watchlist_bloc/watchlist_bloc.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await IsarService.isarDBInit();
   runApp(
     const MyApp(),
   );
@@ -20,7 +23,7 @@ class MyApp extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => ApiServiceBloc()),
-        BlocProvider(create: (_) => FavouriteMoviesShowsCubit()),
+        BlocProvider(create: (_) => WatchlistBloc()),
         BlocProvider(create: (_) => NavigationBloc()),
       ],
       child: MaterialApp(

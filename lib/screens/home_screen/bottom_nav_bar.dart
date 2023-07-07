@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:movies_app/screens/home_screen/home_screen.dart';
-import 'package:movies_app/screens/movie_screens/watchlist_screen.dart';
+import 'package:movies_app/screens/watchlist_screen/watchlist_screen.dart';
 import 'package:movies_app/screens/search_screen/search_screen.dart';
 
 class BottomNavBar extends StatefulWidget {

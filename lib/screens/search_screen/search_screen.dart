@@ -5,7 +5,7 @@ import 'package:movies_app/constants/data_constants.dart';
 import 'package:movies_app/widgets/image_widget.dart';
 import 'package:movies_app/widgets/searchbar_widget.dart';
 import '../../models/movie/movie.dart';
-import '../movie_screens/movie_detail_screen.dart';
+import '../movie_screen/movie_detail_screen.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({super.key});

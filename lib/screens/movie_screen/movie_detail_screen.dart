@@ -5,7 +5,7 @@ import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
 import 'package:movies_app/models/review/review.dart';
 import 'package:movies_app/widgets/image_widget.dart';
-import '../../bloc/fav_cubit/favourite_cubit.dart';
+import '../../bloc/watchlist_bloc/watchlist_bloc.dart';
 import '../../models/movie/movie.dart';
 import 'components/movie_detail_tabview.dart';
 
@@ -57,7 +57,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
 
   @override
   Widget build(BuildContext context) {
-    var favCubit = context.watch<FavouriteMoviesShowsCubit>();
+    var watchlistBloc = context.watch<WatchlistBloc>();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -74,14 +74,16 @@ class _MovieDetailPageState extends State<MovieDetailPage>
           actions: [
             IconButton(
               onPressed: () {
-                favCubit.addFavMovie(widget.movie);
+                (!watchlistBloc.isMovieFavorited(widget.movie))
+                    ? watchlistBloc.add(AddMovieToWatchlist(widget.movie))
+                    : watchlistBloc.add(RemoveMovieFromWatchlist(widget.movie));
               },
               icon: Icon(
-                (favCubit.isMovieFavorited(widget.movie))
+                (watchlistBloc.isMovieFavorited(widget.movie))
                     ? Icons.bookmark_added_rounded
                     : Icons.bookmark_outline_rounded,
                 size: 26,
-                color: (favCubit.isMovieFavorited(widget.movie))
+                color: (watchlistBloc.isMovieFavorited(widget.movie))
                     ? Colors.amber.shade500
                     : Colors.white,
               ),

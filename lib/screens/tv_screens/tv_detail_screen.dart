@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
 import 'package:movies_app/widgets/image_widget.dart';
-import '../../bloc/fav_cubit/favourite_cubit.dart';
+import '../../bloc/watchlist_bloc/watchlist_bloc.dart';
 import '../../models/tv_show/tv_show.dart';
 
 class TvDetailPage extends StatefulWidget {
@@ -27,7 +27,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    var favCubit = context.watch<FavouriteMoviesShowsCubit>();
+    var watchlistBloc = context.watch<WatchlistBloc>();
 
     return SafeArea(
       child: Scaffold(
@@ -45,14 +45,14 @@ class _TvDetailPageState extends State<TvDetailPage> {
           actions: [
             IconButton(
               onPressed: () {
-                favCubit.addFavShow(widget.tvShow);
+                watchlistBloc.add(AddShowToWatchlist(widget.tvShow));
               },
               icon: Icon(
-                (favCubit.isShowFavorited(widget.tvShow))
+                (watchlistBloc.isShowFavorited(widget.tvShow))
                     ? Icons.bookmark_added_rounded
                     : Icons.bookmark_outline_rounded,
                 size: 26,
-                color: (favCubit.isShowFavorited(widget.tvShow))
+                color: (watchlistBloc.isShowFavorited(widget.tvShow))
                     ? Colors.amber.shade500
                     : Colors.white,
               ),

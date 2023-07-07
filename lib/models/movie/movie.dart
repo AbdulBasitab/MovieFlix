@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 // import 'genre.dart';
@@ -6,7 +7,11 @@ import 'package:json_annotation/json_annotation.dart';
 part 'movie.g.dart';
 
 @JsonSerializable()
+@Collection()
 class Movie {
+  @JsonKey(includeFromJson: false)
+  Id isarId = Isar.autoIncrement;
+
   @JsonKey(name: 'title')
   final String? title;
 
@@ -23,7 +28,7 @@ class Movie {
   final String? description;
 
   @JsonKey(name: 'vote_average')
-  final num? rating;
+  final double? rating;
 
   @JsonKey(name: 'release_date')
   final String? releaseDate;

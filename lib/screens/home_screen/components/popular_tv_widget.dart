@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
-import '../../../bloc/fav_cubit/favourite_cubit.dart';
+import '../../../bloc/watchlist_bloc/watchlist_bloc.dart';
 import '../../../widgets/card_widget.dart';
 import '../../tv_screens/tv_detail_screen.dart';
 
@@ -17,7 +17,7 @@ class PopularTvWidget extends StatefulWidget {
 class _PopularTvWidgetState extends State<PopularTvWidget> {
   @override
   Widget build(BuildContext context) {
-    final favCubit = context.watch<FavouriteMoviesShowsCubit>();
+    final favCubit = context.watch<WatchlistBloc>();
     return BlocBuilder<ApiServiceBloc, ApiServiceState>(
       builder: (context, state) {
         if (state.popularTvShows.isNotEmpty &&
@@ -51,13 +51,13 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
                     ),
                   );
                 },
-                onFavouriteTap: () {
-                  if (favCubit.isShowFavorited(popTvs[index]) == true) {
-                    favCubit.removeFavShow(popTvs[index]);
-                    return;
-                  }
-                  favCubit.addFavShow(popTvs[index]);
-                },
+                // onFavouriteTap: () {
+                //   if (favCubit.isShowFavorited(popTvs[index]) == true) {
+                //     favCubit.removeFavShow(popTvs[index]);
+                //     return;
+                //   }
+                //   favCubit.addFavShow(popTvs[index]);
+                // },
               );
             },
           );
@@ -104,13 +104,6 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
                       ),
                     ),
                   );
-                },
-                onFavouriteTap: () {
-                  if (favCubit.isShowFavorited(popTvs[index]) == true) {
-                    favCubit.removeFavShow(popTvs[index]);
-                    return;
-                  }
-                  favCubit.addFavShow(popTvs[index]);
                 },
               );
             },

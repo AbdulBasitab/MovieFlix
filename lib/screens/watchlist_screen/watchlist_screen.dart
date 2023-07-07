@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
-import 'package:movies_app/screens/movie_screens/movie_detail_screen.dart';
+import 'package:movies_app/screens/movie_screen/movie_detail_screen.dart';
 import 'package:movies_app/widgets/image_widget.dart';
-import '../../bloc/fav_cubit/favourite_cubit.dart';
-import '../../bloc/fav_cubit/favourite_cubit_state.dart';
+import '../../bloc/watchlist_bloc/watchlist_bloc.dart';
 import '../../models/movie/movie.dart';
 
 class WatchlistScreen extends StatefulWidget {
@@ -42,7 +41,7 @@ class _WatchlistScreenState extends State<WatchlistScreen>
 
   @override
   Widget build(BuildContext context) {
-    final favCubit = context.watch<FavouriteMoviesShowsCubit>();
+    final watchlistBloc = context.watch<WatchlistBloc>();
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -65,15 +64,14 @@ class _WatchlistScreenState extends State<WatchlistScreen>
             right: 15,
             bottom: 10,
           ),
-          child:
-              BlocBuilder<FavouriteMoviesShowsCubit, FavMoviesShowsCubitState>(
+          child: BlocBuilder<WatchlistBloc, WatchlistState>(
             builder: (context, state) {
-              if (state.favouriteMovies.isNotEmpty) {
-                final List<Movie> favMovies = state.favouriteMovies;
+              if (state.watchlistedMovies.isNotEmpty) {
+                final List<Movie> watchlistedMovies = state.watchlistedMovies;
                 return GridView.builder(
-                  itemCount: favMovies.length,
+                  itemCount: watchlistedMovies.length,
                   itemBuilder: (BuildContext context, int index) {
-                    final currentFavMovie = favMovies[index];
+                    final currentFavMovie = watchlistedMovies[index];
                     return Stack(
                       children: [
                         Container(
@@ -131,17 +129,21 @@ class _WatchlistScreenState extends State<WatchlistScreen>
                                           bottom: 140,
                                           child: IconButton(
                                             onPressed: () {
-                                              if (favCubit.isMovieFavorited(
-                                                  currentFavMovie)) {
-                                                favCubit.removeFavMovie(
-                                                    currentFavMovie);
+                                              if (watchlistBloc
+                                                  .isMovieFavorited(
+                                                      currentFavMovie)) {
+                                                watchlistBloc.add(
+                                                    RemoveMovieFromWatchlist(
+                                                        currentFavMovie));
+
                                                 return;
                                               }
                                             },
                                             icon: Icon(
                                               Icons.favorite_rounded,
-                                              color: favCubit.isMovieFavorited(
-                                                      currentFavMovie)
+                                              color: watchlistBloc
+                                                      .isMovieFavorited(
+                                                          currentFavMovie)
                                                   ? Colors.red
                                                   : Colors.white,
                                               shadows: const [

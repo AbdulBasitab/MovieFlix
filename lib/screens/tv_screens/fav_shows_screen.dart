@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import 'package:movies_app/screens/tv_screens/tv_detail_screen.dart';
-import '../../bloc/fav_cubit/favourite_cubit.dart';
-import '../../bloc/fav_cubit/favourite_cubit_state.dart';
+import '../../bloc/watchlist_bloc/watchlist_bloc.dart';
 import '../../models/tv_show/tv_show.dart';
 
 class FavShows extends StatefulWidget {
@@ -16,7 +15,7 @@ class FavShows extends StatefulWidget {
 class _FavShowsState extends State<FavShows> {
   @override
   Widget build(BuildContext context) {
-    final favCubit = context.watch<FavouriteMoviesShowsCubit>();
+    final watchlistBloc = context.watch<WatchlistBloc>();
     return Scaffold(
       appBar: AppBar(
         title: const Text('Favourite Shows'),
@@ -32,10 +31,10 @@ class _FavShowsState extends State<FavShows> {
           right: 15,
           bottom: 10,
         ),
-        child: BlocBuilder<FavouriteMoviesShowsCubit, FavMoviesShowsCubitState>(
+        child: BlocBuilder<WatchlistBloc, WatchlistState>(
           builder: (context, state) {
-            if (state.favouriteShows.isNotEmpty) {
-              final List<TvShow> favtv = state.favouriteShows;
+            if (state.watchlistedShows.isNotEmpty) {
+              final List<TvShow> favtv = state.watchlistedShows;
               return GridView.builder(
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 130,
@@ -85,18 +84,19 @@ class _FavShowsState extends State<FavShows> {
                               bottom: 140,
                               child: IconButton(
                                 onPressed: () {
-                                  if (favCubit
+                                  if (watchlistBloc
                                       .isShowFavorited(currentfavtvshow)) {
-                                    favCubit.removeFavShow(currentfavtvshow);
+                                    watchlistBloc.add(RemoveTvShowFromWatchlist(
+                                        currentfavtvshow));
                                     return;
                                   }
                                 },
                                 icon: Icon(
                                   Icons.favorite_rounded,
-                                  color:
-                                      favCubit.isShowFavorited(currentfavtvshow)
-                                          ? Colors.red
-                                          : Colors.white,
+                                  color: watchlistBloc
+                                          .isShowFavorited(currentfavtvshow)
+                                      ? Colors.red
+                                      : Colors.white,
                                   shadows: const [
                                     Shadow(
                                       color: Colors.black45,

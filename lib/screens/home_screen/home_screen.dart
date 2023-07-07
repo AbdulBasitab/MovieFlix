@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/bloc/navigation_bloc/navigation_bloc.dart';
 import 'package:movies_app/screens/home_screen/components/trending_movies_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../bloc/api_bloc/api_service_bloc.dart';
+import '../../bloc/watchlist_bloc/watchlist_bloc.dart';
 import 'components/popular_tv_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -19,10 +21,19 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    // WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-    context.read<ApiServiceBloc>().add(FetchTrendingMovies());
-    context.read<ApiServiceBloc>().add(FetchPopularTvShows());
-    // });
+    fetchDataFirstTime();
+  }
+
+  void fetchDataFirstTime() {
+    if (!context.read<NavigationBloc>().state.isDataFetched) {
+      context.read<ApiServiceBloc>().add(FetchTrendingMovies());
+      context.read<ApiServiceBloc>().add(FetchPopularTvShows());
+      context.read<WatchlistBloc>().add(FetchWatchlistMovies());
+
+      return;
+    } else {
+      return;
+    }
   }
 
   @override
@@ -82,19 +93,6 @@ class _HomePageState extends State<HomePage>
                             fontWeight: FontWeight.w500,
                           ),
                         ),
-                        // IconButton(
-                        //   onPressed: () {
-                        //     Navigator.push(
-                        //       context,
-                        //       MaterialPageRoute(
-                        //           builder: (context) => const FavMovies()),
-                        //     );
-                        //   },
-                        //   icon: const Icon(
-                        //     Icons.favorite_border_rounded,
-                        //     color: Colors.amber,
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
@@ -122,19 +120,6 @@ class _HomePageState extends State<HomePage>
                         fontWeight: FontWeight.w500,
                       ),
                     ),
-                    // IconButton(
-                    //   onPressed: () {
-                    //     Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //           builder: (context) => const FavShows()),
-                    //     );
-                    //   },
-                    //   icon: const Icon(
-                    //     Icons.favorite_border_rounded,
-                    //     color: Colors.amber,
-                    //   ),
-                    // ),
                   ],
                 ),
               ),

@@ -4,15 +4,19 @@ part of 'navigation_bloc.dart';
 
 class NavigationState {
   final int selectedIndex;
+  final bool isDataFetched;
   NavigationState({
     required this.selectedIndex,
+    required this.isDataFetched,
   });
 
   NavigationState copyWith({
     int? selectedIndex,
+    bool? isDataFetched,
   }) {
     return NavigationState(
       selectedIndex: selectedIndex ?? this.selectedIndex,
+      isDataFetched: isDataFetched ?? this.isDataFetched,
     );
   }
 }

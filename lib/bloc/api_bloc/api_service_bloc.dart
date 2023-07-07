@@ -238,13 +238,7 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
       var singleWatchProvider = watchProvidersData['US'];
       movieProviderSingleCountry = WatchProvider.fromJson(singleWatchProvider);
 
-      if (movieProviderSingleCountry != null) {
-        emit(state.copyWith(movieWatchProvider: movieProviderSingleCountry));
-      } else {
-        emit(state.copyWith(
-            dataStatus: DataStatus.error,
-            errorMessage: "No watch providers found"));
-      }
+      emit(state.copyWith(movieWatchProvider: movieProviderSingleCountry));
     } catch (e) {
       debugPrint(e.toString());
       emit(state.copyWith(

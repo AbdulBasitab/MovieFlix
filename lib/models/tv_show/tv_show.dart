@@ -1,3 +1,4 @@
+import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../genre/genre.dart';
@@ -5,7 +6,11 @@ import '../genre/genre.dart';
 part 'tv_show.g.dart';
 
 @JsonSerializable()
+@Collection()
 class TvShow {
+  @JsonKey(includeFromJson: false)
+  Id isarId = Isar.autoIncrement;
+
   @JsonKey(name: 'poster_path')
   final String? poster;
 
@@ -37,13 +42,11 @@ class TvShow {
   final String? status;
 
   @JsonKey(name: 'vote_average')
-  final num? rating;
+  final double? rating;
 
   @JsonKey(name: 'genres')
+  @ignore
   final List<Genre>? genres;
-
-  // @JsonKey(defaultValue: false)
-  // final bool isFavourite;
 
   TvShow({
     required this.id,
@@ -51,7 +54,7 @@ class TvShow {
     required this.title,
     required this.episodes,
     required this.firstairDate,
-    required this.genres,
+    this.genres,
     required this.lastairDate,
     required this.rating,
     required this.seasons,

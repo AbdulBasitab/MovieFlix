@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/widgets/card_widget.dart';
 import '../../../bloc/api_bloc/api_service_bloc.dart';
-import '../../../bloc/fav_cubit/favourite_cubit.dart';
-import '../../movie_screens/movie_detail_screen.dart';
+import '../../../bloc/watchlist_bloc/watchlist_bloc.dart';
+import '../../movie_screen/movie_detail_screen.dart';
 
 class TrendingMoviesWidget extends StatefulWidget {
   const TrendingMoviesWidget({
@@ -17,7 +17,7 @@ class TrendingMoviesWidget extends StatefulWidget {
 class _TrendingMoviesWidgetState extends State<TrendingMoviesWidget> {
   @override
   Widget build(BuildContext context) {
-    final favCubit = context.watch<FavouriteMoviesShowsCubit>();
+    final favCubit = context.watch<WatchlistBloc>();
     return BlocBuilder<ApiServiceBloc, ApiServiceState>(
       builder: (context, state) {
         //   context.read<FetchTrendingMoviesCubit>().fetchTrendingMovies();
@@ -60,14 +60,6 @@ class _TrendingMoviesWidgetState extends State<TrendingMoviesWidget> {
                 },
                 posterImage:
                     'https://image.tmdb.org/t/p/w500${trendingMovies[index].poster}',
-                onFavouriteTap: () {
-                  if (favCubit.isMovieFavorited(trendingMovies[index]) ==
-                      true) {
-                    favCubit.removeFavMovie(trendingMovies[index]);
-                    return;
-                  }
-                  favCubit.addFavMovie(trendingMovies[index]);
-                },
               );
             },
           );
@@ -115,14 +107,6 @@ class _TrendingMoviesWidgetState extends State<TrendingMoviesWidget> {
                     },
                     posterImage:
                         'https://image.tmdb.org/t/p/w500${trendingMovies[index].poster}',
-                    onFavouriteTap: () {
-                      if (favCubit.isMovieFavorited(trendingMovies[index]) ==
-                          true) {
-                        favCubit.removeFavMovie(trendingMovies[index]);
-                        return;
-                      }
-                      favCubit.addFavMovie(trendingMovies[index]);
-                    },
                   ),
                 ),
               );
