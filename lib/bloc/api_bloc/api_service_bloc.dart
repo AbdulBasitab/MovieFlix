@@ -1,22 +1,19 @@
-import 'dart:convert';
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/constants/data_constants.dart';
 import 'package:movies_app/models/review/review.dart';
 import 'package:movies_app/models/watch_provider/watch_provider.dart';
 import '../../models/movie/movie.dart';
 import '../../models/movie_detail/movie_detail.dart';
 import '../../models/tv_detail/tv_detail.dart';
 import '../../models/tv_show/tv_show.dart';
+import '../../services/api_service.dart';
 
 part 'api_service_state_event.dart';
 
-class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
-    with ApiServiceConstants {
+class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
   ApiServiceBloc()
       : super(ApiServiceState(
           dataStatus: DataStatus.loading,
+          apiService: ApiService(),
           trendingMovies: [],
           recommendedMovies: [],
           similarMovies: [],
@@ -41,24 +38,14 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
         (event, emit) => fetchMovieWatchProviders(event.movieId, emit));
   }
 
-  /// This function fetches trending movies
+  /// Fetches trending movies
   Future<void> fetchTrendingMovies(Emitter<ApiServiceState> emit) async {
     emit(state.copyWith(dataStatus: DataStatus.loading));
-    final response = await http
-        .get(Uri.parse('$baseUrl/trending/movie/week?api_key=$apiKey'));
-    // print(response.body);
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body) as Map<String, dynamic>;
-      var trendMovies = <Movie>[];
-      trendMovies = <Movie>[
-        ...data['results']
-            .map((trendmovie) => Movie.fromJson(trendmovie))
-            .toList()
-      ];
+    final trendMovies = await state.apiService.fetchTrendingMovies();
 
+    if (trendMovies.isNotEmpty) {
       emit(state.copyWith(
           trendingMovies: trendMovies, dataStatus: DataStatus.success));
-      //return trendMovies;
     } else {
       // If the response was umexpected, throw an error.
       emit(state.copyWith(
@@ -70,35 +57,23 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
   Future<void> fetchMovieDetail(
       int moviekey, Emitter<ApiServiceState> emit) async {
     emit(state.copyWith(dataStatus: DataStatus.loading));
-    final response =
-        await http.get(Uri.parse('$baseUrl/movie/$moviekey?api_key=$apiKey'));
-    print(response);
-    if (response.statusCode == 200) {
-      var movieDetails = json.decode(response.body);
-      var movieDetail = MovieDetail.fromJson(movieDetails);
-      // print(movieDetail);
+    final movieDetail = await state.apiService.fetchMovieDetail(moviekey);
+    if (movieDetail != null) {
       emit(state.copyWith(
           movieDetail: movieDetail, dataStatus: DataStatus.success));
     } else {
       emit(state.copyWith(
           dataStatus: DataStatus.error,
           errorMessage: "Failed to load movie detail"));
-      // throw Exception('Failed to load details');
     }
   }
 
   Future<void> fetchPopularTvShows(Emitter<ApiServiceState> emit) async {
     emit(state.copyWith(dataStatus: DataStatus.loading));
-    final response = await http.get(Uri.parse(
-        '$baseUrl/tv/top_rated?api_key=$apiKey&language=en-US&page=1'));
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body) as Map<String, dynamic>;
-      var popularTvShows = <TvShow>[];
-      popularTvShows = <TvShow>[
-        ...data['results'].map((trendtv) => TvShow.fromJson(trendtv)).toList()
-      ];
+    final popTvShows = await state.apiService.fetchPopularTv();
+    if (popTvShows.isNotEmpty) {
       emit(state.copyWith(
-          popularTvShows: popularTvShows, dataStatus: DataStatus.success));
+          popularTvShows: popTvShows, dataStatus: DataStatus.success));
     } else {
       // If the response was umexpected, throw an error.
       emit(state.copyWith(
@@ -111,34 +86,21 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
   Future<void> fetchTvShowDetail(
       int tvKey, Emitter<ApiServiceState> emit) async {
     emit(state.copyWith(dataStatus: DataStatus.loading));
-    final response = await http
-        .get(Uri.parse('$baseUrl/tv/$tvKey?api_key=$apiKey&language=en-US'));
+    final popTvDetail = await state.apiService.fetchPopularTvDetail(tvKey);
     // print(response.body);
-    if (response.statusCode == 200) {
-      var poptvDetails = json.decode(response.body);
-      var poptvDetail = TvDetail.fromJson(poptvDetails);
-
+    if (popTvDetail != null) {
       emit(state.copyWith(
-          popularTvDetail: poptvDetail, dataStatus: DataStatus.success));
+          popularTvDetail: popTvDetail, dataStatus: DataStatus.success));
     } else {
       emit(state.copyWith(
           dataStatus: DataStatus.error,
           errorMessage: "Failed to load show details"));
-      //throw Exception('Failed to load details');
     }
   }
 
-  Future<List<Movie>> searchMovies(
-      String query, Emitter<ApiServiceState> emit) async {
+  Future<void> searchMovies(String query, Emitter<ApiServiceState> emit) async {
     emit(state.copyWith(dataStatus: DataStatus.loading));
-    var response = await http.get(Uri.parse(
-        "$baseUrl/search/movie?query=$query&include_adult=false&language=en-US&page=1&api_key=$apiKey"));
-    print(response.body);
-    final data = json.decode(response.body) as Map<String, dynamic>;
-    var searchedMovies = <Movie>[];
-    searchedMovies = [
-      ...data['results'].map((movie) => Movie.fromJson(movie)).toList()
-    ];
+    var searchedMovies = await state.apiService.searchMovies(query);
     if (searchedMovies.isNotEmpty) {
       searchedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
       emit(state.copyWith(
@@ -146,20 +108,13 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
     } else {
       emit(state.copyWith(dataStatus: DataStatus.error));
     }
-    return searchedMovies;
   }
 
-  Future<List<Movie>> fetchSimilarMovies(
+  Future<void> fetchSimilarMovies(
       int movieId, Emitter<ApiServiceState> emit) async {
     //  emit(state.copyWith(dataStatus: DataStatus.loading));
-    var response = await http.get(Uri.parse(
-        "$baseUrl/movie/$movieId/similar?language=en-US&page=1&api_key=$apiKey"));
-    print(response.body);
-    final data = json.decode(response.body) as Map<String, dynamic>;
-    var similarMovies = <Movie>[];
-    similarMovies = [
-      ...data['results'].map((movie) => Movie.fromJson(movie)).toList()
-    ];
+    var similarMovies = await state.apiService.fetchSimilarMovies(movieId);
+
     if (similarMovies.isNotEmpty) {
       similarMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
       emit(state.copyWith(
@@ -169,20 +124,13 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
           dataStatus: DataStatus.error,
           errorMessage: "Failed to load similar movies"));
     }
-    return similarMovies;
   }
 
-  Future<List<Review>> fetchMovieReviews(
+  Future<void> fetchMovieReviews(
       int movieId, Emitter<ApiServiceState> emit) async {
     // emit(state.copyWith(dataStatus: DataStatus.loading));
-    var response = await http.get(Uri.parse(
-        "$baseUrl/movie/$movieId/reviews?language=en-US&page=1&api_key=$apiKey"));
-    print(response.body);
-    final data = json.decode(response.body) as Map<String, dynamic>;
-    var movieReviews = <Review>[];
-    movieReviews = [
-      ...data['results'].map((review) => Review.fromJson(review)).toList()
-    ];
+    var movieReviews = await state.apiService.fetchMovieReviews(movieId);
+
     if (movieReviews.isNotEmpty) {
       emit(state.copyWith(
           movieReviews: movieReviews, dataStatus: DataStatus.success));
@@ -191,20 +139,14 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
           dataStatus: DataStatus.error,
           errorMessage: "Failed to load reviews"));
     }
-    return movieReviews;
   }
 
-  Future<List<Movie>> fetchRecommendedMovies(
+  Future<void> fetchRecommendedMovies(
       int movieId, Emitter<ApiServiceState> emit) async {
     // emit(state.copyWith(dataStatus: DataStatus.loading));
-    var response = await http.get(Uri.parse(
-        "$baseUrl/movie/$movieId/recommendations?language=en-US&page=1&api_key=$apiKey"));
-    print(response.body);
-    final data = json.decode(response.body) as Map<String, dynamic>;
-    var recommendedMovies = <Movie>[];
-    recommendedMovies = [
-      ...data['results'].map((movie) => Movie.fromJson(movie)).toList()
-    ];
+    var recommendedMovies =
+        await state.apiService.fetchRecommendedMovies(movieId);
+
     if (recommendedMovies.isNotEmpty) {
       recommendedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
       emit(state.copyWith(
@@ -215,40 +157,19 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState>
           errorMessage: "Failed to load recommended movies",
           dataStatus: DataStatus.error));
     }
-    return recommendedMovies;
   }
 
   Future<void> fetchMovieWatchProviders(
       int movieId, Emitter<ApiServiceState> emit) async {
     // emit(state.copyWith(dataStatus: DataStatus.loading));
-    try {
-      var response = await http.get(
-          Uri.parse(
-            "$baseUrl/movie/$movieId/watch/providers",
-          ),
-          headers: {
-            'accept': 'application/json',
-            'Authorization':
-                'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZjUyNGI5ZDRlY2M1OTU2ODIyNmU3NDVjZWY0ZmZlMCIsInN1YiI6IjYzNmU0MWM2ZDdmYmRhMDBlN2I3Nzc4OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pIhLyoiTyNqDfoc0RQqNHVRyb8ZxcsZzDTcD1u29WsI'
-          });
-      print(response.body);
-      final data = json.decode(response.body) as Map<String, dynamic>;
-      WatchProvider? movieProviderSingleCountry;
-      var watchProvidersData = data['results'];
-      var singleWatchProvider = watchProvidersData['US'];
-      movieProviderSingleCountry = WatchProvider.fromJson(singleWatchProvider);
-
-      emit(state.copyWith(movieWatchProvider: movieProviderSingleCountry));
-    } catch (e) {
-      debugPrint(e.toString());
+    var movieWatchProvider =
+        await state.apiService.fetchMovieWatchProviders(movieId);
+    if (movieWatchProvider != null) {
+      emit(state.copyWith(movieWatchProvider: movieWatchProvider));
+    } else {
       emit(state.copyWith(
           dataStatus: DataStatus.error,
           errorMessage: "No watch providers found"));
     }
   }
-}
-
-class ApiServiceConstants {
-  final baseUrl = DataConstants.baseUrl;
-  final apiKey = DataConstants.apiKey;
 }

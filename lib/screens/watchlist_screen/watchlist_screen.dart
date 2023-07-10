@@ -122,40 +122,6 @@ class _WatchlistScreenState extends State<WatchlistScreen>
                                                     'https://image.tmdb.org/t/p/w500${currentFavMovie.poster}'),
                                           ),
                                         ),
-                                        // Positioned(
-                                        //   top: 7,
-                                        //   left: 77,
-                                        //   right: 0,
-                                        //   bottom: 140,
-                                        //   child: IconButton(
-                                        //     onPressed: () {
-                                        //       if (watchlistBloc
-                                        //           .isMovieFavorited(
-                                        //               currentFavMovie)) {
-                                        //         watchlistBloc.add(
-                                        //             RemoveMovieFromWatchlist(
-                                        //                 currentFavMovie));
-
-                                        //         return;
-                                        //       }
-                                        //     },
-                                        //     icon: Icon(
-                                        //       Icons.favorite_rounded,
-                                        //       color: watchlistBloc
-                                        //               .isMovieFavorited(
-                                        //                   currentFavMovie)
-                                        //           ? Colors.red
-                                        //           : Colors.white,
-                                        //       shadows: const [
-                                        //         Shadow(
-                                        //           color: Colors.black45,
-                                        //           blurRadius: 20,
-                                        //           offset: Offset(0, 2.0),
-                                        //         ),
-                                        //       ],
-                                        //     ),
-                                        //   ),
-                                        // ),
                                       ],
                                     ),
                                   ),

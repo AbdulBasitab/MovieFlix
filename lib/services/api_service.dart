@@ -1,19 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:movies_app/models/movie/movie.dart';
 import 'package:movies_app/models/movie_detail/movie_detail.dart';
 import 'package:movies_app/models/tv_detail/tv_detail.dart';
 import 'package:movies_app/models/tv_show/tv_show.dart';
 
-// import '../constants/data_constants.dart';
+import '../models/review/review.dart';
+import '../models/watch_provider/watch_provider.dart';
+
 class ApiService {
   final String baseUrl = 'https://api.themoviedb.org/3';
   final String apiKey = '2f524b9d4ecc59568226e745cef4ffe0';
   final String readToken =
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZjUyNGI5ZDRlY2M1OTU2ODIyNmU3NDVjZWY0ZmZlMCIsInN1YiI6IjYzNmU0MWM2ZDdmYmRhMDBlN2I3Nzc4OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pIhLyoiTyNqDfoc0RQqNHVRyb8ZxcsZzDTcD1u29WsI';
 
-  Future<List<Movie>> fetchMovies() async {
+  Future<List<Movie>> fetchTrendingMovies() async {
     final response = await http.get(
       Uri.parse('$baseUrl/trending/movie/week?api_key=$apiKey'),
     );
@@ -34,7 +37,7 @@ class ApiService {
     }
   }
 
-  Future<MovieDetail> fetchMovieDetail(double moviekey) async {
+  Future<MovieDetail?> fetchMovieDetail(int moviekey) async {
     final response =
         await http.get(Uri.parse('$baseUrl/movie/$moviekey?api_key=$apiKey'));
     print(response);
@@ -44,7 +47,7 @@ class ApiService {
       print(movieDetail);
       return movieDetail;
     } else {
-      throw Exception('Failed to load details');
+      return null;
     }
   }
 
@@ -65,7 +68,7 @@ class ApiService {
     }
   }
 
-  Future<TvDetail> fetchPopularTvDetail(double tvKey) async {
+  Future<TvDetail?> fetchPopularTvDetail(int tvKey) async {
     final response = await http
         .get(Uri.parse('$baseUrl/tv/$tvKey?api_key=$apiKey&language=en-US'));
     print(response.body);
@@ -75,7 +78,7 @@ class ApiService {
 
       return poptvDetail;
     } else {
-      throw Exception('Failed to load details');
+      return null;
     }
   }
 
@@ -90,10 +93,82 @@ class ApiService {
     ];
     if (searchedMovies.isNotEmpty) {
       searchedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
-      // emit(FetchSearchedMovies(searchedMovies));
-    } else {
-      // emit(ErrorMovieState("No Movies found"));
-    }
+    } else {}
     return searchedMovies;
+  }
+
+  Future<List<Movie>> fetchSimilarMovies(int movieId) async {
+    var response = await http.get(Uri.parse(
+        "$baseUrl/movie/$movieId/similar?language=en-US&page=1&api_key=$apiKey"));
+    print(response.body);
+    final data = json.decode(response.body) as Map<String, dynamic>;
+    var similarMovies = <Movie>[];
+    similarMovies = [
+      ...data['results'].map((movie) => Movie.fromJson(movie)).toList()
+    ];
+    if (similarMovies.isNotEmpty) {
+      similarMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
+    } else {}
+    return similarMovies;
+  }
+
+  Future<List<Review>> fetchMovieReviews(
+    int movieId,
+  ) async {
+    var response = await http.get(Uri.parse(
+        "$baseUrl/movie/$movieId/reviews?language=en-US&page=1&api_key=$apiKey"));
+    print(response.body);
+    final data = json.decode(response.body) as Map<String, dynamic>;
+    var movieReviews = <Review>[];
+    movieReviews = [
+      ...data['results'].map((review) => Review.fromJson(review)).toList()
+    ];
+    if (movieReviews.isNotEmpty) {
+    } else {}
+    return movieReviews;
+  }
+
+  Future<List<Movie>> fetchRecommendedMovies(
+    int movieId,
+  ) async {
+    var response = await http.get(Uri.parse(
+        "$baseUrl/movie/$movieId/recommendations?language=en-US&page=1&api_key=$apiKey"));
+    print(response.body);
+    final data = json.decode(response.body) as Map<String, dynamic>;
+    var recommendedMovies = <Movie>[];
+    recommendedMovies = [
+      ...data['results'].map((movie) => Movie.fromJson(movie)).toList()
+    ];
+    if (recommendedMovies.isNotEmpty) {
+      recommendedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
+    } else {}
+    return recommendedMovies;
+  }
+
+  Future<WatchProvider?> fetchMovieWatchProviders(
+    int movieId,
+  ) async {
+    try {
+      var response = await http.get(
+          Uri.parse(
+            "$baseUrl/movie/$movieId/watch/providers",
+          ),
+          headers: {
+            'accept': 'application/json',
+            'Authorization':
+                'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZjUyNGI5ZDRlY2M1OTU2ODIyNmU3NDVjZWY0ZmZlMCIsInN1YiI6IjYzNmU0MWM2ZDdmYmRhMDBlN2I3Nzc4OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pIhLyoiTyNqDfoc0RQqNHVRyb8ZxcsZzDTcD1u29WsI'
+          });
+      print(response.body);
+      final data = json.decode(response.body) as Map<String, dynamic>;
+      WatchProvider? movieProviderSingleCountry;
+      var watchProvidersData = data['results'];
+      var singleWatchProvider = watchProvidersData['US'];
+      movieProviderSingleCountry = WatchProvider.fromJson(singleWatchProvider);
+
+      return movieProviderSingleCountry;
+    } catch (e) {
+      debugPrint(e.toString());
+      return null;
+    }
   }
 }
