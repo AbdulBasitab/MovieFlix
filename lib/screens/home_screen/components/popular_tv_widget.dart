@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
-import '../../../bloc/watchlist_bloc/watchlist_bloc.dart';
 import '../../../widgets/card_widget.dart';
-import '../../tv_screens/tv_detail_screen.dart';
+import '../../tv_screen/tv_detail_screen.dart';
 
 class PopularTvWidget extends StatefulWidget {
   const PopularTvWidget({
@@ -17,7 +16,6 @@ class PopularTvWidget extends StatefulWidget {
 class _PopularTvWidgetState extends State<PopularTvWidget> {
   @override
   Widget build(BuildContext context) {
-    final favCubit = context.watch<WatchlistBloc>();
     return BlocBuilder<ApiServiceBloc, ApiServiceState>(
       builder: (context, state) {
         if (state.popularTvShows.isNotEmpty &&
@@ -34,7 +32,7 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
             itemBuilder: (BuildContext ctx, index) {
               return MovieTvCardWidget(
                 popTv: popTvs[index],
-                favCubit: favCubit,
+
                 posterImage:
                     'https://image.tmdb.org/t/p/w500${popTvs[index].poster}',
                 fromTrendingMovie: false,
@@ -45,7 +43,7 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => TvDetailPage(
+                      builder: (context) => TvDetailScreen(
                         tvShow: popTvs[index],
                       ),
                     ),
@@ -88,7 +86,6 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
             itemBuilder: (BuildContext ctx, index) {
               return MovieTvCardWidget(
                 popTv: popTvs[index],
-                favCubit: favCubit,
                 posterImage:
                     'https://image.tmdb.org/t/p/w500${popTvs[index].poster}',
                 fromTrendingMovie: false,
@@ -99,7 +96,7 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (context) => TvDetailPage(
+                      builder: (context) => TvDetailScreen(
                         tvShow: popTvs[index],
                       ),
                     ),

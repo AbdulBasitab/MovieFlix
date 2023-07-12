@@ -3,22 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
+import 'package:movies_app/constants/theme_constants.dart';
 import 'package:movies_app/widgets/image_widget.dart';
 import '../../bloc/watchlist_bloc/watchlist_bloc.dart';
 import '../../models/tv_show/tv_show.dart';
 
-class TvDetailPage extends StatefulWidget {
+class TvDetailScreen extends StatefulWidget {
   final TvShow tvShow;
-  const TvDetailPage({
+  const TvDetailScreen({
     Key? key,
     required this.tvShow,
   }) : super(key: key);
 
   @override
-  State<TvDetailPage> createState() => _TvDetailPageState();
+  State<TvDetailScreen> createState() => _TvDetailScreenState();
 }
 
-class _TvDetailPageState extends State<TvDetailPage> {
+class _TvDetailScreenState extends State<TvDetailScreen> {
   @override
   void initState() {
     super.initState();
@@ -28,7 +29,6 @@ class _TvDetailPageState extends State<TvDetailPage> {
   @override
   Widget build(BuildContext context) {
     var watchlistBloc = context.watch<WatchlistBloc>();
-
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -45,7 +45,14 @@ class _TvDetailPageState extends State<TvDetailPage> {
           actions: [
             IconButton(
               onPressed: () {
-                watchlistBloc.add(AddShowToWatchlist(widget.tvShow));
+                if (!watchlistBloc.isShowFavorited(widget.tvShow)) {
+                  watchlistBloc.add(AddShowToWatchlist(widget.tvShow));
+                  showSuccessMessage("Show added to watchlist 🥳");
+                } else {
+                  watchlistBloc.add(RemoveTvShowFromWatchlist(widget.tvShow));
+                  showErrorMessage(
+                      msg: "Show removed from watchlist", color: Colors.black);
+                }
               },
               icon: Icon(
                 (watchlistBloc.isShowFavorited(widget.tvShow))
@@ -53,7 +60,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                     : Icons.bookmark_outline_rounded,
                 size: 26,
                 color: (watchlistBloc.isShowFavorited(widget.tvShow))
-                    ? Colors.amber.shade500
+                    ? AppColors.secondaryColor
                     : Colors.white,
               ),
             ),
@@ -72,15 +79,13 @@ class _TvDetailPageState extends State<TvDetailPage> {
                 children: [
                   Stack(
                     children: [
-                      if (widget.tvShow.backdrop != null)
-                        ImageWidget(
-                          height: 235,
-                          width: double.infinity,
-                          imageUrl:
-                              'https://image.tmdb.org/t/p/w500${widget.tvShow.backdrop}',
-                        ),
-                      if (widget.tvShow.backdrop == null)
-                        const Text('Error Loading Image'),
+                      ImageWidget(
+                        imageUrl:
+                            'https://image.tmdb.org/t/p/w500${widget.tvShow.backdrop}',
+                        height: 235,
+                        width: double.infinity,
+                        iconSize: 18,
+                      ),
                     ],
                   ),
                   Padding(
@@ -145,7 +150,7 @@ class _TvDetailPageState extends State<TvDetailPage> {
                         ),
                       ),
                       const SizedBox(
-                        width: 180,
+                        width: 170,
                       ),
                       const Text(
                         'Episodes:  ',

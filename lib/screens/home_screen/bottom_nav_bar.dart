@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/bloc/navigation_bloc/navigation_bloc.dart';
+import 'package:movies_app/constants/theme_constants.dart';
 import 'package:movies_app/screens/home_screen/home_screen.dart';
 import 'package:movies_app/screens/watchlist_screen/watchlist_screen.dart';
 import 'package:movies_app/screens/search_screen/search_screen.dart';
@@ -90,18 +90,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
                                     .read<NavigationBloc>()
                                     .add(ChangeSelectedIndex(index: value));
                               },
-                              backgroundColor: Colors.blue.shade900,
-                              selectedItemColor: Colors.amber.shade600,
-                              unselectedItemColor: Colors.white54,
-                              unselectedLabelStyle: GoogleFonts.raleway(
-                                color: Colors.white54,
-                                fontSize: 13,
-                                fontWeight: FontWeight.w400,
-                              ),
-                              selectedLabelStyle: GoogleFonts.raleway(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w700,
-                                  color: Colors.amber.shade600),
+                              backgroundColor: AppColors.primaryColor,
+                              selectedItemColor: AppColors.secondaryColor,
+                              unselectedItemColor: AppColors.tertiaryColor,
+                              unselectedLabelStyle:
+                                  AppTextStyles.unselectedItemTextStyle(),
+                              selectedLabelStyle:
+                                  AppTextStyles.selectedItemTextStyle(),
                             ),
                           )
                         : Container(

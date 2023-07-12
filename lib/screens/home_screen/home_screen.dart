@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/bloc/navigation_bloc/navigation_bloc.dart';
+import 'package:movies_app/bloc/watchlist_bloc/watchlist_bloc.dart';
 import 'package:movies_app/screens/home_screen/components/trending_movies_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../bloc/api_bloc/api_service_bloc.dart';
-import '../../bloc/watchlist_bloc/watchlist_bloc.dart';
 import 'components/popular_tv_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -21,15 +21,15 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     super.initState();
-    fetchDataFirstTime();
+    fetchApiAndDbDataForFirstTime();
   }
 
-  void fetchDataFirstTime() {
+  void fetchApiAndDbDataForFirstTime() {
     if (!context.read<NavigationBloc>().state.isDataFetched) {
       context.read<ApiServiceBloc>().add(FetchTrendingMovies());
       context.read<ApiServiceBloc>().add(FetchPopularTvShows());
       context.read<WatchlistBloc>().add(FetchWatchlistMovies());
-
+      context.read<WatchlistBloc>().add(FetchWatchlistShows());
       return;
     } else {
       return;
@@ -132,6 +132,5 @@ class _HomePageState extends State<HomePage>
   }
 
   @override
-  // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }

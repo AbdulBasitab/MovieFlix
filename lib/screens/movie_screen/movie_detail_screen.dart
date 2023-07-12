@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
+import 'package:movies_app/constants/theme_constants.dart';
 import 'package:movies_app/models/review/review.dart';
 import 'package:movies_app/widgets/image_widget.dart';
 import '../../bloc/watchlist_bloc/watchlist_bloc.dart';
@@ -74,9 +75,14 @@ class _MovieDetailPageState extends State<MovieDetailPage>
           actions: [
             IconButton(
               onPressed: () {
-                (!watchlistBloc.isMovieFavorited(widget.movie))
-                    ? watchlistBloc.add(AddMovieToWatchlist(widget.movie))
-                    : watchlistBloc.add(RemoveMovieFromWatchlist(widget.movie));
+                if (!watchlistBloc.isMovieFavorited(widget.movie)) {
+                  watchlistBloc.add(AddMovieToWatchlist(widget.movie));
+                  showSuccessMessage("Movie added to watchlist 🥳");
+                } else {
+                  watchlistBloc.add(RemoveMovieFromWatchlist(widget.movie));
+                  showErrorMessage(
+                      msg: "Movie removed from watchlist", color: Colors.black);
+                }
               },
               icon: Icon(
                 (watchlistBloc.isMovieFavorited(widget.movie))
@@ -84,7 +90,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                     : Icons.bookmark_outline_rounded,
                 size: 26,
                 color: (watchlistBloc.isMovieFavorited(widget.movie))
-                    ? Colors.amber.shade500
+                    ? AppColors.secondaryColor
                     : Colors.white,
               ),
             ),
@@ -92,7 +98,8 @@ class _MovieDetailPageState extends State<MovieDetailPage>
         ),
         body: BlocBuilder<ApiServiceBloc, ApiServiceState>(
             builder: (context, state) {
-          if (state.movieDetail != null) {
+          if (state.movieDetail != null &&
+              state.dataStatus == DataStatus.success) {
             final movie = state.movieDetail;
             return ListView(
               physics: const BouncingScrollPhysics(),
@@ -148,7 +155,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                               color: Colors.white, fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(
-                          width: 30,
+                          width: 26,
                         ),
                         const Text(
                           'Duration:  ',
@@ -287,11 +294,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
               state.movieDetail == null) {
             return Center(
                 child: Text(state.errorMessage ?? "Some Error Occured"));
-          }
-          // else if (state.dataStatus == DataStatus.loading) {
-          //   return const Center(child: CircularProgressIndicator());
-          // }
-          else {
+          } else {
             return const Center(
               child: Center(child: CircularProgressIndicator()),
             );

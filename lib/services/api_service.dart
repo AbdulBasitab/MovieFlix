@@ -2,18 +2,12 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:movies_app/models/movie/movie.dart';
-import 'package:movies_app/models/movie_detail/movie_detail.dart';
-import 'package:movies_app/models/tv_detail/tv_detail.dart';
-import 'package:movies_app/models/tv_show/tv_show.dart';
-
-import '../models/review/review.dart';
-import '../models/watch_provider/watch_provider.dart';
+import '../models/models.dart';
 
 class ApiService {
-  final String baseUrl = 'https://api.themoviedb.org/3';
-  final String apiKey = '2f524b9d4ecc59568226e745cef4ffe0';
-  final String readToken =
+  static const String baseUrl = 'https://api.themoviedb.org/3';
+  static const String apiKey = '2f524b9d4ecc59568226e745cef4ffe0';
+  static const String readToken =
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZjUyNGI5ZDRlY2M1OTU2ODIyNmU3NDVjZWY0ZmZlMCIsInN1YiI6IjYzNmU0MWM2ZDdmYmRhMDBlN2I3Nzc4OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pIhLyoiTyNqDfoc0RQqNHVRyb8ZxcsZzDTcD1u29WsI';
 
   Future<List<Movie>> fetchTrendingMovies() async {
@@ -32,8 +26,7 @@ class ApiService {
 
       return trendMovies;
     } else {
-      // If the response was umexpected, throw an error.
-      throw Exception('Failed to load movies');
+      return <Movie>[];
     }
   }
 

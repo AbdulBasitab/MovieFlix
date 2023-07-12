@@ -71,8 +71,7 @@ class SimilarMoviesWidget extends StatelessWidget {
                   );
                 }),
           );
-        } else if (state.dataStatus == DataStatus.loading &&
-            state.similarMovies.isEmpty) {
+        } else if (state.dataStatus == DataStatus.loading) {
           return const SizedBox(
             height: 90,
             child: Center(
@@ -92,7 +91,7 @@ class SimilarMoviesWidget extends StatelessWidget {
           return const SizedBox(
             height: 90,
             child: Center(
-              child: Text("Some Error Occured try again ⚠️"),
+              child: CircularProgressIndicator(),
             ),
           );
         }

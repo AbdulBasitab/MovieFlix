@@ -246,8 +246,7 @@ class WhereToWatchWidget extends StatelessWidget {
               ],
             ),
           );
-        } else if (state.dataStatus == DataStatus.loading &&
-            state.movieWatchProvider == null) {
+        } else if (state.dataStatus == DataStatus.loading) {
           return const SizedBox(
             height: 90,
             child: Center(
@@ -267,7 +266,7 @@ class WhereToWatchWidget extends StatelessWidget {
           return const SizedBox(
             height: 90,
             child: Center(
-              child: Text("Something went wrong,Try Again"),
+              child: CircularProgressIndicator(),
             ),
           );
         }

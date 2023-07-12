@@ -19,7 +19,7 @@ class IsarService {
     });
   }
 
-  List<Movie> fetchWatchListMovieFromDB() {
+  List<Movie> fetchWatchListMoviesFromDB() {
     List<Movie> watchlistMovies = [];
     isar!.writeTxnSync(() {
       watchlistMovies = isar!.movies.where().findAllSync();
@@ -48,5 +48,13 @@ class IsarService {
       final showsCollection = isar!.tvShows;
       showsCollection.delete(show.isarId).then((value) => debugPrint("$value"));
     });
+  }
+
+  List<TvShow> fetchWatchListShowsFromDB() {
+    List<TvShow> watchlistedShows = [];
+    isar!.writeTxnSync(() {
+      watchlistedShows = isar!.tvShows.where().findAllSync();
+    });
+    return watchlistedShows;
   }
 }

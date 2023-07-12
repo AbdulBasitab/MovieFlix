@@ -1,10 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/models/review/review.dart';
-import 'package:movies_app/models/watch_provider/watch_provider.dart';
-import '../../models/movie/movie.dart';
-import '../../models/movie_detail/movie_detail.dart';
-import '../../models/tv_detail/tv_detail.dart';
-import '../../models/tv_show/tv_show.dart';
+import '../../models/models.dart';
 import '../../services/api_service.dart';
 
 part 'api_service_state_event.dart';

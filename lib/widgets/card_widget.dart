@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/widgets/image_widget.dart';
-import '../bloc/watchlist_bloc/watchlist_bloc.dart';
 import '../models/movie/movie.dart';
 import '../models/tv_show/tv_show.dart';
 
@@ -9,7 +8,6 @@ class MovieTvCardWidget extends StatelessWidget {
     super.key,
     this.popTv,
     this.trendingMovie,
-    required this.favCubit,
     required this.onTap,
     required this.posterImage,
     this.fromTrendingMovie = false,
@@ -18,7 +16,6 @@ class MovieTvCardWidget extends StatelessWidget {
   final TvShow? popTv;
   final Movie? trendingMovie;
   final bool fromTrendingMovie;
-  final WatchlistBloc favCubit;
   final void Function() onTap;
   final String posterImage;
 

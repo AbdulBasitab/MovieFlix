@@ -87,8 +87,7 @@ class ReviewsWidget extends StatelessWidget {
               },
             ),
           );
-        } else if (state.dataStatus == DataStatus.loading &&
-            state.movieReviews.isEmpty) {
+        } else if (state.dataStatus == DataStatus.loading) {
           return const SizedBox(
             height: 90,
             child: Center(
@@ -107,7 +106,7 @@ class ReviewsWidget extends StatelessWidget {
           return const SizedBox(
               height: 90,
               child: Center(
-                child: Text("Something went wrong"),
+                child: CircularProgressIndicator(),
               ));
         }
       },

@@ -16,11 +16,11 @@ class CustomMaterial3SearchBar extends StatefulWidget {
   });
 
   @override
-  _CustomMaterial3SearchBarState createState() =>
-      _CustomMaterial3SearchBarState();
+  CustomMaterial3SearchBarState createState() =>
+      CustomMaterial3SearchBarState();
 }
 
-class _CustomMaterial3SearchBarState extends State<CustomMaterial3SearchBar> {
+class CustomMaterial3SearchBarState extends State<CustomMaterial3SearchBar> {
   bool _isFocused = false;
 
   @override

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
+import 'package:movies_app/screens/movie_screen/movie_detail_screen.dart';
 import 'package:movies_app/widgets/card_widget.dart';
-import '../../../bloc/api_bloc/api_service_bloc.dart';
-import '../../../bloc/watchlist_bloc/watchlist_bloc.dart';
-import '../../movie_screen/movie_detail_screen.dart';
 
 class TrendingMoviesWidget extends StatefulWidget {
   const TrendingMoviesWidget({
@@ -17,10 +16,8 @@ class TrendingMoviesWidget extends StatefulWidget {
 class _TrendingMoviesWidgetState extends State<TrendingMoviesWidget> {
   @override
   Widget build(BuildContext context) {
-    final favCubit = context.watch<WatchlistBloc>();
     return BlocBuilder<ApiServiceBloc, ApiServiceState>(
       builder: (context, state) {
-        //   context.read<FetchTrendingMoviesCubit>().fetchTrendingMovies();
         if (state.dataStatus == DataStatus.loading &&
             state.trendingMovies.isEmpty) {
           return const SliverToBoxAdapter(
@@ -41,7 +38,6 @@ class _TrendingMoviesWidgetState extends State<TrendingMoviesWidget> {
             ),
             itemBuilder: (BuildContext ctx, index) {
               return MovieTvCardWidget(
-                favCubit: favCubit,
                 fromTrendingMovie: true,
                 trendingMovie: trendingMovies[index],
                 onTap: () {
@@ -72,46 +68,46 @@ class _TrendingMoviesWidgetState extends State<TrendingMoviesWidget> {
             ),
           );
         } else {
-          final trendingMovies = state.trendingMovies;
-          return SliverGrid.builder(
-            itemCount: state.trendingMovies.length,
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 140,
-              crossAxisSpacing: 30,
-              mainAxisSpacing: 11,
-              mainAxisExtent: 240,
-            ),
-            itemBuilder: (BuildContext ctx, index) {
-              return Hero(
-                tag: 'movieCard$index',
-                child: Material(
-                  type: MaterialType.transparency,
-                  child: MovieTvCardWidget(
-                    favCubit: favCubit,
-                    fromTrendingMovie: true,
-                    trendingMovie: trendingMovies[index],
-                    onTap: () {
-                      context.read<ApiServiceBloc>().add(
-                            FetchMovieDetail(
-                                movieId: trendingMovies[index].id!),
-                          );
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => MovieDetailPage(
-                            movie: trendingMovies[index],
-                            heroTag: 'movieCard$index',
-                          ),
-                        ),
-                      );
-                    },
-                    posterImage:
-                        'https://image.tmdb.org/t/p/w500${trendingMovies[index].poster}',
-                  ),
-                ),
-              );
-            },
-          );
+          return const Center(child: CircularProgressIndicator());
+          // final trendingMovies = state.trendingMovies;
+          // return SliverGrid.builder(
+          //   itemCount: state.trendingMovies.length,
+          //   gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          //     maxCrossAxisExtent: 140,
+          //     crossAxisSpacing: 30,
+          //     mainAxisSpacing: 11,
+          //     mainAxisExtent: 240,
+          //   ),
+          //   itemBuilder: (BuildContext ctx, index) {
+          //     return Hero(
+          //       tag: 'movieCard$index',
+          //       child: Material(
+          //         type: MaterialType.transparency,
+          //         child: MovieTvCardWidget(
+          //           fromTrendingMovie: true,
+          //           trendingMovie: trendingMovies[index],
+          //           onTap: () {
+          //             context.read<ApiServiceBloc>().add(
+          //                   FetchMovieDetail(
+          //                       movieId: trendingMovies[index].id!),
+          //                 );
+          //             Navigator.push(
+          //               context,
+          //               MaterialPageRoute(
+          //                 builder: (context) => MovieDetailPage(
+          //                   movie: trendingMovies[index],
+          //                   heroTag: 'movieCard$index',
+          //                 ),
+          //               ),
+          //             );
+          //           },
+          //           posterImage:
+          //               'https://image.tmdb.org/t/p/w500${trendingMovies[index].poster}',
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // );
         }
       },
     );

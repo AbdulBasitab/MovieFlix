@@ -71,8 +71,7 @@ class RecommendedMoviesWidget extends StatelessWidget {
                   );
                 }),
           );
-        } else if (state.dataStatus == DataStatus.loading &&
-            state.recommendedMovies.isEmpty) {
+        } else if (state.dataStatus == DataStatus.loading) {
           return const SizedBox(
             height: 90,
             child: Center(
@@ -91,7 +90,7 @@ class RecommendedMoviesWidget extends StatelessWidget {
           return const SizedBox(
             height: 90,
             child: Center(
-              child: Text("Some Error Occured try again ⚠️"),
+              child: CircularProgressIndicator(),
             ),
           );
         }

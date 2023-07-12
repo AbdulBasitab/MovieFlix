@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DataConstants {
   static const baseUrl = 'https://api.themoviedb.org/3';
@@ -27,9 +28,64 @@ extension StringExtensions on String {
   }
 }
 
-List<Widget> movieDetailPageTabs = const [
+const List<Widget> movieDetailPageTabs = [
   Text("Recommended"),
   Text("Similar"),
   Text("Reviews"),
   Text("Where to watch")
 ];
+
+const List<ButtonSegment<int>> buttonSegments = [
+  ButtonSegment(
+    value: 0,
+    label: Text("Movies"),
+    icon: Icon(Icons.movie_outlined),
+    enabled: true,
+  ),
+  ButtonSegment(
+    value: 1,
+    label: Text("Tv Shows"),
+    icon: Icon(Icons.tv_rounded),
+    enabled: true,
+  ),
+];
+
+final Map<int, Widget> segmentedButtonChildren = {
+  0: const Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      SizedBox(width: 8),
+      Icon(Icons.movie_rounded),
+      Text("Movies"),
+      SizedBox(width: 8),
+    ],
+  ),
+  1: const Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      SizedBox(width: 10),
+      Icon(Icons.tv_rounded),
+      SizedBox(width: 10),
+      Text("Tv Shows"),
+      SizedBox(width: 10),
+    ],
+  ),
+};
+
+void showErrorMessage({required String msg, Color? color}) {
+  Fluttertoast.showToast(
+    msg: msg,
+    gravity: ToastGravity.BOTTOM,
+    textColor: Colors.white,
+    backgroundColor: color ?? Colors.red,
+  );
+}
+
+void showSuccessMessage(String msg) {
+  Fluttertoast.showToast(
+    msg: msg,
+    gravity: ToastGravity.BOTTOM,
+    textColor: Colors.white,
+    backgroundColor: Colors.green,
+  );
+}

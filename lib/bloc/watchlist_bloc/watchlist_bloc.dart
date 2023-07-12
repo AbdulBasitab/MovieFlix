@@ -7,10 +7,12 @@ part 'watchlist_bloc_state.dart';
 
 class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
   WatchlistBloc()
-      : super(WatchlistState(
-            watchlistedMovies: [],
-            watchlistedShows: [],
-            isarService: IsarService())) {
+      : super(
+          WatchlistState(
+              watchlistedMovies: [],
+              watchlistedShows: [],
+              isarService: IsarService()),
+        ) {
     on<AddMovieToWatchlist>(
         (event, emit) => addMovieToWatchlist(emit, event.movie));
     on<AddShowToWatchlist>(
@@ -20,6 +22,7 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
     on<RemoveTvShowFromWatchlist>(
         (event, emit) => removeShowFromWatchlist(emit, event.show));
     on<FetchWatchlistMovies>((event, emit) => fetchWatchlistMovies(emit));
+    on<FetchWatchlistShows>((event, emit) => fetchWatchlistShows(emit));
   }
 
   void addMovieToWatchlist(Emitter<WatchlistState> emit, Movie movie) async {
@@ -32,14 +35,20 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
   }
 
   void fetchWatchlistMovies(Emitter<WatchlistState> emit) {
-    var watchlistMovies = state.isarService.fetchWatchListMovieFromDB();
+    var watchlistMovies = state.isarService.fetchWatchListMoviesFromDB();
     emit(state.copyWith(watchlistedMovies: watchlistMovies));
   }
 
-  void addShowToWatchlist(Emitter<WatchlistState> emit, TvShow show) {
+  void fetchWatchlistShows(Emitter<WatchlistState> emit) {
+    var watchlistShows = state.isarService.fetchWatchListShowsFromDB();
+    emit(state.copyWith(watchlistedShows: watchlistShows));
+  }
+
+  void addShowToWatchlist(Emitter<WatchlistState> emit, TvShow show) async {
     emit(state.copyWith(
       watchlistedShows: [...state.watchlistedShows, show],
     ));
+    await state.isarService.addWatchListShowToDB(show);
   }
 
   void removeMovieFromWatchlist(Emitter<WatchlistState> emit, Movie movie) {
@@ -55,6 +64,7 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
     emit(state.copyWith(
       watchlistedShows: state.watchlistedShows,
     ));
+    state.isarService.removeWatchListShowFromDB(show);
   }
 
   bool isMovieFavorited(Movie movie) {
