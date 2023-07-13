@@ -10,13 +10,12 @@ class ApiServiceState {
   final List<Movie> trendingMovies;
   final List<TvShow> popularTvShows;
   final MovieDetail? movieDetail;
-  final TvDetail? popularTvDetail;
+  final TvShowDetail? popularTvDetail;
   final List<Movie> searchedMovies;
   final List<Movie> similarMovies;
   final List<Movie> recommendedMovies;
   final List<Review> movieReviews;
   final WatchProvider? movieWatchProvider;
-  final ApiService apiService;
 
   ApiServiceState(
       {this.dataStatus,
@@ -29,7 +28,6 @@ class ApiServiceState {
       required this.similarMovies,
       required this.recommendedMovies,
       required this.movieReviews,
-      required this.apiService,
       this.movieWatchProvider});
 
   ApiServiceState copyWith({
@@ -38,13 +36,12 @@ class ApiServiceState {
     List<Movie>? trendingMovies,
     List<TvShow>? popularTvShows,
     MovieDetail? movieDetail,
-    TvDetail? popularTvDetail,
+    TvShowDetail? popularTvDetail,
     List<Movie>? searchedMovies,
     List<Movie>? similarMovies,
     List<Movie>? recommendedMovies,
     List<Review>? movieReviews,
     WatchProvider? movieWatchProvider,
-    ApiService? apiService,
   }) {
     return ApiServiceState(
       dataStatus: dataStatus ?? this.dataStatus,
@@ -58,7 +55,6 @@ class ApiServiceState {
       recommendedMovies: recommendedMovies ?? this.recommendedMovies,
       movieReviews: movieReviews ?? this.movieReviews,
       movieWatchProvider: movieWatchProvider ?? this.movieWatchProvider,
-      apiService: apiService ?? this.apiService,
     );
   }
 }

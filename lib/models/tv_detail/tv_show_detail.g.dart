@@ -1,12 +1,12 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'tv_detail.dart';
+part of 'tv_show_detail.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TvDetail _$TvDetailFromJson(Map<String, dynamic> json) => TvDetail(
+TvShowDetail _$TvShowDetailFromJson(Map<String, dynamic> json) => TvShowDetail(
       tvBackdrop: json['backdrop_path'] as String?,
       tvTitle: json['name'] as String?,
       tvId: json['id'] as int?,
@@ -22,7 +22,8 @@ TvDetail _$TvDetailFromJson(Map<String, dynamic> json) => TvDetail(
           .toList(),
     );
 
-Map<String, dynamic> _$TvDetailToJson(TvDetail instance) => <String, dynamic>{
+Map<String, dynamic> _$TvShowDetailToJson(TvShowDetail instance) =>
+    <String, dynamic>{
       'backdrop_path': instance.tvBackdrop,
       'name': instance.tvTitle,
       'id': instance.tvId,

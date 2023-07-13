@@ -56,6 +56,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
     });
   }
 
+//TODO: Fix issues in sizes and UI if any
   @override
   Widget build(BuildContext context) {
     var watchlistBloc = context.watch<WatchlistBloc>();
@@ -98,8 +99,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
         ),
         body: BlocBuilder<ApiServiceBloc, ApiServiceState>(
             builder: (context, state) {
-          if (state.movieDetail != null &&
-              state.dataStatus == DataStatus.success) {
+          if (state.movieDetail != null) {
             final movie = state.movieDetail;
             return ListView(
               physics: const BouncingScrollPhysics(),

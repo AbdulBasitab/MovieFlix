@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/screens/movie_screen/components/recommended_movies_widget.dart';
-import 'package:movies_app/screens/movie_screen/components/reviews_widget.dart';
-import 'package:movies_app/screens/movie_screen/components/similar_movies_widget.dart';
-import 'package:movies_app/screens/movie_screen/components/where_to_watch_widget.dart';
+import 'package:movies_app/screens/movie_detail_screen/components/recommended_movies_widget.dart';
+import 'package:movies_app/screens/movie_detail_screen/components/reviews_widget.dart';
+import 'package:movies_app/screens/movie_detail_screen/components/similar_movies_widget.dart';
+import 'package:movies_app/screens/movie_detail_screen/components/where_to_watch_widget.dart';
 
 class MoviesDetailTabViewWidget extends StatefulWidget {
   const MoviesDetailTabViewWidget({

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import '../../../widgets/card_widget.dart';
-import '../../tv_screen/tv_detail_screen.dart';
+import '../../tv_detail_screen/tv_detail_screen.dart';
 
 class PopularTvWidget extends StatefulWidget {
   const PopularTvWidget({

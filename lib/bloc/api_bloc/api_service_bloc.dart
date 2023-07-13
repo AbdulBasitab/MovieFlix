@@ -1,14 +1,19 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../models/models.dart';
-import '../../services/api_service.dart';
+import 'package:movies_app/models/models.dart';
+import 'package:movies_app/repositories/movie_repository.dart';
+import 'package:movies_app/repositories/tv_show_repository.dart';
 
 part 'api_service_state_event.dart';
 
+//TODO: Seperate the bloc further into smaller blocs
 class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
-  ApiServiceBloc()
-      : super(ApiServiceState(
+  ApiServiceBloc(
+      {required MovieRepository movieRepository,
+      required TvShowRepository tvShowRepository})
+      : _movieRepository = movieRepository,
+        _tvShowRepository = tvShowRepository,
+        super(ApiServiceState(
           dataStatus: DataStatus.loading,
-          apiService: ApiService(),
           trendingMovies: [],
           recommendedMovies: [],
           similarMovies: [],
@@ -32,11 +37,13 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
     on<FetchMovieWatchProvider>(
         (event, emit) => fetchMovieWatchProviders(event.movieId, emit));
   }
+  final MovieRepository _movieRepository;
+  final TvShowRepository _tvShowRepository;
 
   /// Fetches trending movies
   Future<void> fetchTrendingMovies(Emitter<ApiServiceState> emit) async {
     emit(state.copyWith(dataStatus: DataStatus.loading));
-    final trendMovies = await state.apiService.fetchTrendingMovies();
+    final trendMovies = await _movieRepository.fetchTrendingMovies();
 
     if (trendMovies.isNotEmpty) {
       emit(state.copyWith(
@@ -52,7 +59,7 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
   Future<void> fetchMovieDetail(
       int moviekey, Emitter<ApiServiceState> emit) async {
     emit(state.copyWith(dataStatus: DataStatus.loading));
-    final movieDetail = await state.apiService.fetchMovieDetail(moviekey);
+    final movieDetail = await _movieRepository.fetchMovieDetail(moviekey);
     if (movieDetail != null) {
       emit(state.copyWith(
           movieDetail: movieDetail, dataStatus: DataStatus.success));
@@ -65,7 +72,7 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
 
   Future<void> fetchPopularTvShows(Emitter<ApiServiceState> emit) async {
     emit(state.copyWith(dataStatus: DataStatus.loading));
-    final popTvShows = await state.apiService.fetchPopularTv();
+    final popTvShows = await _tvShowRepository.fetchPopularTvShows();
     if (popTvShows.isNotEmpty) {
       emit(state.copyWith(
           popularTvShows: popTvShows, dataStatus: DataStatus.success));
@@ -81,7 +88,7 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
   Future<void> fetchTvShowDetail(
       int tvKey, Emitter<ApiServiceState> emit) async {
     emit(state.copyWith(dataStatus: DataStatus.loading));
-    final popTvDetail = await state.apiService.fetchPopularTvDetail(tvKey);
+    final popTvDetail = await _tvShowRepository.fetchTvShowDetail(tvKey);
     // print(response.body);
     if (popTvDetail != null) {
       emit(state.copyWith(
@@ -95,7 +102,7 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
 
   Future<void> searchMovies(String query, Emitter<ApiServiceState> emit) async {
     emit(state.copyWith(dataStatus: DataStatus.loading));
-    var searchedMovies = await state.apiService.searchMovies(query);
+    var searchedMovies = await _movieRepository.fetchSearchedMovies(query);
     if (searchedMovies.isNotEmpty) {
       searchedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
       emit(state.copyWith(
@@ -108,7 +115,7 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
   Future<void> fetchSimilarMovies(
       int movieId, Emitter<ApiServiceState> emit) async {
     //  emit(state.copyWith(dataStatus: DataStatus.loading));
-    var similarMovies = await state.apiService.fetchSimilarMovies(movieId);
+    var similarMovies = await _movieRepository.fetchSimilarMovies(movieId);
 
     if (similarMovies.isNotEmpty) {
       similarMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
@@ -124,7 +131,7 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
   Future<void> fetchMovieReviews(
       int movieId, Emitter<ApiServiceState> emit) async {
     // emit(state.copyWith(dataStatus: DataStatus.loading));
-    var movieReviews = await state.apiService.fetchMovieReviews(movieId);
+    var movieReviews = await _movieRepository.fetchMovieReviews(movieId);
 
     if (movieReviews.isNotEmpty) {
       emit(state.copyWith(
@@ -140,7 +147,7 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
       int movieId, Emitter<ApiServiceState> emit) async {
     // emit(state.copyWith(dataStatus: DataStatus.loading));
     var recommendedMovies =
-        await state.apiService.fetchRecommendedMovies(movieId);
+        await _movieRepository.fetchRecommendedMovies(movieId);
 
     if (recommendedMovies.isNotEmpty) {
       recommendedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
@@ -158,7 +165,7 @@ class ApiServiceBloc extends Bloc<ApiServiceEvent, ApiServiceState> {
       int movieId, Emitter<ApiServiceState> emit) async {
     // emit(state.copyWith(dataStatus: DataStatus.loading));
     var movieWatchProvider =
-        await state.apiService.fetchMovieWatchProviders(movieId);
+        await _movieRepository.fetchMoviesWatchProviders(movieId);
     if (movieWatchProvider != null) {
       emit(state.copyWith(movieWatchProvider: movieWatchProvider));
     } else {

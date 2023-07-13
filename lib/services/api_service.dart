@@ -44,7 +44,7 @@ class ApiService {
     }
   }
 
-  Future<List<TvShow>> fetchPopularTv() async {
+  Future<List<TvShow>> fetchPopularTvShows() async {
     final response = await http.get(
         Uri.parse('$baseUrl/tv/popular?api_key=$apiKey&language=en-US&page=1'));
     if (response.statusCode == 200) {
@@ -61,13 +61,13 @@ class ApiService {
     }
   }
 
-  Future<TvDetail?> fetchPopularTvDetail(int tvKey) async {
+  Future<TvShowDetail?> fetchTvShowDetail(int tvKey) async {
     final response = await http
         .get(Uri.parse('$baseUrl/tv/$tvKey?api_key=$apiKey&language=en-US'));
     print(response.body);
     if (response.statusCode == 200) {
       var poptvDetails = json.decode(response.body);
-      var poptvDetail = TvDetail.fromJson(poptvDetails);
+      var poptvDetail = TvShowDetail.fromJson(poptvDetails);
 
       return poptvDetail;
     } else {

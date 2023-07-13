@@ -7,7 +7,7 @@ import 'package:path_provider/path_provider.dart';
 class IsarService {
   static Isar? isar;
 
-  static Future<void> isarDBInit() async {
+  Future<void> isarDBInit() async {
     final dir = await getApplicationDocumentsDirectory();
     isar = await Isar.open([MovieSchema, TvShowSchema], directory: dir.path);
   }

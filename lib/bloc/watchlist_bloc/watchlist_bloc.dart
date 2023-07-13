@@ -1,17 +1,22 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/services/isar_service.dart';
+import 'package:movies_app/repositories/movie_repository.dart';
+import 'package:movies_app/repositories/tv_show_repository.dart';
 import '../../models/movie/movie.dart';
 import '../../models/tv_show/tv_show.dart';
 
 part 'watchlist_bloc_state.dart';
 
 class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
-  WatchlistBloc()
-      : super(
+  WatchlistBloc(
+      {required MovieRepository movieRepository,
+      required TvShowRepository tvShowRepository})
+      : _movieRepository = movieRepository,
+        _tvShowRepository = tvShowRepository,
+        super(
           WatchlistState(
-              watchlistedMovies: [],
-              watchlistedShows: [],
-              isarService: IsarService()),
+            watchlistedMovies: [],
+            watchlistedShows: [],
+          ),
         ) {
     on<AddMovieToWatchlist>(
         (event, emit) => addMovieToWatchlist(emit, event.movie));
@@ -25,22 +30,25 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
     on<FetchWatchlistShows>((event, emit) => fetchWatchlistShows(emit));
   }
 
+  final MovieRepository _movieRepository;
+  final TvShowRepository _tvShowRepository;
+
   void addMovieToWatchlist(Emitter<WatchlistState> emit, Movie movie) async {
     emit(
       state.copyWith(
         watchlistedMovies: [...state.watchlistedMovies, movie],
       ),
     );
-    await state.isarService.addWatchListMovieToDB(movie);
+    await _movieRepository.addWatchlistedMovieToDb(movie);
   }
 
   void fetchWatchlistMovies(Emitter<WatchlistState> emit) {
-    var watchlistMovies = state.isarService.fetchWatchListMoviesFromDB();
+    var watchlistMovies = _movieRepository.fetchWatchlistedMoviesFromDb();
     emit(state.copyWith(watchlistedMovies: watchlistMovies));
   }
 
   void fetchWatchlistShows(Emitter<WatchlistState> emit) {
-    var watchlistShows = state.isarService.fetchWatchListShowsFromDB();
+    var watchlistShows = _tvShowRepository.fetchWatchlistedTvShowsFromDb();
     emit(state.copyWith(watchlistedShows: watchlistShows));
   }
 
@@ -48,7 +56,7 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
     emit(state.copyWith(
       watchlistedShows: [...state.watchlistedShows, show],
     ));
-    await state.isarService.addWatchListShowToDB(show);
+    await _tvShowRepository.addWatchlistedTvShowToDb(show);
   }
 
   void removeMovieFromWatchlist(Emitter<WatchlistState> emit, Movie movie) {
@@ -56,7 +64,7 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
     emit(state.copyWith(
       watchlistedMovies: state.watchlistedMovies,
     ));
-    state.isarService.removeWatchListMovieFromDB(movie);
+    _movieRepository.removeMovieFromWatchlistDb(movie);
   }
 
   void removeShowFromWatchlist(Emitter<WatchlistState> emit, TvShow show) {
@@ -64,7 +72,7 @@ class WatchlistBloc extends Bloc<WatchlistEvent, WatchlistState> {
     emit(state.copyWith(
       watchlistedShows: state.watchlistedShows,
     ));
-    state.isarService.removeWatchListShowFromDB(show);
+    _tvShowRepository.removeTvShowFromWatchlistDb(show);
   }
 
   bool isMovieFavorited(Movie movie) {

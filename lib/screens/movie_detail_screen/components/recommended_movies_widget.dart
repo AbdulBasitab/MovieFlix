@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import 'package:movies_app/widgets/image_widget.dart';
-
-import '../../../bloc/api_bloc/api_service_bloc.dart';
 
 class RecommendedMoviesWidget extends StatelessWidget {
   const RecommendedMoviesWidget({
@@ -13,8 +12,7 @@ class RecommendedMoviesWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ApiServiceBloc, ApiServiceState>(
       builder: (context, state) {
-        if (state.recommendedMovies.isNotEmpty &&
-            state.dataStatus == DataStatus.success) {
+        if (state.recommendedMovies.isNotEmpty) {
           return SizedBox(
             height: 200,
             child: ListView.builder(

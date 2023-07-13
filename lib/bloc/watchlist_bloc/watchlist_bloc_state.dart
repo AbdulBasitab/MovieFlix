@@ -5,23 +5,19 @@ part of 'watchlist_bloc.dart';
 class WatchlistState {
   List<Movie> watchlistedMovies;
   List<TvShow> watchlistedShows;
-  IsarService isarService;
 
   WatchlistState({
     required this.watchlistedMovies,
     required this.watchlistedShows,
-    required this.isarService,
   });
 
   WatchlistState copyWith({
     List<Movie>? watchlistedMovies,
     List<TvShow>? watchlistedShows,
-    IsarService? isarService,
   }) {
     return WatchlistState(
       watchlistedMovies: watchlistedMovies ?? this.watchlistedMovies,
       watchlistedShows: watchlistedShows ?? this.watchlistedShows,
-      isarService: isarService ?? this.isarService,
     );
   }
 }

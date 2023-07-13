@@ -111,9 +111,9 @@ class _WatchlistScreenState extends State<WatchlistScreen>
                 const SizedBox(height: 35),
                 Expanded(
                   child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 600),
-                    switchInCurve: accelerateEasing,
-                    switchOutCurve: decelerateEasing,
+                    duration: const Duration(milliseconds: 400),
+                    switchInCurve: Curves.easeIn,
+                    switchOutCurve: Curves.easeOut,
                     child: (currentSelection == 0)
                         ? WatchlistMoviesWidget(animation: _animation)
                         : WatchlistShowsWidget(animation: _animation),

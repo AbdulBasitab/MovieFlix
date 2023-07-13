@@ -59,6 +59,7 @@ class WhereToWatchWidget extends StatelessWidget {
                         width: double.infinity,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
                           padding: const EdgeInsets.all(8),
                           itemCount:
                               state.movieWatchProvider?.buyOptions?.length,
@@ -127,6 +128,7 @@ class WhereToWatchWidget extends StatelessWidget {
                         width: double.infinity,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
                           padding: const EdgeInsets.all(8),
                           itemCount:
                               state.movieWatchProvider?.rentOptions?.length,
@@ -198,6 +200,7 @@ class WhereToWatchWidget extends StatelessWidget {
                         width: double.infinity,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
+                          physics: const BouncingScrollPhysics(),
                           padding: const EdgeInsets.all(8),
                           itemCount:
                               state.movieWatchProvider?.flatrateOptions?.length,
