@@ -5,7 +5,7 @@ import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
 import 'package:movies_app/constants/theme_constants.dart';
 import 'package:movies_app/models/review/review.dart';
-import 'package:movies_app/widgets/image_widget.dart';
+import 'package:movies_app/common_widgets/image_widget.dart';
 import '../../bloc/watchlist_bloc/watchlist_bloc.dart';
 import '../../models/movie/movie.dart';
 import 'components/movie_detail_tabview.dart';

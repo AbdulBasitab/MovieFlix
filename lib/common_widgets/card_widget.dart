@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:movies_app/widgets/image_widget.dart';
+import 'package:movies_app/common_widgets/image_widget.dart';
+import 'package:movies_app/constants/theme_constants.dart';
 import '../models/movie/movie.dart';
 import '../models/tv_show/tv_show.dart';
 
@@ -48,10 +49,8 @@ class MovieTvCardWidget extends StatelessWidget {
               (fromTrendingMovie)
                   ? trendingMovie?.title ?? ''
                   : popTv?.title ?? '',
-              style: const TextStyle(
+              style: AppTextStyles.customTextStyle(
                 fontSize: 13,
-                fontWeight: FontWeight.bold,
-                color: Colors.white70,
               ),
             ),
           ),

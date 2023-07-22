@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import 'package:movies_app/screens/movie_detail_screen/movie_detail_screen.dart';
-import 'package:movies_app/widgets/card_widget.dart';
+import 'package:movies_app/common_widgets/card_widget.dart';
 
 class TrendingMoviesWidget extends StatefulWidget {
   const TrendingMoviesWidget({
@@ -33,8 +33,8 @@ class _TrendingMoviesWidgetState extends State<TrendingMoviesWidget> {
             itemCount: state.trendingMovies.length,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 140,
-              crossAxisSpacing: 30,
-              mainAxisSpacing: 11,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
               mainAxisExtent: 240,
             ),
             itemBuilder: (BuildContext ctx, index) {

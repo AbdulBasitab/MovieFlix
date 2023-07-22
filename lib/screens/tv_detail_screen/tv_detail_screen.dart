@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
 import 'package:movies_app/constants/theme_constants.dart';
-import 'package:movies_app/widgets/image_widget.dart';
+import 'package:movies_app/common_widgets/image_widget.dart';
 import '../../bloc/watchlist_bloc/watchlist_bloc.dart';
 import '../../models/tv_show/tv_show.dart';
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../bloc/api_bloc/api_service_bloc.dart';
-import '../../../widgets/image_widget.dart';
+import '../../../common_widgets/image_widget.dart';
 
 class ReviewsWidget extends StatelessWidget {
   const ReviewsWidget({

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
-import '../../../widgets/card_widget.dart';
+import '../../../common_widgets/card_widget.dart';
 import '../../tv_detail_screen/tv_detail_screen.dart';
 
 class PopularTvWidget extends StatefulWidget {
@@ -24,15 +24,14 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
           return SliverGrid.builder(
             itemCount: state.popularTvShows.length,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 130,
-              crossAxisSpacing: 30,
-              mainAxisSpacing: 11,
+              maxCrossAxisExtent: 140,
+              crossAxisSpacing: 10,
+              mainAxisSpacing: 10,
               mainAxisExtent: 240,
             ),
             itemBuilder: (BuildContext ctx, index) {
               return MovieTvCardWidget(
                 popTv: popTvs[index],
-
                 posterImage:
                     'https://image.tmdb.org/t/p/w500${popTvs[index].poster}',
                 fromTrendingMovie: false,
@@ -49,13 +48,6 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
                     ),
                   );
                 },
-                // onFavouriteTap: () {
-                //   if (favCubit.isShowFavorited(popTvs[index]) == true) {
-                //     favCubit.removeFavShow(popTvs[index]);
-                //     return;
-                //   }
-                //   favCubit.addFavShow(popTvs[index]);
-                // },
               );
             },
           );

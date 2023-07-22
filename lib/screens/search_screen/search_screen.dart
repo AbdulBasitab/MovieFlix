@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
-import 'package:movies_app/widgets/image_widget.dart';
-import 'package:movies_app/widgets/searchbar_widget.dart';
+import 'package:movies_app/common_widgets/image_widget.dart';
+import 'package:movies_app/common_widgets/searchbar_widget.dart';
 import '../../models/movie/movie.dart';
 import '../movie_detail_screen/movie_detail_screen.dart';
 

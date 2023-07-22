@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/widgets/image_widget.dart';
+import 'package:movies_app/common_widgets/image_widget.dart';
 
 import '../../../bloc/api_bloc/api_service_bloc.dart';
 

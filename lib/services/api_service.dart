@@ -45,15 +45,14 @@ class ApiService {
   }
 
   Future<List<TvShow>> fetchPopularTvShows() async {
-    final response = await http.get(
-        Uri.parse('$baseUrl/tv/popular?api_key=$apiKey&language=en-US&page=1'));
+    final response = await http.get(Uri.parse(
+        '$baseUrl/tv/top_rated?api_key=$apiKey&language=en-US&page=1'));
     if (response.statusCode == 200) {
       final data = json.decode(response.body) as Map<String, dynamic>;
       var trendTvs = <TvShow>[];
       trendTvs = <TvShow>[
         ...data['results'].map((trendtv) => TvShow.fromJson(trendtv)).toList()
       ];
-
       return trendTvs;
     } else {
       // If the response was umexpected, throw an error.

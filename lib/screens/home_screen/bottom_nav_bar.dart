@@ -101,12 +101,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
                           )
                         : Container(
                             color: Colors.transparent,
-                            width: MediaQuery.of(context).size.width,
+                            width: MediaQuery.sizeOf(context).width,
                           ),
                   )
                 : Container(
                     color: Colors.transparent,
-                    width: MediaQuery.of(context).size.width,
+                    width: MediaQuery.sizeOf(context).width,
                   ),
           ),
         ),
