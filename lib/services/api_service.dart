@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import '../models/models.dart';
@@ -11,21 +12,26 @@ class ApiService {
       'eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZjUyNGI5ZDRlY2M1OTU2ODIyNmU3NDVjZWY0ZmZlMCIsInN1YiI6IjYzNmU0MWM2ZDdmYmRhMDBlN2I3Nzc4OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pIhLyoiTyNqDfoc0RQqNHVRyb8ZxcsZzDTcD1u29WsI';
 
   Future<List<Movie>> fetchTrendingMovies() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/trending/movie/week?api_key=$apiKey'),
-    );
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body) as Map<String, dynamic>;
-      print(data.toString());
-      var trendMovies = <Movie>[];
-      trendMovies = <Movie>[
-        ...data['results']
-            .map((trendmovie) => Movie.fromJson(trendmovie))
-            .toList()
-      ];
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/trending/movie/week?api_key=$apiKey'),
+      );
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        print(data.toString());
+        var trendMovies = <Movie>[];
+        trendMovies = <Movie>[
+          ...data['results']
+              .map((trendmovie) => Movie.fromJson(trendmovie))
+              .toList()
+        ];
 
-      return trendMovies;
-    } else {
+        return trendMovies;
+      } else {
+        return <Movie>[];
+      }
+    } catch (e) {
+      log("Failed to fetch movies, Error: $e");
       return <Movie>[];
     }
   }
@@ -45,18 +51,23 @@ class ApiService {
   }
 
   Future<List<TvShow>> fetchPopularTvShows() async {
-    final response = await http.get(Uri.parse(
-        '$baseUrl/tv/top_rated?api_key=$apiKey&language=en-US&page=1'));
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body) as Map<String, dynamic>;
-      var trendTvs = <TvShow>[];
-      trendTvs = <TvShow>[
-        ...data['results'].map((trendtv) => TvShow.fromJson(trendtv)).toList()
-      ];
-      return trendTvs;
-    } else {
-      // If the response was umexpected, throw an error.
-      throw Exception('Failed to load movies');
+    try {
+      final response = await http.get(Uri.parse(
+          '$baseUrl/tv/top_rated?api_key=$apiKey&language=en-US&page=1'));
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body) as Map<String, dynamic>;
+        var trendTvs = <TvShow>[];
+        trendTvs = <TvShow>[
+          ...data['results'].map((trendtv) => TvShow.fromJson(trendtv)).toList()
+        ];
+        return trendTvs;
+      } else {
+        // If the response was umexpected, throw an error.
+        throw Exception('Failed to load tv shows');
+      }
+    } catch (e) {
+      log("Failed to fetch tv shows, Error: $e");
+      return <TvShow>[];
     }
   }
 
