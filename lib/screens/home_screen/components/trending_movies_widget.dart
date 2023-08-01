@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
+import 'package:movies_app/bloc/movie_detail_bloc/movie_detail_bloc.dart';
+import 'package:movies_app/bloc/trending_movies_bloc/trending_movies_bloc.dart'
+    as trendingmoviebloc;
 import 'package:movies_app/screens/movie_detail_screen/movie_detail_screen.dart';
 import 'package:movies_app/common_widgets/card_widget.dart';
 
@@ -16,11 +18,12 @@ class TrendingMoviesWidget extends StatefulWidget {
 class _TrendingMoviesWidgetState extends State<TrendingMoviesWidget> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ApiServiceBloc, ApiServiceState>(
+    return BlocBuilder<trendingmoviebloc.TrendingMoviesBloc,
+        trendingmoviebloc.TrendingMoviesState>(
       builder: (context, state) {
-        if ((state.dataStatus == DataStatus.loading &&
+        if ((state.dataStatus == trendingmoviebloc.DataStatus.loading &&
                 state.trendingMovies.isEmpty) ||
-            (state.dataStatus == DataStatus.success &&
+            (state.dataStatus == trendingmoviebloc.DataStatus.success &&
                 state.trendingMovies.isEmpty)) {
           return const SliverToBoxAdapter(
             child: Center(
@@ -32,18 +35,18 @@ class _TrendingMoviesWidgetState extends State<TrendingMoviesWidget> {
           return SliverGrid.builder(
             itemCount: state.trendingMovies.length,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 140,
-              crossAxisSpacing: 10,
-              mainAxisSpacing: 10,
-              mainAxisExtent: 240,
+              maxCrossAxisExtent: 200,
+              crossAxisSpacing: 0,
+              mainAxisSpacing: 13,
+              mainAxisExtent: 250,
             ),
             itemBuilder: (BuildContext ctx, index) {
               return MovieTvCardWidget(
                 fromTrendingMovie: true,
                 trendingMovie: trendingMovies[index],
                 onTap: () {
-                  context.read<ApiServiceBloc>().add(
-                        FetchMovieDetail(movieId: trendingMovies[index].id!),
+                  context.read<MovieDetailBloc>().add(
+                        FetchMovieDetail(movieKey: trendingMovies[index].id!),
                       );
                   Navigator.push(
                     context,
@@ -60,7 +63,7 @@ class _TrendingMoviesWidgetState extends State<TrendingMoviesWidget> {
               );
             },
           );
-        } else if (state.dataStatus == DataStatus.error &&
+        } else if (state.dataStatus == trendingmoviebloc.DataStatus.error &&
             state.trendingMovies.isEmpty) {
           return SliverToBoxAdapter(
             child: Center(

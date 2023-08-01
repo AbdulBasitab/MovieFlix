@@ -48,17 +48,18 @@ class _BottomNavBarState extends State<BottomNavBar> {
       builder: (context, state) => SafeArea(
         child: Scaffold(
           body: WillPopScope(
-              onWillPop: () async {
-                if (state.selectedIndex == 0) {
-                  return true;
-                } else {
-                  context
-                      .read<NavigationBloc>()
-                      .add(ChangeSelectedIndex(index: 0));
-                  return false;
-                }
-              },
-              child: screens[state.selectedIndex]),
+            onWillPop: () async {
+              if (state.selectedIndex == 0) {
+                return true;
+              } else {
+                context
+                    .read<NavigationBloc>()
+                    .add(ChangeSelectedIndex(index: 0));
+                return false;
+              }
+            },
+            child: screens[state.selectedIndex],
+          ),
           bottomNavigationBar: AnimatedContainer(
             duration: const Duration(milliseconds: 50),
             height: _isVisible ? 60 : 0,

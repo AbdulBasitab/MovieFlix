@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:movies_app/bloc/watch_provider_bloc/watch_provider_bloc.dart';
 import 'package:movies_app/common_widgets/image_widget.dart';
-
-import '../../../bloc/api_bloc/api_service_bloc.dart';
+import 'package:movies_app/constants/theme_constants.dart';
 
 class WhereToWatchWidget extends StatelessWidget {
   const WhereToWatchWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ApiServiceBloc, ApiServiceState>(
+    return BlocBuilder<WatchProviderBloc, WatchProviderState>(
       builder: (context, state) {
         if (state.movieWatchProvider != null &&
             state.dataStatus == DataStatus.success) {
@@ -43,17 +43,17 @@ class WhereToWatchWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          left: 15,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 25,
                         ),
                         child: Text(
                           "Buy",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+                          style: AppTextStyles.customTextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 0),
                       SizedBox(
                         height: 140,
                         width: double.infinity,
@@ -88,9 +88,8 @@ class WhereToWatchWidget extends StatelessWidget {
                                       buyList?[index].providerName ?? '',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
+                                      style: AppTextStyles.customTextStyle(
+                                          fontSize: 13),
                                     ),
                                   ),
                                 ],
@@ -112,17 +111,17 @@ class WhereToWatchWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          left: 15,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 25,
                         ),
                         child: Text(
                           "Rent",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+                          style: AppTextStyles.customTextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const SizedBox(height: 10),
+                      const SizedBox(height: 0),
                       SizedBox(
                         height: 140,
                         width: double.infinity,
@@ -139,7 +138,7 @@ class WhereToWatchWidget extends StatelessWidget {
                               padding: const EdgeInsets.all(8.0),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(10),
@@ -153,15 +152,16 @@ class WhereToWatchWidget extends StatelessWidget {
                                               "https://image.tmdb.org/t/p/w500${rentList?[index].logoPath}"),
                                     ),
                                   ),
-                                  const SizedBox(height: 4),
+                                  const SizedBox(height: 8),
                                   SizedBox(
                                     width: 90,
-                                    child: Text(
-                                      rentList?[index].providerName ?? '',
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 12,
+                                    child: Center(
+                                      child: Text(
+                                        rentList?[index].providerName ?? '',
+                                        maxLines: 1,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: AppTextStyles.customTextStyle(
+                                            fontSize: 13),
                                       ),
                                     ),
                                   ),
@@ -184,17 +184,17 @@ class WhereToWatchWidget extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.only(
-                          left: 15,
+                      Padding(
+                        padding: const EdgeInsets.only(
+                          left: 25,
                         ),
                         child: Text(
                           "Stream",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w500),
+                          style: AppTextStyles.customTextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                       ),
-                      const SizedBox(height: 8),
+                      const SizedBox(height: 0),
                       SizedBox(
                         height: 140,
                         width: double.infinity,
@@ -232,9 +232,8 @@ class WhereToWatchWidget extends StatelessWidget {
                                       flatrateList?[index].providerName ?? '',
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
-                                      style: const TextStyle(
-                                        fontSize: 12,
-                                      ),
+                                      style: AppTextStyles.customTextStyle(
+                                          fontSize: 13),
                                     ),
                                   ),
                                 ],
@@ -266,10 +265,13 @@ class WhereToWatchWidget extends StatelessWidget {
             ),
           );
         } else {
-          return const SizedBox(
+          return SizedBox(
             height: 90,
             child: Center(
-              child: CircularProgressIndicator(),
+              child: Text(
+                'Failed to load watch providers.',
+                style: AppTextStyles.customTextStyle(fontSize: 14),
+              ),
             ),
           );
         }

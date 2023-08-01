@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
+import 'package:movies_app/bloc/tv_detail_bloc/tv_detail_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
 import 'package:movies_app/constants/theme_constants.dart';
 import 'package:movies_app/common_widgets/image_widget.dart';
@@ -47,11 +47,13 @@ class _TvDetailScreenState extends State<TvDetailScreen> {
               onPressed: () {
                 if (!watchlistBloc.isShowFavorited(widget.tvShow)) {
                   watchlistBloc.add(AddShowToWatchlist(widget.tvShow));
-                  showSuccessMessage("Show added to watchlist 🥳");
+                  showSuccessMessage(
+                      "Show added to watchlist", AppColors.primaryColor);
                 } else {
                   watchlistBloc.add(RemoveTvShowFromWatchlist(widget.tvShow));
                   showErrorMessage(
-                      msg: "Show removed from watchlist", color: Colors.black);
+                      msg: "Show removed from watchlist",
+                      color: AppColors.primaryColor);
                 }
               },
               icon: Icon(
@@ -66,11 +68,11 @@ class _TvDetailScreenState extends State<TvDetailScreen> {
             ),
           ],
         ),
-        body: BlocBuilder<ApiServiceBloc, ApiServiceState>(
-            builder: (context, state) {
-          if (state.popularTvDetail != null &&
+        body:
+            BlocBuilder<TvDetailBloc, TvDetailState>(builder: (context, state) {
+          if (state.tvShowDetail != null &&
               state.dataStatus == DataStatus.success) {
-            final tvShow = state.popularTvDetail;
+            final tvShow = state.tvShowDetail;
             return SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               child: Column(
@@ -288,7 +290,7 @@ class _TvDetailScreenState extends State<TvDetailScreen> {
               ),
             );
           } else if (state.dataStatus == DataStatus.error &&
-              state.popularTvDetail == null) {
+              state.tvShowDetail == null) {
             return Center(child: Text(state.errorMessage ?? ''));
           } else {
             return const Center(

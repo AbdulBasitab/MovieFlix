@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
+import 'package:movies_app/bloc/movie_detail_bloc/movie_detail_bloc.dart'
+    as moviedetailbloc;
+import 'package:movies_app/bloc/movie_reviews_bloc/movie_reviews_bloc.dart';
+import 'package:movies_app/bloc/recommended_movies_bloc/recommended_movies_bloc.dart';
+import 'package:movies_app/bloc/similar_movies_bloc/similar_movies_bloc.dart';
+import 'package:movies_app/bloc/watch_provider_bloc/watch_provider_bloc.dart';
 import 'package:movies_app/constants/data_constants.dart';
 import 'package:movies_app/constants/theme_constants.dart';
 import 'package:movies_app/models/review/review.dart';
@@ -43,15 +48,17 @@ class _MovieDetailPageState extends State<MovieDetailPage>
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Future.delayed(const Duration(seconds: 1), () {
         context
-            .read<ApiServiceBloc>()
-            .add(FetchSimilarMovies(widget.movie.id!));
+            .read<SimilarMoviesBloc>()
+            .add(FetchSimilarMovies(movieId: widget.movie.id!));
         context
-            .read<ApiServiceBloc>()
-            .add(FetchRecommendedMovies(widget.movie.id!));
-        context.read<ApiServiceBloc>().add(FetchMovieReviews(widget.movie.id!));
+            .read<RecommendedMoviesBloc>()
+            .add(FetchRecommendedMovies(movieId: widget.movie.id!));
         context
-            .read<ApiServiceBloc>()
-            .add(FetchMovieWatchProvider(widget.movie.id!));
+            .read<MovieReviewsBloc>()
+            .add(FetchMovieReviews(widget.movie.id!));
+        context
+            .read<WatchProviderBloc>()
+            .add(FetchWatchProviders(movieId: widget.movie.id!));
       });
     });
   }
@@ -78,11 +85,13 @@ class _MovieDetailPageState extends State<MovieDetailPage>
               onPressed: () {
                 if (!watchlistBloc.isMovieFavorited(widget.movie)) {
                   watchlistBloc.add(AddMovieToWatchlist(widget.movie));
-                  showSuccessMessage("Movie added to watchlist 🥳");
+                  showSuccessMessage(
+                      "Movie added to watchlist", AppColors.primaryColor);
                 } else {
                   watchlistBloc.add(RemoveMovieFromWatchlist(widget.movie));
                   showErrorMessage(
-                      msg: "Movie removed from watchlist", color: Colors.black);
+                      msg: "Movie removed from watchlist",
+                      color: AppColors.primaryColor);
                 }
               },
               icon: Icon(
@@ -97,8 +106,8 @@ class _MovieDetailPageState extends State<MovieDetailPage>
             ),
           ],
         ),
-        body: BlocBuilder<ApiServiceBloc, ApiServiceState>(
-            builder: (context, state) {
+        body: BlocBuilder<moviedetailbloc.MovieDetailBloc,
+            moviedetailbloc.MovieDetailState>(builder: (context, state) {
           if (state.movieDetail != null) {
             final movie = state.movieDetail;
             return ListView(
@@ -128,8 +137,8 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                       ),
                       child: Text(
                         widget.movie.title.toString(),
-                        style: const TextStyle(
-                          fontSize: 25,
+                        style: AppTextStyles.numberTextStyle(
+                          fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -140,31 +149,35 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
                           child: Text(
                             'Release Date:  ',
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
+                            style: AppTextStyles.numberTextStyle(
+                                fontSize: 14, textColor: AppColors.greyColor),
                           ),
                         ),
                         Text(
                           widget.movie.releaseDate!.formatDate().toString(),
-                          style: const TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                          style: AppTextStyles.numberTextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                         const SizedBox(
                           width: 26,
                         ),
-                        const Text(
+                        Text(
                           'Duration:  ',
-                          style: TextStyle(
-                            color: Colors.grey,
-                          ),
+                          style: AppTextStyles.numberTextStyle(
+                              fontSize: 14, textColor: AppColors.greyColor),
                         ),
                         Text(
                           '${durationToString(movie?.runTime as int)} min',
+                          style: AppTextStyles.numberTextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -174,28 +187,27 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20, right: 0),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20, right: 0),
                           child: Text(
                             'Rating:  ',
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
+                            style: AppTextStyles.numberTextStyle(
+                                fontSize: 14, textColor: AppColors.greyColor),
                           ),
-                        ),
-                        Text(
-                          widget.movie.rating!.toStringAsFixed(1).toString(),
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(
-                          width: 5,
                         ),
                         Icon(
                           Icons.star,
                           color: Colors.amber.shade600,
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        Text(
+                          widget.movie.rating!.toStringAsFixed(1).toString(),
+                          style: AppTextStyles.numberTextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ],
                     ),
@@ -204,13 +216,12 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                     ),
                     Row(
                       children: [
-                        const Padding(
-                          padding: EdgeInsets.only(left: 20),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 20),
                           child: Text(
                             'Genre:  ',
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
+                            style: AppTextStyles.numberTextStyle(
+                                fontSize: 14, textColor: AppColors.greyColor),
                           ),
                         ),
                         if (movie!.genres.isNotEmpty &&
@@ -227,18 +238,14 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                             children: [
                               Text(
                                 movie.genres.elementAt(0).name.toString(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style:
+                                    AppTextStyles.customTextStyle(fontSize: 14),
                               ),
                               const Text(' , '),
                               Text(
                                 movie.genres.elementAt(1).name.toString(),
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                style:
+                                    AppTextStyles.customTextStyle(fontSize: 14),
                               )
                             ],
                           )),
@@ -246,34 +253,38 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                       ],
                     ),
                     const SizedBox(
-                      height: 25,
+                      height: 15,
                     ),
-                    Container(
-                      alignment: Alignment.centerLeft,
+                    Padding(
                       padding: const EdgeInsets.all(20),
                       child: Text(
                         widget.movie.description.toString(),
                         textAlign: TextAlign.left,
-                        style: const TextStyle(
-                          fontSize: 14,
-                        ),
+                        style: AppTextStyles.numberTextStyle(fontSize: 15),
                       ),
                     ),
-                    const SizedBox(height: 25),
+                    const SizedBox(height: 20),
                     TabBar(
                       tabs: movieDetailPageTabs,
                       controller: movieDetailTabController,
                       padding: const EdgeInsets.all(8),
                       labelPadding: const EdgeInsets.all(12),
+                      unselectedLabelStyle:
+                          AppTextStyles.unselectedItemTextStyle(
+                        fontSize: 13.5,
+                      ),
+                      labelStyle: AppTextStyles.customTextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w700),
                       isScrollable: true,
                       indicator: BoxDecoration(
                         color: Colors.black,
                         borderRadius: BorderRadius.circular(10),
                         border:
-                            Border.all(color: Colors.blue.shade900, width: 2.5),
+                            Border.all(color: AppColors.primaryColor, width: 3),
                       ),
-                      indicatorColor: Colors.blue.shade900,
+                      indicatorColor: AppColors.primaryColor,
                       indicatorSize: TabBarIndicatorSize.tab,
+                      automaticIndicatorColorAdjustment: false,
                       onTap: (index) async {
                         setState(() {
                           selectedIndex = index;
@@ -290,7 +301,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                 ),
               ],
             );
-          } else if (state.dataStatus == DataStatus.error &&
+          } else if (state.dataStatus == moviedetailbloc.DataStatus.error &&
               state.movieDetail == null) {
             return Center(
                 child: Text(state.errorMessage ?? "Some Error Occured"));

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
+import 'package:movies_app/bloc/movie_detail_bloc/movie_detail_bloc.dart';
+import 'package:movies_app/bloc/search_bloc/search_bloc.dart' as searchbloc;
 import 'package:movies_app/constants/data_constants.dart';
 import 'package:movies_app/common_widgets/image_widget.dart';
 import 'package:movies_app/common_widgets/searchbar_widget.dart';
@@ -67,8 +68,8 @@ class _SearchScreenState extends State<SearchScreen>
                       controller: searchBarController,
                       onChanged: (query) {
                         context
-                            .read<ApiServiceBloc>()
-                            .add(FetchSearchedMovies(query));
+                            .read<searchbloc.SearchBloc>()
+                            .add(searchbloc.SearchMovies(searchQuery: query));
                       },
                       onClear: () {
                         searchBarController.clear();
@@ -79,7 +80,8 @@ class _SearchScreenState extends State<SearchScreen>
                 ),
                 const SizedBox(height: 30),
                 Expanded(
-                  child: BlocBuilder<ApiServiceBloc, ApiServiceState>(
+                  child: BlocBuilder<searchbloc.SearchBloc,
+                      searchbloc.SearchState>(
                     builder: (context, state) {
                       if (state.searchedMovies.isNotEmpty &&
                           searchBarController.text.isNotEmpty) {
@@ -103,10 +105,11 @@ class _SearchScreenState extends State<SearchScreen>
                                       child: InkWell(
                                         onTap: () {
                                           //TODO: Also implement search for tv shows
-                                          context.read<ApiServiceBloc>().add(
+                                          context.read<MovieDetailBloc>().add(
                                               FetchMovieDetail(
-                                                  movieId: searchedMovies[index]
-                                                      .id!));
+                                                  movieKey:
+                                                      searchedMovies[index]
+                                                          .id!));
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
@@ -196,9 +199,11 @@ class _SearchScreenState extends State<SearchScreen>
                                 );
                               }),
                         );
-                      } else if (state.dataStatus == DataStatus.loading) {
+                      } else if (state.dataStatus ==
+                          searchbloc.DataStatus.loading) {
                         return const Center(child: CircularProgressIndicator());
-                      } else if (state.dataStatus == DataStatus.error &&
+                      } else if (state.dataStatus ==
+                              searchbloc.DataStatus.error &&
                           searchBarController.text.isNotEmpty) {
                         return Center(
                             child:

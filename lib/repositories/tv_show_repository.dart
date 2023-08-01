@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:movies_app/models/models.dart';
 import 'package:movies_app/services/api_service.dart';
 import 'package:movies_app/services/isar_service.dart';
@@ -12,6 +13,7 @@ class TvShowRepository {
     try {
       return await _apiService.fetchPopularTvShows();
     } catch (e) {
+      debugPrint("$e");
       rethrow;
     }
   }
@@ -20,6 +22,16 @@ class TvShowRepository {
     try {
       return await _apiService.fetchTvShowDetail(showId);
     } catch (e) {
+      debugPrint("$e");
+      rethrow;
+    }
+  }
+
+  Future<List<TvShow>> fetchSearchedTvShows(String query) async {
+    try {
+      return await _apiService.fetchSearchedTvShows(query);
+    } catch (e) {
+      debugPrint("$e");
       rethrow;
     }
   }

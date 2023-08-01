@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
+import 'package:movies_app/bloc/movie_detail_bloc/movie_detail_bloc.dart';
 import 'package:movies_app/bloc/watchlist_bloc/watchlist_bloc.dart';
 import 'package:movies_app/models/models.dart';
 import 'package:movies_app/screens/movie_detail_screen/movie_detail_screen.dart';
@@ -28,8 +28,8 @@ class WatchlistMoviesWidget extends StatelessWidget {
               return MovieTvCardWidget(
                 onTap: () {
                   context
-                      .read<ApiServiceBloc>()
-                      .add(FetchMovieDetail(movieId: movie.id!));
+                      .read<MovieDetailBloc>()
+                      .add(FetchMovieDetail(movieKey: movie.id!));
                   Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -45,8 +45,8 @@ class WatchlistMoviesWidget extends StatelessWidget {
               );
             },
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 130,
-              crossAxisSpacing: 20,
+              maxCrossAxisExtent: 200,
+              crossAxisSpacing: 0,
               mainAxisSpacing: 10,
               mainAxisExtent: 240,
             ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../bloc/api_bloc/api_service_bloc.dart';
-import '../../../common_widgets/image_widget.dart';
+import 'package:movies_app/bloc/movie_reviews_bloc/movie_reviews_bloc.dart';
+import 'package:movies_app/common_widgets/image_widget.dart';
 
 class ReviewsWidget extends StatelessWidget {
   const ReviewsWidget({
@@ -10,7 +10,7 @@ class ReviewsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ApiServiceBloc, ApiServiceState>(
+    return BlocBuilder<MovieReviewsBloc, MovieReviewsState>(
       builder: (context, state) {
         if (state.movieReviews.isNotEmpty &&
             state.dataStatus == DataStatus.success) {

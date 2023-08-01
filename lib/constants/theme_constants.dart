@@ -27,22 +27,31 @@ class AppColors {
   static const Color whiteColor = Colors.white;
   static const Color blackColor = Colors.black;
   static const Color transparentColor = Colors.transparent;
+  static const Color greyColor = Colors.grey;
 }
 
 class AppTextStyles {
-  static TextStyle selectedItemTextStyle() {
+  static TextStyle selectedItemTextStyle({
+    Color? textColor,
+    double? fontSize,
+    FontWeight? fontWeight,
+  }) {
     return GoogleFonts.raleway(
-      fontSize: 16,
-      fontWeight: FontWeight.w700,
-      color: Colors.amber.shade600,
+      fontSize: fontSize ?? 16,
+      fontWeight: fontWeight ?? FontWeight.w700,
+      color: textColor ?? Colors.amber.shade600,
     );
   }
 
-  static TextStyle unselectedItemTextStyle() {
+  static TextStyle unselectedItemTextStyle({
+    Color? textColor,
+    double? fontSize,
+    FontWeight? fontWeight,
+  }) {
     return GoogleFonts.raleway(
-      color: Colors.white54,
-      fontSize: 13,
-      fontWeight: FontWeight.w400,
+      color: textColor ?? Colors.white54,
+      fontSize: fontSize ?? 13,
+      fontWeight: fontWeight ?? FontWeight.w400,
     );
   }
 
@@ -52,6 +61,18 @@ class AppTextStyles {
     FontWeight? fontWeight,
   }) {
     return GoogleFonts.raleway(
+      fontSize: fontSize,
+      color: textColor ?? Colors.white,
+      fontWeight: fontWeight ?? FontWeight.w500,
+    );
+  }
+
+  static TextStyle numberTextStyle({
+    Color? textColor,
+    required double fontSize,
+    FontWeight? fontWeight,
+  }) {
+    return GoogleFonts.lato(
       fontSize: fontSize,
       color: textColor ?? Colors.white,
       fontWeight: fontWeight ?? FontWeight.w500,

@@ -18,7 +18,7 @@ class ApiService {
       );
       if (response.statusCode == 200) {
         final data = json.decode(response.body) as Map<String, dynamic>;
-        print(data.toString());
+        debugPrint(data.toString());
         var trendMovies = <Movie>[];
         trendMovies = <Movie>[
           ...data['results']
@@ -39,11 +39,11 @@ class ApiService {
   Future<MovieDetail?> fetchMovieDetail(int moviekey) async {
     final response =
         await http.get(Uri.parse('$baseUrl/movie/$moviekey?api_key=$apiKey'));
-    print(response);
+    debugPrint('$response');
     if (response.statusCode == 200) {
       var movieDetails = json.decode(response.body);
       var movieDetail = MovieDetail.fromJson(movieDetails);
-      print(movieDetail);
+      debugPrint('$movieDetail');
       return movieDetail;
     } else {
       return null;
@@ -74,7 +74,7 @@ class ApiService {
   Future<TvShowDetail?> fetchTvShowDetail(int tvKey) async {
     final response = await http
         .get(Uri.parse('$baseUrl/tv/$tvKey?api_key=$apiKey&language=en-US'));
-    print(response.body);
+    debugPrint(response.body);
     if (response.statusCode == 200) {
       var poptvDetails = json.decode(response.body);
       var poptvDetail = TvShowDetail.fromJson(poptvDetails);
@@ -88,7 +88,7 @@ class ApiService {
   Future<List<Movie>> searchMovies(String query) async {
     var response = await http.get(Uri.parse(
         "$baseUrl/search/movie?query=$query&include_adult=false&language=en-US&page=1&api_key=$apiKey"));
-    print(response.body);
+    debugPrint(response.body);
     final data = json.decode(response.body) as Map<String, dynamic>;
     var searchedMovies = <Movie>[];
     searchedMovies = [
@@ -96,14 +96,29 @@ class ApiService {
     ];
     if (searchedMovies.isNotEmpty) {
       searchedMovies.sort((a, b) => b.rating!.compareTo(a.rating!));
-    } else {}
+    }
     return searchedMovies;
+  }
+
+  Future<List<TvShow>> fetchSearchedTvShows(String query) async {
+    var response = await http.get(Uri.parse(
+        "$baseUrl/search/tv?query=$query&include_adult=false&language=en-US&page=1&api_key=$apiKey"));
+    debugPrint(response.body);
+    final data = json.decode(response.body) as Map<String, dynamic>;
+    var searchedShows = <TvShow>[];
+    searchedShows = [
+      ...data['results'].map((show) => TvShow.fromJson(show)).toList()
+    ];
+    if (searchedShows.isNotEmpty) {
+      searchedShows.sort((a, b) => b.rating!.compareTo(a.rating!));
+    }
+    return searchedShows;
   }
 
   Future<List<Movie>> fetchSimilarMovies(int movieId) async {
     var response = await http.get(Uri.parse(
         "$baseUrl/movie/$movieId/similar?language=en-US&page=1&api_key=$apiKey"));
-    print(response.body);
+    debugPrint(response.body);
     final data = json.decode(response.body) as Map<String, dynamic>;
     var similarMovies = <Movie>[];
     similarMovies = [
@@ -120,7 +135,7 @@ class ApiService {
   ) async {
     var response = await http.get(Uri.parse(
         "$baseUrl/movie/$movieId/reviews?language=en-US&page=1&api_key=$apiKey"));
-    print(response.body);
+    debugPrint(response.body);
     final data = json.decode(response.body) as Map<String, dynamic>;
     var movieReviews = <Review>[];
     movieReviews = [
@@ -136,7 +151,7 @@ class ApiService {
   ) async {
     var response = await http.get(Uri.parse(
         "$baseUrl/movie/$movieId/recommendations?language=en-US&page=1&api_key=$apiKey"));
-    print(response.body);
+    debugPrint(response.body);
     final data = json.decode(response.body) as Map<String, dynamic>;
     var recommendedMovies = <Movie>[];
     recommendedMovies = [
@@ -158,10 +173,9 @@ class ApiService {
           ),
           headers: {
             'accept': 'application/json',
-            'Authorization':
-                'Bearer eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiIyZjUyNGI5ZDRlY2M1OTU2ODIyNmU3NDVjZWY0ZmZlMCIsInN1YiI6IjYzNmU0MWM2ZDdmYmRhMDBlN2I3Nzc4OSIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.pIhLyoiTyNqDfoc0RQqNHVRyb8ZxcsZzDTcD1u29WsI'
+            'Authorization': 'Bearer $readToken'
           });
-      print(response.body);
+      debugPrint(response.body);
       final data = json.decode(response.body) as Map<String, dynamic>;
       WatchProvider? movieProviderSingleCountry;
       var watchProvidersData = data['results'];

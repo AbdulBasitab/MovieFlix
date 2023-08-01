@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/bloc/navigation_bloc/navigation_bloc.dart';
+import 'package:movies_app/bloc/popular_shows_bloc/popular_shows_bloc.dart';
+import 'package:movies_app/bloc/trending_movies_bloc/trending_movies_bloc.dart';
 import 'package:movies_app/bloc/watchlist_bloc/watchlist_bloc.dart';
+import 'package:movies_app/constants/theme_constants.dart';
 import 'package:movies_app/screens/home_screen/components/trending_movies_widget.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../bloc/api_bloc/api_service_bloc.dart';
 import 'components/popular_tv_widget.dart';
 
 class HomePage extends StatefulWidget {
@@ -26,8 +28,8 @@ class _HomePageState extends State<HomePage>
 
   void fetchApiAndDbDataForFirstTime() {
     if (!context.read<NavigationBloc>().state.isDataFetched) {
-      context.read<ApiServiceBloc>().add(FetchTrendingMovies());
-      context.read<ApiServiceBloc>().add(FetchPopularTvShows());
+      context.read<TrendingMoviesBloc>().add(FetchTrendingMovies());
+      context.read<PopularShowsBloc>().add(FetchPopularShows());
       context.read<WatchlistBloc>().add(FetchWatchlistMovies());
       context.read<WatchlistBloc>().add(FetchWatchlistShows());
       return;
@@ -42,13 +44,14 @@ class _HomePageState extends State<HomePage>
     return SafeArea(
       child: Scaffold(
         backgroundColor: Colors.black,
+        drawer: const Column(children: []),
         appBar: AppBar(
           backgroundColor: Colors.blue.shade900,
           title: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             textBaseline: TextBaseline.ideographic,
             children: [
-              const SizedBox(width: 5),
+              // const SizedBox(width: 5),
               Image.asset(
                 'assets/logo/movieflix.png',
                 scale: 14,
@@ -64,6 +67,9 @@ class _HomePageState extends State<HomePage>
           centerTitle: true,
           elevation: 10,
           toolbarHeight: 65,
+          actions: const [
+            SizedBox(width: 50),
+          ],
         ),
         body: CustomScrollView(
           controller: widget.scrollController,
@@ -80,7 +86,7 @@ class _HomePageState extends State<HomePage>
                     padding: const EdgeInsets.only(
                       top: 20,
                       bottom: 10,
-                      left: 10,
+                      left: 20,
                       right: 10,
                     ),
                     child: Row(
@@ -88,10 +94,8 @@ class _HomePageState extends State<HomePage>
                       children: [
                         Text(
                           'Trending Movies',
-                          style: GoogleFonts.raleway(
-                            fontSize: 20,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: AppTextStyles.customTextStyle(
+                              fontSize: 20, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -107,7 +111,7 @@ class _HomePageState extends State<HomePage>
                 padding: const EdgeInsets.only(
                   top: 20,
                   bottom: 15,
-                  left: 10,
+                  left: 20,
                   right: 10,
                 ),
                 child: Row(
@@ -115,10 +119,8 @@ class _HomePageState extends State<HomePage>
                   children: [
                     Text(
                       'Popular Shows',
-                      style: GoogleFonts.raleway(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w500,
-                      ),
+                      style: AppTextStyles.customTextStyle(
+                          fontSize: 20, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),

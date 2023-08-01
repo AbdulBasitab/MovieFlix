@@ -29,10 +29,18 @@ extension StringExtensions on String {
 }
 
 const List<Widget> movieDetailPageTabs = [
-  Text("Recommended"),
-  Text("Similar"),
-  Text("Reviews"),
-  Text("Where to watch")
+  Text(
+    "Recommended",
+  ),
+  Text(
+    "Similar",
+  ),
+  Text(
+    "Reviews",
+  ),
+  Text(
+    "Where to watch",
+  ),
 ];
 
 const List<ButtonSegment<int>> buttonSegments = [
@@ -81,11 +89,11 @@ void showErrorMessage({required String msg, Color? color}) {
   );
 }
 
-void showSuccessMessage(String msg) {
+void showSuccessMessage(String msg, Color color) {
   Fluttertoast.showToast(
     msg: msg,
     gravity: ToastGravity.BOTTOM,
     textColor: Colors.white,
-    backgroundColor: Colors.green,
+    backgroundColor: color,
   );
 }

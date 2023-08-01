@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:movies_app/bloc/api_bloc/api_service_bloc.dart';
+import 'package:movies_app/bloc/popular_shows_bloc/popular_shows_bloc.dart'
+    as popshowsbloc;
+import 'package:movies_app/bloc/tv_detail_bloc/tv_detail_bloc.dart';
 import '../../../common_widgets/card_widget.dart';
 import '../../tv_detail_screen/tv_detail_screen.dart';
 
@@ -16,16 +18,17 @@ class PopularTvWidget extends StatefulWidget {
 class _PopularTvWidgetState extends State<PopularTvWidget> {
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ApiServiceBloc, ApiServiceState>(
+    return BlocBuilder<popshowsbloc.PopularShowsBloc,
+        popshowsbloc.PopularShowsState>(
       builder: (context, state) {
-        if (state.popularTvShows.isNotEmpty &&
-            state.dataStatus == DataStatus.success) {
-          final popTvs = state.popularTvShows;
+        if (state.popularShows.isNotEmpty &&
+            state.dataStatus == popshowsbloc.DataStatus.success) {
+          final popTvs = state.popularShows;
           return SliverGrid.builder(
-            itemCount: state.popularTvShows.length,
+            itemCount: popTvs.length,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 140,
-              crossAxisSpacing: 10,
+              maxCrossAxisExtent: 200,
+              crossAxisSpacing: 0,
               mainAxisSpacing: 10,
               mainAxisExtent: 240,
             ),
@@ -37,8 +40,8 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
                 fromTrendingMovie: false,
                 onTap: () {
                   context
-                      .read<ApiServiceBloc>()
-                      .add(FetchTvShowDetail(tvShowId: popTvs[index].id!));
+                      .read<TvDetailBloc>()
+                      .add(FetchTvDetail(tvShowKey: popTvs[index].id!));
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -51,28 +54,28 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
               );
             },
           );
-        } else if (state.dataStatus == DataStatus.loading &&
-            state.popularTvShows.isEmpty) {
+        } else if (state.dataStatus == popshowsbloc.DataStatus.loading &&
+            state.popularShows.isEmpty) {
           return const SliverToBoxAdapter(
             child: Center(
               child: CircularProgressIndicator(),
             ),
           );
-        } else if (state.dataStatus == DataStatus.error &&
-            state.popularTvShows.isEmpty) {
+        } else if (state.dataStatus == popshowsbloc.DataStatus.error &&
+            state.popularShows.isEmpty) {
           return SliverToBoxAdapter(
             child: Center(
               child: Text(state.errorMessage ?? "Some error occured"),
             ),
           );
         } else {
-          final popTvs = state.popularTvShows;
+          final popTvs = state.popularShows;
           return SliverGrid.builder(
-            itemCount: state.popularTvShows.length,
+            itemCount: state.popularShows.length,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 130,
-              crossAxisSpacing: 30,
-              mainAxisSpacing: 11,
+              maxCrossAxisExtent: 200,
+              crossAxisSpacing: 0,
+              mainAxisSpacing: 10,
               mainAxisExtent: 240,
             ),
             itemBuilder: (BuildContext ctx, index) {
@@ -83,8 +86,8 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
                 fromTrendingMovie: false,
                 onTap: () {
                   context
-                      .read<ApiServiceBloc>()
-                      .add(FetchTvShowDetail(tvShowId: popTvs[index].id!));
+                      .read<TvDetailBloc>()
+                      .add(FetchTvDetail(tvShowKey: popTvs[index].id!));
                   Navigator.push(
                     context,
                     MaterialPageRoute(

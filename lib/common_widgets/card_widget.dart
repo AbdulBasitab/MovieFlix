@@ -23,19 +23,22 @@ class MovieTvCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 26),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           InkWell(
             onTap: onTap,
             child: Stack(
-              // alignment: Alignment.topRight,
               children: [
                 SizedBox(
-                  height: 170,
+                  height: 180,
+                  width: 130,
                   child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: ImageWidget(imageUrl: posterImage)),
+                    borderRadius: BorderRadius.circular(10),
+                    child: ImageWidget(imageUrl: posterImage),
+                  ),
                 ),
               ],
             ),
@@ -45,12 +48,13 @@ class MovieTvCardWidget extends StatelessWidget {
           ),
           SizedBox(
             height: 45,
-            child: Text(
-              (fromTrendingMovie)
-                  ? trendingMovie?.title ?? ''
-                  : popTv?.title ?? '',
-              style: AppTextStyles.customTextStyle(
-                fontSize: 13,
+            child: Center(
+              child: Text(
+                (fromTrendingMovie)
+                    ? trendingMovie?.title ?? ''
+                    : popTv?.title ?? '',
+                style: AppTextStyles.customTextStyle(
+                    fontSize: 14, fontWeight: FontWeight.w500),
               ),
             ),
           ),
