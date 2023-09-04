@@ -54,13 +54,13 @@ class _HomePageState extends State<HomePage>
               // const SizedBox(width: 5),
               Image.asset(
                 'assets/logo/movieflix.png',
-                scale: 14,
+                scale: 13,
               ),
               const SizedBox(width: 7),
               Text(
                 'MovieFlix',
                 style: GoogleFonts.raleway(
-                    fontSize: 22, height: 1.6, fontWeight: FontWeight.w600),
+                    fontSize: 24, height: 1.6, fontWeight: FontWeight.w600),
               ),
             ],
           ),
@@ -84,9 +84,9 @@ class _HomePageState extends State<HomePage>
                     height: 70,
                     alignment: Alignment.topLeft,
                     padding: const EdgeInsets.only(
-                      top: 20,
+                      top: 30,
                       bottom: 10,
-                      left: 20,
+                      left: 10,
                       right: 10,
                     ),
                     child: Row(
@@ -95,7 +95,7 @@ class _HomePageState extends State<HomePage>
                         Text(
                           'Trending Movies',
                           style: AppTextStyles.customTextStyle(
-                              fontSize: 20, fontWeight: FontWeight.w600),
+                              fontSize: 21, fontWeight: FontWeight.w600),
                         ),
                       ],
                     ),
@@ -109,8 +109,8 @@ class _HomePageState extends State<HomePage>
                 height: 70,
                 alignment: Alignment.topLeft,
                 padding: const EdgeInsets.only(
-                  top: 20,
-                  bottom: 15,
+                  top: 30,
+                  bottom: 10,
                   left: 20,
                   right: 10,
                 ),
@@ -120,7 +120,7 @@ class _HomePageState extends State<HomePage>
                     Text(
                       'Popular Shows',
                       style: AppTextStyles.customTextStyle(
-                          fontSize: 20, fontWeight: FontWeight.w600),
+                          fontSize: 21, fontWeight: FontWeight.w600),
                     ),
                   ],
                 ),

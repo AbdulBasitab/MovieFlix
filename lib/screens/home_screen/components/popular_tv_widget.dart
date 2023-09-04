@@ -28,9 +28,9 @@ class _PopularTvWidgetState extends State<PopularTvWidget> {
             itemCount: popTvs.length,
             gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
               maxCrossAxisExtent: 200,
-              crossAxisSpacing: 0,
-              mainAxisSpacing: 10,
-              mainAxisExtent: 240,
+              crossAxisSpacing: 5,
+              mainAxisSpacing: 0,
+              mainAxisExtent: 215,
             ),
             itemBuilder: (BuildContext ctx, index) {
               return MovieTvCardWidget(

@@ -59,8 +59,9 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => SearchBloc(
-              movieRepository: movieRepository,
-              tvShowRepository: tvShowRepository),
+            movieRepository: movieRepository,
+            tvShowRepository: tvShowRepository,
+          ),
         ),
         BlocProvider(
           create: (_) =>

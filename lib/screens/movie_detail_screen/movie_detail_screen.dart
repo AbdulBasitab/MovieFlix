@@ -258,7 +258,7 @@ class _MovieDetailPageState extends State<MovieDetailPage>
                     Padding(
                       padding: const EdgeInsets.all(20),
                       child: Text(
-                        widget.movie.description.toString(),
+                        widget.movie.description ?? '',
                         textAlign: TextAlign.left,
                         style: AppTextStyles.numberTextStyle(fontSize: 15),
                       ),

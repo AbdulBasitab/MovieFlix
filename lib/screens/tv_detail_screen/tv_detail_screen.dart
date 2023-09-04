@@ -282,8 +282,9 @@ class _TvDetailScreenState extends State<TvDetailScreen> {
                     alignment: Alignment.centerLeft,
                     padding: const EdgeInsets.all(20),
                     child: Text(
-                      widget.tvShow.description.toString(),
-                      textAlign: TextAlign.justify,
+                      widget.tvShow.description ?? '',
+                      textAlign: TextAlign.left,
+                      style: AppTextStyles.numberTextStyle(fontSize: 15),
                     ),
                   ),
                 ],

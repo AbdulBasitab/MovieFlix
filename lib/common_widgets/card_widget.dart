@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movies_app/common_widgets/image_widget.dart';
-import 'package:movies_app/constants/theme_constants.dart';
+// import 'package:movies_app/constants/theme_constants.dart';
 import '../models/movie/movie.dart';
 import '../models/tv_show/tv_show.dart';
 
@@ -23,7 +23,7 @@ class MovieTvCardWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 26),
+      padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -43,21 +43,21 @@ class MovieTvCardWidget extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 45,
-            child: Center(
-              child: Text(
-                (fromTrendingMovie)
-                    ? trendingMovie?.title ?? ''
-                    : popTv?.title ?? '',
-                style: AppTextStyles.customTextStyle(
-                    fontSize: 14, fontWeight: FontWeight.w500),
-              ),
-            ),
-          ),
+          // const SizedBox(
+          //   height: 10,
+          // ),
+          // SizedBox(
+          //   height: 45,
+          //   child: Center(
+          //     child: Text(
+          //       (fromTrendingMovie)
+          //           ? trendingMovie?.title ?? ''
+          //           : popTv?.title ?? '',
+          //       style: AppTextStyles.customTextStyle(
+          //           fontSize: 14, fontWeight: FontWeight.w500),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

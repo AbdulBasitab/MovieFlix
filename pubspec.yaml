@@ -58,6 +58,7 @@ dependencies:
   material_segmented_control: ^5.0.0
   fluttertoast: ^8.2.2
   get_it: ^7.6.0
+  easy_debounce: ^2.0.3
 
 dev_dependencies:
   flutter_test:

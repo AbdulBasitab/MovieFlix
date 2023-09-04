@@ -1,3 +1,4 @@
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:movies_app/bloc/movie_detail_bloc/movie_detail_bloc.dart';
@@ -67,9 +68,12 @@ class _SearchScreenState extends State<SearchScreen>
                     CustomMaterial3SearchBar(
                       controller: searchBarController,
                       onChanged: (query) {
-                        context
-                            .read<searchbloc.SearchBloc>()
-                            .add(searchbloc.SearchMovies(searchQuery: query));
+                        EasyDebounce.debounce("search_debouncer",
+                            const Duration(milliseconds: 400), () {
+                          context
+                              .read<searchbloc.SearchBloc>()
+                              .add(searchbloc.SearchMovies(searchQuery: query));
+                        });
                       },
                       onClear: () {
                         searchBarController.clear();
