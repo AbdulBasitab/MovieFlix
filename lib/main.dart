@@ -46,7 +46,8 @@ class MainApp extends StatelessWidget {
         ),
         BlocProvider(
           create: (_) => MovieDetailBloc(
-              movieRepository: serviceLocator<MovieRepository>()),
+            movieRepository: serviceLocator<MovieRepository>(),
+          ),
         ),
         BlocProvider(
           create: (_) => TvDetailBloc(tvShowRepository: tvShowRepository),

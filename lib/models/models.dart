@@ -1,8 +1,8 @@
-export '/models/genre/genre.dart';
-export '/models/movie/movie.dart';
-export '/models/movie_detail/movie_detail.dart';
-export '/models/review/review.dart';
-export '/models/review_author/review_author.dart';
+export 'genre/genre.dart';
+export 'movie/movie.dart';
+export 'movie_detail/movie_detail.dart';
+export 'review/review.dart';
+export 'review_author/review_author.dart';
 export 'tv_detail/tv_show_detail.dart';
-export '/models/tv_show/tv_show.dart';
-export '/models/watch_provider/watch_provider.dart';
+export 'tv_show/tv_show.dart';
+export 'watch_provider/watch_provider.dart';
