@@ -25,7 +25,6 @@ class ApiService {
               .map((trendmovie) => Movie.fromJson(trendmovie))
               .toList()
         ];
-
         return trendMovies;
       } else {
         return <Movie>[];
