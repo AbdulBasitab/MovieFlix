@@ -1,18 +1,19 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'provider_info.g.dart';
 
 @JsonSerializable()
-class ProviderInfo {
+class ProviderInfo extends Equatable {
   @JsonKey(name: 'logo_path')
-  String? logoPath;
+  final String? logoPath;
   @JsonKey(name: 'provider_id')
-  int? providerId;
+  final int? providerId;
   @JsonKey(name: 'provider_name')
-  String? providerName;
+  final String? providerName;
 
-  ProviderInfo({
+  const ProviderInfo({
     this.logoPath,
     this.providerId,
     this.providerName,
@@ -21,4 +22,10 @@ class ProviderInfo {
       _$ProviderInfoFromJson(json);
 
   Map<String, dynamic> toJson() => _$ProviderInfoToJson(this);
+
+  @override
+  List<Object?> get props => [logoPath, providerId, providerName];
+
+  @override
+  bool get stringify => true;
 }

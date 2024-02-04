@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import '../genre/genre.dart';
@@ -5,7 +7,7 @@ import '../genre/genre.dart';
 part 'tv_show_detail.g.dart';
 
 @JsonSerializable()
-class TvShowDetail {
+class TvShowDetail extends Equatable {
   @JsonKey(name: 'backdrop_path')
   final String? tvBackdrop;
 
@@ -39,7 +41,7 @@ class TvShowDetail {
   @JsonKey(name: 'genres')
   final List<Genre>? genres;
 
-  TvShowDetail({
+  const TvShowDetail({
     this.tvBackdrop,
     this.tvTitle,
     this.tvId,
@@ -57,4 +59,24 @@ class TvShowDetail {
       _$TvShowDetailFromJson(json);
 
   Map<String, dynamic> toJson() => _$TvShowDetailToJson(this);
+
+  @override
+  List<Object?> get props {
+    return [
+      tvBackdrop,
+      tvTitle,
+      tvId,
+      tvDescription,
+      seasons,
+      episodes,
+      firstairDate,
+      lastairDate,
+      status,
+      rating,
+      genres,
+    ];
+  }
+
+  @override
+  bool get stringify => true;
 }

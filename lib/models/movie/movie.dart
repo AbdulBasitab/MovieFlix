@@ -1,4 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
+import 'package:equatable/equatable.dart';
 import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -8,7 +9,7 @@ part 'movie.g.dart';
 
 @JsonSerializable()
 @Collection()
-class Movie {
+class Movie extends Equatable {
   @JsonKey(includeFromJson: false)
   Id isarId = Isar.autoIncrement;
 
@@ -51,28 +52,19 @@ class Movie {
   Map<String, dynamic> toJson() => _$MovieToJson(this);
 
   @override
-  bool operator ==(covariant Movie other) {
-    if (identical(this, other)) return true;
-
-    return other.title == title &&
-        other.poster == poster &&
-        other.id == id &&
-        other.backdrop == backdrop &&
-        other.description == description &&
-        other.rating == rating &&
-        other.releaseDate == releaseDate &&
-        other.runTime == runTime;
+  List<Object?> get props {
+    return [
+      title,
+      poster,
+      id,
+      backdrop,
+      description,
+      rating,
+      releaseDate,
+      runTime,
+    ];
   }
 
   @override
-  int get hashCode {
-    return title.hashCode ^
-        poster.hashCode ^
-        id.hashCode ^
-        backdrop.hashCode ^
-        description.hashCode ^
-        rating.hashCode ^
-        releaseDate.hashCode ^
-        runTime.hashCode;
-  }
+  bool get stringify => true;
 }

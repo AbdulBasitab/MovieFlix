@@ -9,16 +9,16 @@ import 'package:movies_app/screens/home_screen/components/trending_movies_widget
 import 'package:google_fonts/google_fonts.dart';
 import 'components/popular_tv_widget.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage({super.key, required this.scrollController});
+class HomeScreen extends StatefulWidget {
+  const HomeScreen({super.key, required this.scrollController});
 
   final ScrollController scrollController;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomePageState extends State<HomePage>
+class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
   @override
   void initState() {
@@ -41,94 +41,92 @@ class _HomePageState extends State<HomePage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        drawer: const Column(children: []),
-        appBar: AppBar(
-          backgroundColor: Colors.blue.shade900,
-          title: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            textBaseline: TextBaseline.ideographic,
-            children: [
-              // const SizedBox(width: 5),
-              Image.asset(
-                'assets/logo/movieflix.png',
-                scale: 13,
-              ),
-              const SizedBox(width: 7),
-              Text(
-                'MovieFlix',
-                style: GoogleFonts.raleway(
-                    fontSize: 24, height: 1.6, fontWeight: FontWeight.w600),
-              ),
-            ],
-          ),
-          centerTitle: true,
-          elevation: 10,
-          toolbarHeight: 65,
-          actions: const [
-            SizedBox(width: 50),
+    return Scaffold(
+      backgroundColor: Colors.black,
+      drawer: const Column(children: []),
+      appBar: AppBar(
+        backgroundColor: Colors.blue.shade900,
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          textBaseline: TextBaseline.ideographic,
+          children: [
+            // const SizedBox(width: 5),
+            Image.asset(
+              'assets/logo/movieflix.png',
+              scale: 13,
+            ),
+            const SizedBox(width: 7),
+            Text(
+              'MovieFlix',
+              style: GoogleFonts.raleway(
+                  fontSize: 24, height: 1.6, fontWeight: FontWeight.w600),
+            ),
           ],
         ),
-        body: CustomScrollView(
-          controller: widget.scrollController,
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            SliverToBoxAdapter(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
+        centerTitle: true,
+        elevation: 10,
+        toolbarHeight: 65,
+        actions: const [
+          SizedBox(width: 50),
+        ],
+      ),
+      body: CustomScrollView(
+        controller: widget.scrollController,
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverToBoxAdapter(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Container(
+                  height: 70,
+                  alignment: Alignment.topLeft,
+                  padding: const EdgeInsets.only(
+                    top: 30,
+                    bottom: 10,
+                    left: 10,
+                    right: 10,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Trending Movies',
+                        style: AppTextStyles.customTextStyle(
+                            fontSize: 21, fontWeight: FontWeight.w600),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const TrendingMoviesWidget(),
+          SliverToBoxAdapter(
+            child: Container(
+              height: 70,
+              alignment: Alignment.topLeft,
+              padding: const EdgeInsets.only(
+                top: 30,
+                bottom: 10,
+                left: 20,
+                right: 10,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Container(
-                    height: 70,
-                    alignment: Alignment.topLeft,
-                    padding: const EdgeInsets.only(
-                      top: 30,
-                      bottom: 10,
-                      left: 10,
-                      right: 10,
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Trending Movies',
-                          style: AppTextStyles.customTextStyle(
-                              fontSize: 21, fontWeight: FontWeight.w600),
-                        ),
-                      ],
-                    ),
+                  Text(
+                    'Popular Shows',
+                    style: AppTextStyles.customTextStyle(
+                        fontSize: 21, fontWeight: FontWeight.w600),
                   ),
                 ],
               ),
             ),
-            const TrendingMoviesWidget(),
-            SliverToBoxAdapter(
-              child: Container(
-                height: 70,
-                alignment: Alignment.topLeft,
-                padding: const EdgeInsets.only(
-                  top: 30,
-                  bottom: 10,
-                  left: 20,
-                  right: 10,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Popular Shows',
-                      style: AppTextStyles.customTextStyle(
-                          fontSize: 21, fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            const PopularTvWidget(),
-          ],
-        ),
+          ),
+          const PopularTvWidget(),
+        ],
       ),
     );
   }

@@ -1,3 +1,5 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
+import 'package:equatable/equatable.dart';
 import 'package:isar/isar.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -7,7 +9,7 @@ part 'tv_show.g.dart';
 
 @JsonSerializable()
 @Collection()
-class TvShow {
+class TvShow extends Equatable {
   @JsonKey(includeFromJson: false)
   Id isarId = Isar.autoIncrement;
 
@@ -68,15 +70,24 @@ class TvShow {
   Map<String, dynamic> toJson() => _$TvShowToJson(this);
 
   @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is TvShow &&
-        other.id == id &&
-        other.poster == poster &&
-        other.title == title;
+  List<Object?> get props {
+    return [
+      isarId,
+      poster,
+      id,
+      backdrop,
+      title,
+      description,
+      seasons,
+      episodes,
+      firstairDate,
+      lastairDate,
+      status,
+      rating,
+      genres,
+    ];
   }
 
   @override
-  int get hashCode => id.hashCode ^ poster.hashCode ^ title.hashCode;
+  bool get stringify => true;
 }

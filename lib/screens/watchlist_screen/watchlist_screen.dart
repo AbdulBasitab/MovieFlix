@@ -44,83 +44,81 @@ class _WatchlistScreenState extends State<WatchlistScreen>
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: GestureDetector(
-        onHorizontalDragEnd: (details) {
-          // int sensitivity = 8;
-          if (details.primaryVelocity! > 0) {
-            // Right Swipe
-            setState(() {
-              currentSelection = 0;
-            });
-          } else if (details.primaryVelocity! < 0) {
-            // left swipe
-            setState(() {
-              currentSelection = 1;
-            });
-          }
-        },
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(
-              'Watchlist',
-              style: GoogleFonts.raleway(
-                fontSize: 20,
-                fontWeight: FontWeight.w600,
-              ),
+    return GestureDetector(
+      onHorizontalDragEnd: (details) {
+        // int sensitivity = 8;
+        if (details.primaryVelocity! > 0) {
+          // Right Swipe
+          setState(() {
+            currentSelection = 0;
+          });
+        } else if (details.primaryVelocity! < 0) {
+          // left swipe
+          setState(() {
+            currentSelection = 1;
+          });
+        }
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            'Watchlist',
+            style: GoogleFonts.raleway(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
             ),
-            backgroundColor: Colors.blue.shade900,
-            elevation: 2,
-            toolbarHeight: 65,
-            centerTitle: true,
           ),
-          body: Padding(
-            padding: const EdgeInsets.only(
-              top: 30,
-              left: 20,
-              right: 15,
-              bottom: 10,
-            ),
-            child: Column(
-              children: [
-                MaterialSegmentedControl(
-                  children: segmentedButtonChildren,
-                  selectionIndex: currentSelection,
-                  borderColor: AppColors.secondaryColor,
-                  selectedColor: AppColors.secondaryColor,
-                  unselectedColor: Colors.black,
-                  selectedTextStyle: GoogleFonts.raleway(
-                    color: Colors.black,
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                  unselectedTextStyle: GoogleFonts.raleway(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
-                  ),
-                  borderWidth: 1.4,
-                  borderRadius: 32.0,
-                  verticalOffset: 10,
-                  onSegmentTapped: (int index) {
-                    setState(() {
-                      currentSelection = index;
-                    });
-                  },
+          backgroundColor: Colors.blue.shade900,
+          elevation: 2,
+          toolbarHeight: 65,
+          centerTitle: true,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.only(
+            top: 30,
+            left: 20,
+            right: 15,
+            bottom: 10,
+          ),
+          child: Column(
+            children: [
+              MaterialSegmentedControl(
+                children: segmentedButtonChildren,
+                selectionIndex: currentSelection,
+                borderColor: AppColors.secondaryColor,
+                selectedColor: AppColors.secondaryColor,
+                unselectedColor: Colors.black,
+                selectedTextStyle: GoogleFonts.raleway(
+                  color: Colors.black,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
                 ),
-                const SizedBox(height: 35),
-                Expanded(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 400),
-                    switchInCurve: Curves.easeIn,
-                    switchOutCurve: Curves.easeOut,
-                    child: (currentSelection == 0)
-                        ? WatchlistMoviesWidget(animation: _animation)
-                        : WatchlistShowsWidget(animation: _animation),
-                  ),
+                unselectedTextStyle: GoogleFonts.raleway(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
                 ),
-              ],
-            ),
+                borderWidth: 1.4,
+                borderRadius: 32.0,
+                verticalOffset: 10,
+                onSegmentTapped: (int index) {
+                  setState(() {
+                    currentSelection = index;
+                  });
+                },
+              ),
+              const SizedBox(height: 35),
+              Expanded(
+                child: AnimatedSwitcher(
+                  duration: const Duration(milliseconds: 400),
+                  switchInCurve: Curves.easeIn,
+                  switchOutCurve: Curves.easeOut,
+                  child: (currentSelection == 0)
+                      ? WatchlistMoviesWidget(animation: _animation)
+                      : WatchlistShowsWidget(animation: _animation),
+                ),
+              ),
+            ],
           ),
         ),
       ),

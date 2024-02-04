@@ -7,15 +7,15 @@ import 'package:movies_app/screens/home_screen/home_screen.dart';
 import 'package:movies_app/screens/watchlist_screen/watchlist_screen.dart';
 import 'package:movies_app/screens/search_screen/search_screen.dart';
 
-class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({super.key});
+class MainNavigationScreen extends StatefulWidget {
+  const MainNavigationScreen({super.key});
 
   @override
-  State<BottomNavBar> createState() => _BottomNavBarState();
+  State<MainNavigationScreen> createState() => _MainNavigationScreenState();
 }
 
-class _BottomNavBarState extends State<BottomNavBar> {
-  bool _isVisible = true;
+class _MainNavigationScreenState extends State<MainNavigationScreen> {
+  // bool _isVisible = true;
   ScrollController hideNavigationBarController = ScrollController();
 
   @override
@@ -24,15 +24,11 @@ class _BottomNavBarState extends State<BottomNavBar> {
     hideNavigationBarController.addListener(() {
       if (hideNavigationBarController.position.userScrollDirection ==
           ScrollDirection.reverse) {
-        setState(() {
-          _isVisible = false;
-        });
+        context.read<NavigationBloc>().add(SetIsNavBarVisible(value: false));
       }
       if (hideNavigationBarController.position.userScrollDirection ==
           ScrollDirection.forward) {
-        setState(() {
-          _isVisible = true;
-        });
+        context.read<NavigationBloc>().add(SetIsNavBarVisible(value: true));
       }
     });
   }
@@ -40,12 +36,13 @@ class _BottomNavBarState extends State<BottomNavBar> {
   @override
   Widget build(BuildContext context) {
     final List<Widget> screens = [
-      HomePage(scrollController: hideNavigationBarController),
+      HomeScreen(scrollController: hideNavigationBarController),
       const SearchScreen(),
       const WatchlistScreen(),
     ];
     return BlocBuilder<NavigationBloc, NavigationState>(
       builder: (context, state) => SafeArea(
+        top: false,
         child: Scaffold(
           body: WillPopScope(
             onWillPop: () async {
@@ -62,12 +59,12 @@ class _BottomNavBarState extends State<BottomNavBar> {
           ),
           bottomNavigationBar: AnimatedContainer(
             duration: const Duration(milliseconds: 50),
-            height: _isVisible ? 60 : 0,
-            child: _isVisible
+            height: state.isNavBarVisible ? 60 : 0,
+            child: state.isNavBarVisible
                 ? AnimatedContainer(
                     duration: const Duration(milliseconds: 50),
-                    height: _isVisible ? 60 : 0,
-                    child: _isVisible
+                    height: state.isNavBarVisible ? 60 : 0,
+                    child: state.isNavBarVisible
                         ? BottomAppBar(
                             height: 60,
                             child: BottomNavigationBar(
