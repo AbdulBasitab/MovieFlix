@@ -11,9 +11,9 @@ import '../../models/tv_show/tv_show.dart';
 class TvDetailScreen extends StatefulWidget {
   final TvShow tvShow;
   const TvDetailScreen({
-    Key? key,
+    super.key,
     required this.tvShow,
-  }) : super(key: key);
+  });
 
   @override
   State<TvDetailScreen> createState() => _TvDetailScreenState();

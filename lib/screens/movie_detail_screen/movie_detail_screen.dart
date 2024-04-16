@@ -19,10 +19,10 @@ class MovieDetailPage extends StatefulWidget {
   final Movie movie;
   final String heroTag;
   const MovieDetailPage({
-    Key? key,
+    super.key,
     required this.movie,
     required this.heroTag,
-  }) : super(key: key);
+  });
 
   @override
   State<MovieDetailPage> createState() => _MovieDetailPageState();

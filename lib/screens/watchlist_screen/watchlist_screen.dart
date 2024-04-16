@@ -7,7 +7,7 @@ import 'components/watchlist_movies_widget.dart';
 import 'components/watchlist_shows_widget.dart';
 
 class WatchlistScreen extends StatefulWidget {
-  const WatchlistScreen({Key? key}) : super(key: key);
+  const WatchlistScreen({super.key});
 
   @override
   State<WatchlistScreen> createState() => _WatchlistScreenState();

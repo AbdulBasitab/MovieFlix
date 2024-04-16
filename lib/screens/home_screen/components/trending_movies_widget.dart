@@ -8,8 +8,8 @@ import 'package:movies_app/common_widgets/card_widget.dart';
 
 class TrendingMoviesWidget extends StatefulWidget {
   const TrendingMoviesWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<TrendingMoviesWidget> createState() => _TrendingMoviesWidgetState();

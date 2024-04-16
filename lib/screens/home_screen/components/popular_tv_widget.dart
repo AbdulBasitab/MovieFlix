@@ -8,8 +8,8 @@ import '../../tv_detail_screen/tv_detail_screen.dart';
 
 class PopularTvWidget extends StatefulWidget {
   const PopularTvWidget({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<PopularTvWidget> createState() => _PopularTvWidgetState();
